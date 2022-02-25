@@ -18,4 +18,7 @@ module.exports = {
       extends: ["plugin:cypress/recommended"],
     },
   ],
+  globals: {
+    $ref: "readonly",
+  },
 };
