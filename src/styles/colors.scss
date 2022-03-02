@@ -1,0 +1,54 @@
+$base-colors: (
+  "success": #6cb76f,
+  "error": #da5552,
+  "white": #fff,
+  "black": #000,
+);
+$palette-color-schema: (
+  "light": #f8f9fa,
+  "dark": #212121,
+  "primary": #4268b3,
+  "accent": #fdb63a,
+  "secondary": #2dcd8a,
+);
+$text-colors: (
+  "primary-text": #fff,
+  "accent-text": #000,
+  "secondary-text": #000,
+  "success-text": #fff,
+  "error-text": #fff,
+  "white-text": #000,
+  "light-text": #000,
+  "black-text": #fff,
+  "dark-text": #fff,
+);
+$palette-colors: generate-color-palette(
+  $palette-color-schema,
+  (
+    "light": (
+      "saturation": -5%,
+      "lightness": 5%,
+    ),
+    "lighter": (
+      "saturation": -10%,
+      "lightness": 10%,
+    ),
+    "dark": (
+      "saturation": 5%,
+      "lightness": -5%,
+    ),
+    "darker": (
+      "saturation": 10%,
+      "lightness": -10%,
+    ),
+    "fade": (
+      "alpha": -0.4%,
+    ),
+  )
+);
+
+:root {
+  @include generate-css-variables($base-colors);
+  @include generate-css-variables($palette-colors);
+  @include generate-css-variables($text-colors);
+}

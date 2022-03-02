@@ -1,0 +1,11 @@
+@charset 'UTF-8';
+
+// @import "./normalize.scss";
+@import "./colors.scss";
+// @import "./components/_index.scss";
+// @import "./elements/_index.scss";
+// @import "./app.scss";
+
+:root {
+  --design-system-prefix: #{$design-system-prefix};
+}

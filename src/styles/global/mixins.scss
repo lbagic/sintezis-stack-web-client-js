@@ -1,0 +1,20 @@
+@mixin touch-device {
+  @media (hover: none) {
+    @content;
+  }
+}
+@mixin click-device {
+  @media (hover: hover) {
+    @content;
+  }
+}
+@mixin transition($transition-property-value) {
+  &-enter-from,
+  &-leave-to {
+    @content;
+  }
+  &-enter-active,
+  &-leave-active {
+    transition: $transition-property-value;
+  }
+}

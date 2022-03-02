@@ -1,0 +1,27 @@
+@function generate-color-palette($palette, $variants) {
+  $output: ();
+  @each $name, $value in $palette {
+    $output: map-merge(
+      $output,
+      (
+        "#{$name}": $value,
+      )
+    );
+    @each $variant, $map in $variants {
+      $alpha: map-get($map, "alpha") or 0%;
+      $output: map-merge(
+        $output,
+        (
+          "#{$name}-#{$variant}":
+            adjust-color(
+              $value,
+              $lightness: map-get($map, "lightness") or 0%,
+              $saturation: map-get($map, "saturation") or 0%,
+              $alpha: map-get($map, "alpha") or 0%
+            ),
+        )
+      );
+    }
+  }
+  @return $output;
+}
