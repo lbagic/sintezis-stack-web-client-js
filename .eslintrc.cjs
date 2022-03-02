@@ -12,6 +12,9 @@ module.exports = {
   env: {
     "vue/setup-compiler-macros": true,
   },
+  rules: {
+    "vue/no-setup-props-destructure": "off",
+  },
   overrides: [
     {
       files: ["cypress/integration/**.spec.{js,ts,jsx,tsx}"],
@@ -20,5 +23,11 @@ module.exports = {
   ],
   globals: {
     $ref: "readonly",
+    $computed: "readonly",
+    $shallowRef: "readonly",
+    $customRef: "readonly",
+    $toRef: "readonly",
+    $: "readonly",
+    $$: "readonly",
   },
 };

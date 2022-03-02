@@ -1,0 +1,18 @@
+{
+  // -------------------------- FORMATTER --------------------------
+  "editor.detectIndentation": false,
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "files.eol": "\n",
+  // -------------------------- LANGUAGE SETTINGS --------------------------
+  // makefile
+  "[makefile]": {
+    "editor.insertSpaces": false
+  },
+  // javascript / typescript
+  "eslint.format.enable": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+    // "source.organizeImports": true,
+  },
+}
