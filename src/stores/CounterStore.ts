@@ -1,6 +1,6 @@
-import { defineStore } from "pinia";
+import { createStore } from "./core/storeFactory";
 
-export const useCounterStore = defineStore({
+export const useCounterStore = createStore({
   id: "counter",
   state: () => ({
     counter: 0,
@@ -13,4 +13,5 @@ export const useCounterStore = defineStore({
       this.counter++;
     },
   },
+  persist: true,
 });
