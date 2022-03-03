@@ -10,7 +10,7 @@ import BaseModal from "../components/base/BaseModal.vue";
     <BaseButton disabled>Button</BaseButton>
     <BaseButton>Button</BaseButton>
     <BaseIcon icon="Search" button />
-    <BaseModal class="dialog" open />
+    <BaseModal class="dialog" />
     <template v-for="col in paletteColors" :key="col">
       <div :style="`background-color: var(--snt-${col}-lighter)`">asdf</div>
       <div :style="`background-color: var(--snt-${col}-light)`">asdf</div>
@@ -22,16 +22,6 @@ import BaseModal from "../components/base/BaseModal.vue";
 </template>
 
 <style lang="scss" scoped>
-.button-primary {
-  transition: color 0.2s ease-in-out;
-  color: red;
-  &:hover {
-    color: cyan;
-  }
-  &:focus {
-    color: green;
-  }
-}
 .wrap > div {
   padding: 1rem;
 }
