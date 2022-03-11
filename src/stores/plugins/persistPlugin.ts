@@ -1,3 +1,3 @@
-import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
+import { createPersistedState } from "pinia-plugin-persistedstate";
 
-export const persistPlugin = piniaPluginPersistedstate;
+export const persistPlugin = createPersistedState();

@@ -21,7 +21,7 @@ const palette = palettePicker(color, colorVariant);
   --padding-small: 8px 12px;
   --padding-large: 12px 48px;
 
-  display: inline-block;
+  display: inline-flex;
   cursor: pointer;
   font-weight: 400;
   text-align: center;

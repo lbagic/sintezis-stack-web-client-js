@@ -1,6 +1,6 @@
 import { createStore } from "./core/storeFactory";
 
-export const useUser = createStore({
+export const useUserStore = createStore({
   id: "store",
   state: () => ({
     counter: 0,

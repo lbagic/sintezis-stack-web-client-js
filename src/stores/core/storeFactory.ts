@@ -80,12 +80,10 @@ export const createStore = <
         ) {
           const items = Array.isArray(item) ? item : [item];
           const array = this[key];
-          console.log(items, array);
           items.forEach((newItem) => {
             const existingIndex = array.findIndex(
               (savedItem) => savedItem.id === newItem.id
             );
-            console.log(items, array, existingIndex);
             if (existingIndex >= 0) array.splice(existingIndex, 1, newItem);
             else array.push(newItem);
           });

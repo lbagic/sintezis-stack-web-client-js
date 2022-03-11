@@ -13,9 +13,11 @@
   },
   "dependencies": {
     "@vueuse/core": "^7.6.2",
+    "@vueuse/integrations": "^8.0.0",
+    "focus-trap": "^6.7.3",
     "lodash.debounce": "^4.0.8",
     "pinia": "^2.0.11",
-    "pinia-plugin-persistedstate": "^1.2.3",
+    "pinia-plugin-persistedstate": "^1.5.1",
     "secure-ls": "^1.2.6",
     "vue": "^3.2.31",
     "vue-router": "^4.0.12"

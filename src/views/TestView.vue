@@ -1,23 +1,24 @@
 <script setup lang="ts">
-import { paletteColors } from "@/utils/colors";
 import BaseButton from "../components/base/BaseButton.vue";
 import BaseIcon from "../components/base/BaseIcon.vue";
 import BaseModal from "../components/base/BaseModal.vue";
+
+const modal = $ref<InstanceType<typeof BaseModal> | null>(null);
 </script>
 
 <template>
   <div class="wrap">
     <BaseButton disabled>Button</BaseButton>
     <BaseButton>Button</BaseButton>
+    <router-link to="#dialog">dialog</router-link>
     <BaseIcon icon="Search" button />
-    <BaseModal class="dialog" />
-    <template v-for="col in paletteColors" :key="col">
-      <div :style="`background-color: var(--snt-${col}-lighter)`">asdf</div>
-      <div :style="`background-color: var(--snt-${col}-light)`">asdf</div>
-      <div :style="`background-color: var(--snt-${col})`">asdf</div>
-      <div :style="`background-color: var(--snt-${col}-dark)`">asdf</div>
-      <div :style="`background-color: var(--snt-${col}-darker)`">asdf</div>
-    </template>
+    <BaseModal class="dialog" hash="#dialog" query="dialog" ref="modal">
+      <input type="text" autofocus />
+      <input type="text" />
+      <input type="text" />
+      <input type="text" />
+      <input type="text" />
+    </BaseModal>
   </div>
 </template>
 
