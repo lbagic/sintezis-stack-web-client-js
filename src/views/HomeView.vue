@@ -1,12 +1,10 @@
+import HelloWorld from '@/components/HelloWorld.vue';
 <script setup lang="ts">
-import TheWelcome from "@/components/TheWelcome.vue";
-// import { useStore } from "@/stores/main";
-// const store = useStore();
+import HelloWorld from "../components/HelloWorld.vue";
 </script>
 
 <template>
-  <main>
-    <!-- <pre>{{ store.cities }}</pre> -->
-    <TheWelcome />
-  </main>
+  <HelloWorld msg="You did it!" />
 </template>
+
+<style scoped lang="scss"></style>

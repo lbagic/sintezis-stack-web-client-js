@@ -1,6 +1,6 @@
 import { useBreakpoints } from "@vueuse/core";
 
-export const breakpoints = useBreakpoints({
+export const breakpoint = useBreakpoints({
   s: 640,
   m: 768,
   l: 1024,

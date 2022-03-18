@@ -1,24 +1,20 @@
 <script setup lang="ts">
-import type { PaletteColors } from "@/utils/colors";
-import { palettePicker, type PaletteVariants } from "@/utils/colors";
+import { type PaletteColor, paletteColor } from "@/utils/paletteColor";
 import { defineAsyncComponent, markRaw, watch } from "vue";
 
 const {
   icon,
-  color = "primary",
-  colorVariant = "dark",
+  color = paletteColor("primary"),
   button,
   disabled,
 } = defineProps<{
   icon: string;
-  color?: PaletteColors;
-  colorVariant?: PaletteVariants;
+  color?: PaletteColor;
   button?: boolean;
   disabled?: boolean;
 }>();
 
 let component = $ref("");
-const palette = palettePicker(color, colorVariant);
 
 const attrs: Record<string, unknown> = {};
 if (button) {
@@ -51,19 +47,19 @@ watch(
 
 <style scoped lang="scss">
 .base-icon-component {
-  color: v-bind("palette.color.value");
+  color: v-bind("color.base.value");
 }
 .base-icon-component-button {
   cursor: pointer;
   &:hover {
-    color: v-bind("palette.strong.value");
+    color: v-bind("color.strong.value");
   }
   &:active {
-    color: v-bind("palette.stronger.value");
+    color: v-bind("color.stronger.value");
   }
 }
 .base-icon-component-button[disabled="true"] {
   cursor: initial;
-  color: v-bind("palette.fade.value") !important;
+  color: v-bind("color.fade.value") !important;
 }
 </style>

@@ -1,16 +1,15 @@
 $base-colors: (
-  "success": #6cb76f,
-  "error": #da5552,
-  "white": #fff,
-  "black": #000,
-);
-$palette-color-schema: (
-  "light": #f8f9fa,
-  "dark": #212121,
   "primary": #4268b3,
   "accent": #fdb63a,
   "secondary": #2dcd8a,
+  "success": #6cb76f,
+  "error": #da5552,
+  "white": #fff,
+  "light": #f8f9fa,
+  "black": #000,
+  "dark": #212121,
 );
+
 $text-colors: (
   "primary-text": #fff,
   "accent-text": #000,
@@ -22,33 +21,32 @@ $text-colors: (
   "black-text": #fff,
   "dark-text": #fff,
 );
-$palette-colors: generate-color-palette(
-  $palette-color-schema,
-  (
-    "light": (
-      "saturation": -5%,
-      "lightness": 5%,
-    ),
-    "lighter": (
-      "saturation": -10%,
-      "lightness": 10%,
-    ),
-    "dark": (
-      "saturation": 5%,
-      "lightness": -5%,
-    ),
-    "darker": (
-      "saturation": 10%,
-      "lightness": -10%,
-    ),
-    "fade": (
-      "alpha": -0.4%,
-    ),
-  )
+
+$base-color-variants: (
+  "light": (
+    "saturation": -5%,
+    "lightness": 5%,
+  ),
+  "lighter": (
+    "saturation": -10%,
+    "lightness": 10%,
+  ),
+  "dark": (
+    "saturation": 5%,
+    "lightness": -5%,
+  ),
+  "darker": (
+    "saturation": 10%,
+    "lightness": -10%,
+  ),
+  "fade": (
+    "alpha": -0.8%,
+  ),
 );
 
+$palette-colors: generate-color-palette($base-colors, $base-color-variants);
+
 :root {
-  @include generate-css-variables($base-colors);
   @include generate-css-variables($palette-colors);
   @include generate-css-variables($text-colors);
 }

@@ -58,9 +58,11 @@
   position: relative;
   font-weight: normal;
 }
-
-body {
+html, body {
   min-height: 100vh;
+  height: 100%;
+}
+body {
   color: var(--color-text);
   background: var(--color-background);
   transition: color 0.5s, background-color 0.5s;
