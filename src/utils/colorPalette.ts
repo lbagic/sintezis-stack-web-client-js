@@ -2,8 +2,8 @@ import { useCssVar } from "@vueuse/core";
 import type { Ref } from "vue";
 import { prefix } from "./prefix";
 
-type ColorVariant = "light" | "lighter" | "dark" | "darker";
-type ColorName =
+export type PaletteVariant = "light" | "dark";
+export type PaletteColor =
   | "primary"
   | "accent"
   | "secondary"
@@ -14,15 +14,15 @@ type ColorName =
   | "black"
   | "white";
 
-export type PaletteColor = Record<
+export type Palette = Record<
   "base" | "strong" | "stronger" | "text" | "fade",
   Ref<string>
 >;
 
-export const paletteColor = (
-  color: ColorName,
-  variant: ColorVariant = "dark"
-): PaletteColor => ({
+export const colorPalette = (
+  color: PaletteColor,
+  variant: PaletteVariant = "dark"
+): Palette => ({
   base: useCssVar(`--${prefix}-${color}`),
   strong: useCssVar(`--${prefix}-${color}-${variant}`),
   stronger: useCssVar(`--${prefix}-${color}-${variant}er`),

@@ -1,9 +1,16 @@
 <script setup lang="ts">
-import { type PaletteColor, paletteColor } from "@/utils/paletteColor";
+import {
+  type PaletteColor,
+  type PaletteVariant,
+  colorPalette,
+} from "@/utils/colorPalette";
 
-const { color = paletteColor("primary") } = defineProps<{
-  color?: PaletteColor;
+const { colorName = "primary", colorVariant } = defineProps<{
+  colorName?: PaletteColor;
+  colorVariant?: PaletteVariant;
 }>();
+
+const palette = colorPalette(colorName, colorVariant);
 </script>
 
 <template>
@@ -37,20 +44,20 @@ const { color = paletteColor("primary") } = defineProps<{
   opacity: 1;
 
   &:not([disabled]) {
-    color: v-bind("color.text.value");
+    color: v-bind("palette.text.value");
     cursor: pointer;
-    background: v-bind("color.base.value");
+    background: v-bind("palette.base.value");
     &:hover {
-      background: v-bind("color.strong.value");
+      background: v-bind("palette.strong.value");
     }
     &:active {
-      background: v-bind("color.stronger.value");
+      background: v-bind("palette.stronger.value");
     }
   }
   &[disabled] {
     cursor: default !important;
     color: #eee !important;
-    background: v-bind("color.fade.value") !important;
+    background: v-bind("palette.fade.value") !important;
     pointer-events: none !important;
   }
 }

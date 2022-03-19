@@ -1,3 +1,3 @@
 import { useCssVar } from "@vueuse/core";
 
-export const prefix = useCssVar("--system-prefix").value.trim();
+export const prefix = useCssVar("--prefix").value.trim();

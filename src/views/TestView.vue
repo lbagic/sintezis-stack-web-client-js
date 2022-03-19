@@ -8,10 +8,10 @@ const modal = $ref<InstanceType<typeof BaseModal> | null>(null);
 
 <template>
   <div class="wrap">
-    <BaseButton disabled>Button</BaseButton>
+    <BaseButton color-name="accent">Button</BaseButton>
     <BaseButton>Button</BaseButton>
     <router-link to="#dialog">dialog</router-link>
-    <BaseIcon icon="Search" button />
+    <BaseIcon icon="IconClose" button color-name="error" scale="2" />
     <BaseModal class="dialog" hash="#dialog" query="dialog" ref="modal">
       <input type="text" autofocus />
       <input type="text" />

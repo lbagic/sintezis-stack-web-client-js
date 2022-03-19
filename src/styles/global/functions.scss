@@ -37,7 +37,7 @@
     @if type-of($value) == "map" {
       @include generate-css-variables($value, $current-key);
     } @else {
-      --#{$system-prefix}-#{$current-key}: #{$value};
+      --#{$prefix}-#{$current-key}: #{$value};
     }
   }
 }
