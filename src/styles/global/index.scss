@@ -1,8 +1,6 @@
-@import "./prefix.scss";
-// @import "./functions/get.scss";
-@import "./functions/generate-color-palette.scss";
-// @import "./functions/generate-json.scss";
-@import "./functions/generate-css-variables.scss";
+$system-prefix: "snt";
 
-@import "./mixins.scss";
 @import "./breakpoints.scss";
+
+@import "./functions.scss";
+@import "./mixins.scss";
