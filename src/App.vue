@@ -8,8 +8,9 @@ import Navigation from "./components/Navigation.vue";
   <RouterView />
 </template>
 
-<style>
+<style lang="scss">
 @import "@/assets/base.css";
+@import "@/assets/styles/_index.scss";
 #app {
   display: grid;
   grid-template-rows: auto 1fr;

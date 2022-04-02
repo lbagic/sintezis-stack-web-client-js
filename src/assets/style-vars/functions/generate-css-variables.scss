@@ -1,0 +1,13 @@
+@mixin generate-css-variables($map, $keys: ()) {
+  @each $key, $value in $map {
+    @if type-of($value) == "map" {
+        @include generate-css-variables($value, append($keys, $key));
+    } @else {
+        $list: if($key == "base", $keys, append($keys, $key));
+        $variable: $prefix;
+        @each $k in $list {
+            $variable: #{$variable}-#{$k};
+        }
+        --#{$variable}: #{$value};
+  }}
+};

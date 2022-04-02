@@ -1,20 +1,29 @@
 <script setup lang="ts">
 import {
+  usePalette,
   type PaletteColor,
   type PaletteVariant,
-  colorPalette,
-} from "@/utils/colorPalette";
+} from "@/utils/usePalette";
 
-const { colorName = "primary", colorVariant } = defineProps<{
-  colorName?: PaletteColor;
-  colorVariant?: PaletteVariant;
+const props = defineProps<{
+  color?: PaletteColor;
+  variant?: PaletteVariant;
+  to?: string;
 }>();
-
-const palette = colorPalette(colorName, colorVariant);
+const palette = usePalette(props);
+const component = props.to ? "router-link" : "button";
+const attrs: Record<string, string> = {};
+if (props.to) attrs.to = props.to;
 </script>
 
 <template>
-  <button class="base-button-component"><slot></slot></button>
+  <component
+    :is="component"
+    class="base-button-component"
+    :data-component="component"
+    v-bind="attrs"
+    ><slot></slot
+  ></component>
 </template>
 
 <style scoped lang="scss">
@@ -44,21 +53,24 @@ const palette = colorPalette(colorName, colorVariant);
   opacity: 1;
 
   &:not([disabled]) {
-    color: v-bind("palette.text.value");
+    color: v-bind("palette.contrast");
     cursor: pointer;
-    background: v-bind("palette.base.value");
+    background: v-bind("palette.base");
     &:hover {
-      background: v-bind("palette.strong.value");
+      background: v-bind("palette.strong");
     }
     &:active {
-      background: v-bind("palette.stronger.value");
+      background: v-bind("palette.stronger");
     }
   }
   &[disabled] {
     cursor: default !important;
     color: #eee !important;
-    background: v-bind("palette.fade.value") !important;
+    background: v-bind("palette.opaque") !important;
     pointer-events: none !important;
   }
+}
+.base-button-component[data-component="router-link"] {
+  text-decoration: none;
 }
 </style>

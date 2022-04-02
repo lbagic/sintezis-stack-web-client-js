@@ -1,0 +1,10 @@
+$prefix: snt;
+
+@import "./functions/generate-color-palette.scss";
+@import "./functions/generate-css-variables.scss";
+@import "./functions/generate-json.scss";
+@import "./functions/color-contrast.scss";
+
+@import "./colors.scss";
+@import "./breakpoints.scss";
+@import "./transitions.scss";

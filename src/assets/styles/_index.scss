@@ -1,0 +1,8 @@
+@charset 'UTF-8';
+
+:root {
+  --prefix: #{$prefix};
+  @include generate-css-variables($breakpoints, 'breakpoint');
+  @include generate-css-variables($colors, 'color');
+}
+

@@ -1,31 +1,25 @@
 <script setup lang="ts">
+import { prefix } from "@/utils/useCss";
+import { defineAsyncComponent, markRaw, watch } from "vue";
 import {
+  usePalette,
   type PaletteColor,
   type PaletteVariant,
-  colorPalette,
-} from "@/utils/colorPalette";
-import { defineAsyncComponent, markRaw, watch, watchEffect } from "vue";
+} from "../../utils/usePalette";
 
-const {
-  icon,
-  colorName = "primary",
-  colorVariant,
-  button,
-  disabled,
-} = defineProps<{
+const props = defineProps<{
   icon: string;
-  colorName?: PaletteColor;
-  colorVariant?: PaletteVariant;
   button?: boolean;
   disabled?: boolean;
+  color?: PaletteColor;
+  variant?: PaletteVariant;
 }>();
+const { icon, button, disabled } = props;
 
 let component = $ref("");
-let reference = $ref(null);
-const palette = colorPalette(colorName, colorVariant);
 const attrs: Record<string, unknown> = {};
+const palette = usePalette(props);
 
-watchEffect(() => console.log(reference));
 if (button) {
   if (disabled) attrs.disabled = true;
   else attrs.tabindex = 0;
@@ -47,31 +41,28 @@ watch(
 
 <template>
   <component
-    :class="{
-      'base-icon-component': true,
-      'base-icon-component-button': button,
-    }"
+    :class="`${prefix}icon`"
+    :data-button="button"
     :is="component"
     v-bind="attrs"
-    ref="reference"
   />
 </template>
 
 <style scoped lang="scss">
-.base-icon-component {
-  color: v-bind("palette.base.value");
+.#{$prefix}icon {
+  color: v-bind("palette.base");
 }
-.base-icon-component-button {
+.#{$prefix}icon[data-button="true"] {
   cursor: pointer;
   &:hover {
-    color: v-bind("palette.strong.value");
+    color: v-bind("palette.strong");
   }
   &:active {
-    color: v-bind("palette.stronger.value");
+    color: v-bind("palette.stronger");
   }
 }
-.base-icon-component-button[disabled="true"] {
+.#{$prefix}icon[data-button="true"][disabled="true"] {
   cursor: initial;
-  color: v-bind("palette.fade.value") !important;
+  color: v-bind("palette.opaque") !important;
 }
 </style>

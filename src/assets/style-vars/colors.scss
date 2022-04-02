@@ -1,0 +1,34 @@
+$base-colors: (
+"primary": #0d6efd,
+"secondary": #6c757d,
+  "success": #198754,
+  "info": #0dcaf0,
+  "warning": #ffc107,
+  "danger": #dc3545,
+  "light": #f8f9fa,
+  "dark": #212529,
+);
+
+$base-color-variants: (
+  "light": (
+    "saturation": -5%,
+    "lightness": 5%,
+  ),
+  "lighter": (
+    "saturation": -10%,
+    "lightness": 10%,
+  ),
+  "dark": (
+    "saturation": 5%,
+    "lightness": -5%,
+  ),
+  "darker": (
+    "saturation": 10%,
+    "lightness": -10%,
+  ),
+  "opaque": (
+    "alpha": -0.5%,
+  ),
+);
+
+$colors: generate-color-palette($base-colors, $base-color-variants);
