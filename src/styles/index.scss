@@ -1,7 +1,8 @@
 @charset 'UTF-8';
 
-@import "./normalize.scss";
-@import "./colors.scss";
-// @import "./components/_index.scss";
-// @import "./elements/_index.scss";
-@import "./app.scss";
+@import "./normalize";
+@import "./colors";
+// @import "./components/_index";
+// @import "./elements/_index";
+@import "./app";
+@import "./garbage";
