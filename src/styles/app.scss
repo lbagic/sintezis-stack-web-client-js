@@ -1,0 +1,20 @@
+:root {
+  --snt-app-color: #212121;
+  --snt-app-background: var(--snt-color-light);
+
+  --snt-nav-height: 50px;
+  --snt-button-and-input-height: 50px;
+
+  --snt-overlay-backdrop-filter: blur(1px);
+  --snt-overlay-border-radius: 4px;
+
+  --snt-z-index-toast: 9000;
+  --snt-z-index-overlay: 8000;
+  --snt-z-index-dropdown: 7000;
+  --snt-z-index-header: 6000;
+  --snt-z-index-footer: 5000;
+
+  --snt-box-shadow-1: "0 0 8px #00000011";
+  --snt-box-shadow-2: "0 0 8px #00000018";
+  --snt-box-shadow-3: "0 0 8px #00000022";
+}
