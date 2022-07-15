@@ -1,16 +1,19 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link>
-  </nav>
-  <router-view/>
+  <main-navigation />
+  <main>
+    <router-view />
+  </main>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-}
+<script>
+import MainNavigation from './components/MainNavigation.vue';
 
-nav {
-  padding: 30px;
-}
-</style>
+export default {
+  name: "App",
+  components: {
+    MainNavigation
+  },
+};
+</script>
+
+<style lang="scss"></style>
