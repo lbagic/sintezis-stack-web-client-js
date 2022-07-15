@@ -1,0 +1,13 @@
+stages:
+  - development
+
+development:
+  stage: development
+  script:
+    - echo "Deploying development"
+    - cd /home/ubuntu/buckley/development/web.client.js
+    - sudo git pull origin development
+    - sudo docker-compose up --force-recreate
+    - echo "Done deploying development"
+  only:
+    - development
