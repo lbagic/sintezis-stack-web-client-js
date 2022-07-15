@@ -7,11 +7,11 @@ const routes = [
     name: 'home',
     component: HomeView
   },
-  // {
-  //   path: '/about',
-  //   name: 'about',
-  //   component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  // }
+  {
+    path: '/grid',
+    name: 'grid-example',
+    component: () => import(/* webpackChunkName: "grid-example" */ '../views/GridExampleView.vue')
+  }
 ]
 
 const router = createRouter({
