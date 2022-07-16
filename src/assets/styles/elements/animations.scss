@@ -1,0 +1,81 @@
+:root {
+  --#{$prefix}bezier-1: cubic-bezier(0.72, 0.16, 0.28, 0.93);
+  --#{$prefix}bezier-2: cubic-bezier(0.81, 0.17, 0.28, 1);
+  --#{$prefix}bezier-3: cubic-bezier(0.53, -0.05, 0.22, 0.9);
+  --#{$prefix}bezier-4: cubic-bezier(0.45, 0, 0.47, 1.4);
+}
+
+.#{$prefix}fade {
+  @include transition(all 0.4s var(--#{$prefix}bezier-1)) {
+    opacity: 0;
+  }
+}
+.#{$prefix}slide {
+  @include transition(all 0.4s var(--#{$prefix}bezier-1)) {
+    transform: translateX(-4px);
+    opacity: 0;
+  }
+}
+.#{$prefix}drop {
+  @include transition(all 0.4s var(--#{$prefix}bezier-1)) {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+}
+.#{$prefix}float {
+  @include transition(all 0.4s var(--#{$prefix}bezier-1)) {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+}
+
+.#{$prefix}animate-underline {
+  position: relative;
+  &::after {
+    background: currentColor;
+    bottom: 0px;
+    content: "";
+    height: 1px;
+    left: 0;
+    position: absolute;
+    transition: width 0.2s ease-in-out;
+    width: 0;
+  }
+  &:focus::after {
+    width: 100%;
+  }
+  @media (hover: hover) {
+    &:hover::after {
+      width: 100%;
+    }
+  }
+  &.router-link-exact-active::after {
+    width: 100%;
+  }
+}
+
+.spinner-1 {
+  --color: var(--#{$prefix}color-primary);
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+}
+.spinner-1:after {
+  content: " ";
+  display: block;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border-radius: 50%;
+  border: 6px solid var(--color);
+  border-color: var(--color) transparent var(--color) transparent;
+  animation: spinner-1 1.2s linear infinite;
+}
+@keyframes spinner-1 {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

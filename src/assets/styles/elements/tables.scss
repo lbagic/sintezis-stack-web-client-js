@@ -1,0 +1,59 @@
+.#{$prefix}table {
+  --#{$prefix}table-padding: 0.5rem;
+  --#{$prefix}table-background-color: var(--#{$prefix}color-light);
+
+  border-spacing: 0px;
+  position: relative;
+  width: 100%;
+
+  @each $color, $value in $base-colors {
+    &.#{$color} {
+      --#{$prefix}table-color: var(--#{$prefix}color-#{$color});
+      --#{$prefix}table-text-color: var(--#{$prefix}color-#{$color}-contrast);
+      --#{$prefix}table-alt-color: var(--#{$prefix}color-#{$color}-lightest);
+      --#{$prefix}table-border-color: var(--#{$prefix}color-#{$color}-darker);
+    }
+  }
+}
+.#{$prefix}table td,
+.#{$prefix}table th {
+  background: var(--#{$prefix}table-background-color);
+  padding: var(--#{$prefix}table-padding);
+  text-align: left;
+}
+
+// sticky header styles
+
+.#{$prefix}table tr > th {
+  position: sticky;
+}
+.#{$prefix}table thead > tr > th,
+.#{$prefix}table > tr:not(:last-child) > th {
+  top: 0;
+}
+.#{$prefix}table tfoot > tr > th,
+.#{$prefix}table > tr:last-child > th {
+  bottom: 0;
+}
+
+// table color styles
+
+.#{$prefix}table th {
+  background: var(--#{$prefix}table-color);
+  color: var(--#{$prefix}table-text-color);
+}
+.#{$prefix}table > tr:nth-child(2n-1) > td,
+.#{$prefix}table > tbody > tr:nth-child(2n-1) > td {
+  background: var(--#{$prefix}table-alt-color);
+}
+// .#{$prefix}table  > tr:nth-child(2n) > td,
+// .#{$prefix}table  > tbody > tr:nth-child(2n) > td {
+//   background: var(--#{$prefix}table-alt-color-2);
+// }
+
+// table border styles
+
+.#{$prefix}table {
+  border-spacing: 1px;
+  background: var(--#{$prefix}table-border-color);
+}

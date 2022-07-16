@@ -1,0 +1,12 @@
+.#{$prefix}card {
+  padding: 16px;
+  border: 1px solid;
+  border-radius: 8px;
+  box-shadow: 0 0 8px #00000011;
+  @each $color, $value in $base-colors {
+    &.#{$color} {
+      background: var(--#{$prefix}color-#{$color}-lightest);
+      border-color: var(--#{$prefix}color-#{$color}-lighter);
+    }
+  }
+}

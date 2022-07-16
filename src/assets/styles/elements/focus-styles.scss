@@ -1,0 +1,13 @@
+:is(a, button, input, textarea, summary, [tabindex]) {
+  --outline-width: max(2px, 0.08em);
+  --outline-style: solid;
+  --outline-color: currentColor;
+  &:focus,
+  &:focus-visible {
+    outline: var(--outline-width) var(--outline-style) var(--outline-color);
+    outline-offset: var(--outline-offset, var(--outline-width));
+  }
+  &:focus:not(:focus-visible) {
+    outline: none;
+  }
+}

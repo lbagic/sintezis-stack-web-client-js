@@ -1,0 +1,123 @@
+.#{$prefix}button {
+  --height: 50px;
+  --padding: 8px 24px;
+  --padding-small: 8px 12px;
+  --padding-large: 12px 48px;
+
+  display: inline-block;
+  width: fit-content;
+  cursor: pointer;
+  font-weight: 400;
+  text-align: center;
+  justify-content: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  user-select: none;
+  border: 1.5px solid transparent;
+  min-height: var(--height);
+  font-size: 16px;
+  line-height: 1.5;
+  border-radius: 1px;
+  transition-timing-function: ease-in-out;
+  transition-duration: 0.15s;
+  transition-property: color, background-color, border-color, box-shadow,
+    opacity;
+  opacity: 1;
+
+  &:not(.small):not(.large) {
+    padding: var(--padding);
+  }
+  &.small {
+    padding: var(--padding-small);
+  }
+  &.large {
+    padding: var(--padding-large);
+  }
+
+  &:not(.text):not(.outline) {
+    box-shadow: 0 0 4px #0004;
+    @each $color, $value in $base-colors {
+      &.#{$color} {
+        color: var(--#{$prefix}color-#{$color}-contrast);
+        background: var(--#{$prefix}color-#{$color});
+        border-color: var(--#{$prefix}color-#{$color});
+        &:active {
+          background: var(--#{$prefix}color-#{$color}-dark);
+          border-color: var(--#{$prefix}color-#{$color}-dark);
+        }
+      }
+    }
+  }
+  &.outline {
+    background-color: transparent;
+    box-shadow: 0 0 4px #0004;
+    @each $color, $value in $base-colors {
+      &.#{$color} {
+        color: var(--#{$prefix}color-#{$color});
+        border-color: var(--#{$prefix}color-#{$color}-lighter);
+        &:active {
+          border-color: var(--#{$prefix}color-#{$color}-light);
+          color: var(--#{$prefix}color-#{$color}-dark);
+        }
+      }
+    }
+  }
+  &.text {
+    background-color: transparent;
+    @each $color, $value in $base-colors {
+      &.#{$color} {
+        color: var(--#{$prefix}color-#{$color});
+        &:active {
+          color: var(--#{$prefix}color-#{$color}-dark);
+        }
+      }
+    }
+  }
+
+  &[disabled] {
+    opacity: 0.66 !important;
+    cursor: default !important;
+    pointer-events: none !important;
+  }
+}
+
+// .#{$prefix}button-type-default,
+// .#{$prefix}button-type-outline {
+//   // height: var(--height);
+//   min-height: var(--height);
+//   box-shadow: 0 0 4px #0004;
+// }
+
+// .#{$prefix}button-small {
+//   padding: var(--padding-small);
+// }
+// .#{$prefix}button-large {
+//   padding: var(--padding-large);
+// }
+// .#{$prefix}button-expand {
+//   width: 100%;
+// }
+
+// .#{$prefix}button-type-default {
+//   background: v-bind("colors.default");
+//   color: v-bind("colors.on");
+//   &:active {
+//     background: v-bind("colors.accent");
+//   }
+// }
+// .#{$prefix}button-type-outline {
+//   background: transparent;
+//   border: var(--border-width) solid v-bind("colors.default");
+//   color: v-bind("colors.default");
+//   &:active {
+//     border: var(--border-width) solid v-bind("colors.accent");
+//     color: v-bind("colors.accent");
+//   }
+// }
+// .#{$prefix}button-type-text {
+//   background: transparent;
+//   color: v-bind("colors.default");
+//   &:active {
+//     color: v-bind("colors.accent");
+//   }
+// }
