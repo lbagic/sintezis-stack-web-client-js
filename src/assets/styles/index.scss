@@ -4,8 +4,21 @@
 
 :root {
   --prefix: #{$prefix};
-  --#{$prefix}line-height: 1.5;
-  --#{$prefix}body-color: white;
+
+  // --#{$prefix}app-color: #212121;
+  --#{$prefix}app-background: white;
+
+  // --#{$prefix}nav-height: 50px;
+  // --#{$prefix}button-and-input-height: 50px;
+
+  // --#{$prefix}overlay-backdrop-filter: blur(1px);
+  // --#{$prefix}overlay-border-radius: 4px;
+
+  // --#{$prefix}z-index-toast: 9000;
+  // --#{$prefix}z-index-overlay: 8000;
+  // --#{$prefix}z-index-dropdown: 7000;
+  // --#{$prefix}z-index-header: 6000;
+  // --#{$prefix}z-index-footer: 5000;
 
   @include generate-css-variables($breakpoints, "breakpoint");
   @include generate-css-variables($colors, "color");

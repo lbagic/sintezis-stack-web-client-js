@@ -47,7 +47,7 @@ import HelloWorld from "./components/HelloWorld.vue";
 @import "@/assets/styles/index.scss";
 
 body {
-  background: #fff;
+  background: var(--#{$prefix}app-background);
 }
 #app {
   display: grid;
