@@ -5,24 +5,24 @@
   --#{$prefix}bezier-4: cubic-bezier(0.45, 0, 0.47, 1.4);
 }
 
-.#{$prefix}fade {
+.#{$prefix}transition-fade {
   @include transition(all 0.4s var(--#{$prefix}bezier-1)) {
     opacity: 0;
   }
 }
-.#{$prefix}slide {
+.#{$prefix}transition-slide {
   @include transition(all 0.4s var(--#{$prefix}bezier-1)) {
     transform: translateX(-4px);
     opacity: 0;
   }
 }
-.#{$prefix}drop {
+.#{$prefix}transition-drop {
   @include transition(all 0.4s var(--#{$prefix}bezier-1)) {
     transform: translateY(-10px);
     opacity: 0;
   }
 }
-.#{$prefix}float {
+.#{$prefix}transition-float {
   @include transition(all 0.4s var(--#{$prefix}bezier-1)) {
     transform: translateY(10px);
     opacity: 0;
@@ -54,13 +54,13 @@
   }
 }
 
-.spinner-1 {
+.#{$prefix}loader {
   --color: var(--#{$prefix}color-primary);
   display: inline-block;
   width: 80px;
   height: 80px;
 }
-.spinner-1:after {
+.#{$prefix}loader:after {
   content: " ";
   display: block;
   width: 64px;
@@ -69,9 +69,9 @@
   border-radius: 50%;
   border: 6px solid var(--color);
   border-color: var(--color) transparent var(--color) transparent;
-  animation: spinner-1 1.2s linear infinite;
+  animation: loader-animation 1.2s linear infinite;
 }
-@keyframes spinner-1 {
+@keyframes loader-animation {
   0% {
     transform: rotate(0deg);
   }

@@ -6,6 +6,7 @@
     "build": "vite build",
     "preview": "vite preview --port 4173",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
+    "lint-strict": "npm run lint -- --no-eslintrc --config ./.eslint-pre-commit.eslintrc.cjs",
     "prepare": "husky install"
   },
   "dependencies": {
@@ -27,6 +28,6 @@
     "vite": "^2.9.14"
   },
   "lint-staged": {
-    "*.{vue,js,ts}": "npm run lint -- --no-eslintrc --config ./.eslint-pre-commit.eslintrc.cjs"
+    "*.{vue,js,ts}": "npm run lint-strict"
   }
 }
