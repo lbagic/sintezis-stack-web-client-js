@@ -27,6 +27,6 @@
     "vite": "^2.9.14"
   },
   "lint-staged": {
-    "*.{vue,js,ts}": "npm run lint"
+    "*.{vue,js,ts}": "npm run lint -- --no-eslintrc --config ./.eslint-pre-commit.eslintrc.cjs"
   }
 }

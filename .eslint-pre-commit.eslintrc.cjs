@@ -17,7 +17,4 @@ module.exports = {
     $: "readonly",
     $$: "readonly",
   },
-  rules: {
-    "no-unused-vars": "off",
-  },
 };
