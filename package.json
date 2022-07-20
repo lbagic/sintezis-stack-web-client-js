@@ -28,6 +28,6 @@
     "vite": "^2.9.14"
   },
   "lint-staged": {
-    "*.{vue,js,ts}": "npm run lint-strict"
+    "*.{vue,js,ts}": "npm run lint"
   }
 }
