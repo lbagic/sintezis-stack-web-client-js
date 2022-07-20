@@ -1,0 +1,9 @@
+:export {
+  JSON: generate-json(
+    (
+      breakpoints: $breakpoints,
+      prefix: $prefix,
+      colors: $colors,
+    )
+  );
+}
