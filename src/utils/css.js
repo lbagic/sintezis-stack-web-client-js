@@ -36,6 +36,7 @@ console.log({ parsed });
  *    warning: Color,
  *    danger: Color,
  *    light: Color,
+ *    grey: Color,
  *    dark: Color
  * }} Colors
  */

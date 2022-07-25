@@ -16,7 +16,6 @@
     height: var(--height);
     min-width: var(--min-width);
     width: var(--width);
-    border: 1px solid var(--#{$prefix}color-light-darker);
     background-color: var(--background);
     padding: var(--padding-y) var(--padding-x);
     line-height: var(--line-height);
@@ -38,31 +37,64 @@
     min-width: var(--min-width);
     width: var(--width);
   }
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--#{$prefix}color-light-darker);
+  &[data-valid="true"] {
+    border-color: var(--#{$prefix}color-success);
+  }
+  &[data-valid="false"] {
+    border-color: var(--#{$prefix}color-danger);
+  }
 }
 
 // input label styles
 .#{$prefix}input-label {
   --margin: 0.25rem;
-}
-.#{$prefix}input-label[data-required="true"]::after {
+
   // input label required styles
-  content: "*";
-  color: var(--#{$prefix}color-danger);
+  &[data-required-asterisk="true"]::after {
+    content: "*";
+    color: var(--#{$prefix}color-danger);
+  }
+
+  // input label placement
+  &[data-label-placement~="block"] {
+    display: block;
+    &[data-label-placement~="start"] {
+      margin-block-end: var(--margin);
+    }
+    &[data-label-placement~="end"] {
+      margin-block-start: var(--margin);
+    }
+  }
+  &[data-label-placement~="inline"] {
+    &[data-label-placement~="start"] {
+      margin-inline-end: var(--margin);
+    }
+    &[data-label-placement~="end"] {
+      margin-inline-start: var(--margin);
+    }
+  }
 }
-.#{$prefix}input-label[data-label-placement~="block"] {
-  display: block;
-  &[data-label-placement~="start"] {
-    margin-block-end: var(--margin);
+
+// input hint and error styles
+.#{$prefix}input-help {
+  line-height: 1.25;
+  font-size: 13px;
+  &:nth-of-type(1) {
+    margin-top: 2px;
   }
-  &[data-label-placement~="end"] {
-    margin-block-start: var(--margin);
+  &[data-hint] {
+    color: var(--#{$prefix}color-grey);
+  }
+  &[data-error] {
+    color: var(--#{$prefix}color-danger);
   }
 }
-.#{$prefix}input-label[data-label-placement~="inline"] {
-  &[data-label-placement~="start"] {
-    margin-inline-end: var(--margin);
-  }
-  &[data-label-placement~="end"] {
-    margin-inline-start: var(--margin);
+.#{$prefix}input-error-transition {
+  @include transition(all 0.3s var(--#{$prefix}bezier-1)) {
+    transform: translateY(-3px);
+    opacity: 0;
   }
 }
