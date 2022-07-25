@@ -4,20 +4,19 @@
   --padding-small: 8px 12px;
   --padding-large: 12px 48px;
 
-  display: inline-block;
+  outline-color: transparent !important;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
   width: fit-content;
+  line-height: 1.5;
+  white-space: nowrap;
   cursor: pointer;
   font-weight: 400;
-  text-align: center;
-  justify-content: center;
-  white-space: nowrap;
-  vertical-align: middle;
   user-select: none;
   border: 1.5px solid transparent;
   min-height: var(--height);
   font-size: 16px;
-  line-height: 1.5;
   border-radius: 1px;
   transition-timing-function: ease-in-out;
   transition-duration: 0.15s;
@@ -35,16 +34,39 @@
     padding: var(--padding-large);
   }
 
+  @each $color, $value in $base-colors {
+    &.#{$color} {
+      --base-color: var(--#{$prefix}color-#{$color});
+      --accent-color: var(--#{$prefix}color-#{$color}-dark);
+      --focus-color: var(--#{$prefix}color-#{$color}-darker);
+      --contrast-color: var(--#{$prefix}color-#{$color}-contrast);
+    }
+  }
+
   &:not(.text):not(.outline) {
     box-shadow: 0 0 4px #0004;
     @each $color, $value in $base-colors {
       &.#{$color} {
-        color: var(--#{$prefix}color-#{$color}-contrast);
-        background: var(--#{$prefix}color-#{$color});
-        border-color: var(--#{$prefix}color-#{$color});
+        color: var(--contrast-color);
+        background: var(--base-color);
+        border-color: var(--base-color);
         &:active {
-          background: var(--#{$prefix}color-#{$color}-dark);
-          border-color: var(--#{$prefix}color-#{$color}-dark);
+          background: var(--accent-color);
+          border-color: var(--accent-color);
+        }
+        @media (hover: hover) {
+          &:focus {
+            background: var(--focus-color);
+            border-color: var(--focus-color);
+          }
+          &:hover {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+          }
+          &:active {
+            background: var(--base-color);
+            border-color: var(--base-color);
+          }
         }
       }
     }
@@ -54,22 +76,48 @@
     box-shadow: 0 0 4px #0004;
     @each $color, $value in $base-colors {
       &.#{$color} {
-        color: var(--#{$prefix}color-#{$color});
-        border-color: var(--#{$prefix}color-#{$color}-lighter);
+        color: var(--base-color);
+        border-color: var(--base-color);
         &:active {
-          border-color: var(--#{$prefix}color-#{$color}-light);
-          color: var(--#{$prefix}color-#{$color}-dark);
+          border-color: var(--accent-color);
+          color: var(--accent-color);
+        }
+        @media (hover: hover) {
+          &:focus {
+            border-color: var(--focus-color);
+            color: var(--focus-color);
+          }
+          &:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+          }
+          &:active {
+            border-color: var(--base-color);
+            color: var(--base-color);
+          }
         }
       }
     }
   }
   &.text {
     background-color: transparent;
+    @extend %#{$prefix}animate-underline;
     @each $color, $value in $base-colors {
       &.#{$color} {
-        color: var(--#{$prefix}color-#{$color});
+        color: var(--base-color);
         &:active {
-          color: var(--#{$prefix}color-#{$color}-dark);
+          color: var(--accent-color);
+        }
+        @media (hover: hover) {
+          &:focus {
+            color: var(--focus-color);
+          }
+          &:hover {
+            color: var(--accent-color);
+          }
+          &:active {
+            color: var(--base-color);
+          }
         }
       }
     }

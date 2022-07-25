@@ -20,4 +20,8 @@ export const routes = [
     path: "/about",
     component: () => import("../views/AboutView.vue"),
   },
+  {
+    path: "/test",
+    component: () => import("../views/TestView.vue"),
+  },
 ];

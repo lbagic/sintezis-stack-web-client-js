@@ -9,6 +9,7 @@ import { RouterLink, RouterView } from "vue-router";
       <RouterLink class="snt-button secondary outline" to="/about"
         >About</RouterLink
       >
+      <RouterLink class="snt-button danger text" to="/test">Test</RouterLink>
     </nav>
   </header>
 

@@ -1,11 +1,11 @@
-:is(a, button, input, textarea, summary, [tabindex]) {
-  --outline-width: max(2px, 0.08em);
+:is(a, button, input, textarea, select, summary, [tabindex]) {
+  --outline-width: 1px;
   --outline-style: solid;
-  --outline-color: currentColor;
+  --outline-color: var(--#{$prefix}color-light-darkest);
   &:focus,
   &:focus-visible {
     outline: var(--outline-width) var(--outline-style) var(--outline-color);
-    outline-offset: var(--outline-offset, var(--outline-width));
+    outline-offset: 1px;
   }
   &:focus:not(:focus-visible) {
     outline: none;

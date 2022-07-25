@@ -30,28 +30,7 @@
 }
 
 .#{$prefix}animate-underline {
-  position: relative;
-  &::after {
-    background: currentColor;
-    bottom: 0px;
-    content: "";
-    height: 1px;
-    left: 0;
-    position: absolute;
-    transition: width 0.2s ease-in-out;
-    width: 0;
-  }
-  &:focus::after {
-    width: 100%;
-  }
-  @media (hover: hover) {
-    &:hover::after {
-      width: 100%;
-    }
-  }
-  &.router-link-exact-active::after {
-    width: 100%;
-  }
+  @extend %#{$prefix}animate-underline;
 }
 
 .#{$prefix}loader {
