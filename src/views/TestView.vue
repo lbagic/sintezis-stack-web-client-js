@@ -109,13 +109,7 @@ function onChange() {
       <BaseInput v-model="form.model.date" type="date" label="date" />
       <BaseInput v-model="form.model.time" type="time" label="time" />
       <BaseInput v-model="form.model.month" type="month" label="month" />
-      <button
-        type="submit"
-        :disabled="!form.isValid"
-        class="snt-button primary"
-      >
-        submit
-      </button>
+      <button type="submit" class="snt-button primary">submit</button>
     </div>
     <pre>FORM: {{ form }}</pre>
   </form>

@@ -9,6 +9,7 @@ const settings = {
   useHtmlValidation: true,
   useRequiredAsterisk: true,
   useErrors: true,
+  useErrorBorder: true,
 };
 
 const htmlErrors = {
@@ -131,6 +132,7 @@ const props = defineProps({
   hideErrors: undefined,
   hideHtmlValidation: undefined,
   hideRequiredAsterisk: undefined,
+  hideErrorBorder: undefined,
 });
 
 const model = reactive(props.modelValue);
@@ -139,16 +141,6 @@ const type = props.type ?? "text";
 const config = componentConfig[type];
 if (!config) throw new Error(`Input type "${type}" not supported.`);
 const isRequired = Object.prototype.hasOwnProperty.call(attrs, "required");
-const useHtmlValidation = useUndefinedProp(
-  props.hideHtmlValidation,
-  settings.useHtmlValidation
-);
-const useRequiredAsterisk = useUndefinedProp(
-  props.hideRequiredAsterisk,
-  settings.useRequiredAsterisk
-);
-const useErrors = useUndefinedProp(props.hideErrors, settings.useErrors);
-
 const label = $ref(props.label);
 const labelPlacement = (() => {
   const _placement = props.labelPlacement ?? config.labelPlacement ?? "";
@@ -158,9 +150,27 @@ const labelPlacement = (() => {
   return placement.join(" ");
 })();
 
+const useHtmlValidation = useUndefinedProp(
+  props.hideHtmlValidation,
+  settings.useHtmlValidation
+);
+const useRequiredAsterisk = useUndefinedProp(
+  props.hideRequiredAsterisk,
+  settings.useRequiredAsterisk
+);
 const showRequiredAsterisk = useRequiredAsterisk && isRequired;
+
+const useErrors = useUndefinedProp(props.hideErrors, settings.useErrors);
 const showError = computed(
   () => useErrors && model.isDirty && !model.isValid && model.errorMessage
+);
+
+const useErrorBorder = useUndefinedProp(
+  props.useErrorBorder,
+  settings.useErrorBorder
+);
+const showErrorBorder = computed(
+  () => useErrorBorder && model.isDirty && !model.isValid
 );
 
 function runHtmlValidation() {
@@ -249,6 +259,8 @@ onMounted(() => {
       :value="model.value"
       :type="type"
       :data-type="type"
+      :data-error-border="showErrorBorder"
+      :data-valid="model.isValid"
       @input="onInput($event.target.value)"
       @invalid="onInvalid($event)"
       @blur="onBlur"
@@ -261,6 +273,8 @@ onMounted(() => {
       :value="model.value"
       :type="type"
       :data-type="type"
+      :data-error-border="showErrorBorder"
+      :data-valid="model.isValid"
       @input="onInput($event.target.valueAsNumber)"
       @invalid="onInvalid($event)"
       @blur="onBlur"
@@ -273,6 +287,8 @@ onMounted(() => {
       class="snt-input"
       :type="type"
       :data-type="type"
+      :data-error-border="showErrorBorder"
+      :data-valid="model.isValid"
       @invalid="onInvalid($event)"
       @blur="onBlur"
     />
@@ -283,6 +299,8 @@ onMounted(() => {
       class="snt-input"
       :value="model.value"
       :data-type="type"
+      :data-error-border="showErrorBorder"
+      :data-valid="model.isValid"
       @input="onInput($event.target.value)"
       @invalid="onInvalid($event)"
       @blur="onBlur"
@@ -295,6 +313,8 @@ onMounted(() => {
       ref="inputRef"
       :value="model.value"
       :data-type="type"
+      :data-error-border="showErrorBorder"
+      :data-valid="model.isValid"
       @input="onInput($event.target.value)"
       @invalid="onInvalid($event)"
       @blur="onBlur"

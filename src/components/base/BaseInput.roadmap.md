@@ -15,3 +15,5 @@
 | `checkbox`, `radio` support                  |           |
 | `file input` support                         |           |
 | `@invalid` lazy validation when form submits |           |
+
+todo: implement error borders
