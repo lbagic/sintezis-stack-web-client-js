@@ -1,6 +1,26 @@
 <script>
 import { computed, onMounted, reactive, useAttrs, watch } from "vue";
 
+// # BaseInput roadmap
+
+// | BaseInput                                    | status ✅ |
+// | -------------------------------------------- | --------- |
+// | different input type support                 |           |
+// | validation                                   |           |
+// | error & help text support                    |           |
+// | label support                                |           |
+// | icon support                                 |           |
+// | default input types                          |           |
+// | extendable styling                           |           |
+// | `date`, `time`, `month` support              |           |
+// | `date range` support                         |           |
+// | `textarea`, `select` support                 |           |
+// | `checkbox`, `radio` support                  |           |
+// | `file input` support                         |           |
+// | `@invalid` lazy validation when form submits |           |
+
+// todo: placeholder, options
+
 export default {
   inheritAttrs: false,
 };
@@ -231,7 +251,6 @@ function onInvalid(event) {
 function onBlur() {
   model.isDirty = true;
 }
-
 onMounted(() => {
   runValidation(model.value);
 });
@@ -315,10 +334,15 @@ onMounted(() => {
       :data-type="type"
       :data-error-border="showErrorBorder"
       :data-valid="model.isValid"
+      :data-has-placeholder="!!$attrs.placeholder"
+      :data-has-value="model.value !== undefined && model.value !== null"
       @input="onInput($event.target.value)"
       @invalid="onInvalid($event)"
       @blur="onBlur"
     >
+      <option v-if="$attrs.placeholder" value="" selected disabled hidden>
+        {{ $attrs.placeholder }}
+      </option>
       <option value="1">opt 1</option>
       <option value="2">opt 2</option>
       <option value="3">opt 3</option>

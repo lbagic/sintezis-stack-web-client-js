@@ -1,4 +1,5 @@
 import HomeView from "../views/HomeView.vue";
+import { aclRoutes } from "./routes.acl";
 
 /**
  * VueRouter routes.
@@ -11,11 +12,6 @@ export const routes = [
     component: HomeView,
     meta: { userOnly: true },
   },
-  // {
-  //   path: "/login",
-  //   component: LoginView,
-  //   meta: { visitorOnly: true, title: "Log In" },
-  // },
   {
     path: "/about",
     component: () => import("../views/AboutView.vue"),
@@ -24,4 +20,5 @@ export const routes = [
     path: "/test",
     component: () => import("../views/TestView.vue"),
   },
+  ...aclRoutes,
 ];

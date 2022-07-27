@@ -1,5 +1,6 @@
 <script setup>
 import { RouterLink, RouterView } from "vue-router";
+import BaseToast from "./components/base/BaseToast.vue";
 </script>
 
 <template>
@@ -14,6 +15,7 @@ import { RouterLink, RouterView } from "vue-router";
   </header>
 
   <RouterView />
+  <BaseToast />
 </template>
 
 <style lang="scss">
@@ -21,6 +23,7 @@ import { RouterLink, RouterView } from "vue-router";
 
 body {
   background: var(--#{$prefix}app-background);
+  color: var(--#{$prefix}app-color);
 }
 #app {
   display: grid;
