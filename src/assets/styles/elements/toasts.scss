@@ -65,14 +65,14 @@
     position: absolute;
   }
 }
-.#{$prefix}toast-animation-top {
+.#{$prefix}toast-transition-top {
   &-enter-from,
   &-leave-to {
     opacity: 0;
     transform: translateY(-20px);
   }
 }
-.#{$prefix}toast-animation-bottom {
+.#{$prefix}toast-transition-bottom {
   &-enter-from,
   &-leave-to {
     opacity: 0;

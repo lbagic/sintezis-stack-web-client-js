@@ -11,9 +11,8 @@
  *
  * @param { any } req Grpc request object.
  * @param { string } token Grpc request object.
- * @return { GrpcRequestContext } Returns request context.
+ * @returns { GrpcRequestContext } Returns request context.
  */
-
 export function resolveGrpcRequestContext(req, token) {
   const { name } = req.getMethodDescriptor();
   const request = req.getRequestMessage().toObject();
@@ -39,9 +38,8 @@ export function resolveGrpcRequestContext(req, token) {
  *  isStream: boolean,
  * } & GrpcRequestContext } GrpcCallContext
  *
- * @return { GrpcCallContext } Returns request context.
+ * @returns { GrpcCallContext } Returns request context.
  */
-
 export function resolveGrpcCallContext({
   req,
   invoker,
@@ -81,11 +79,9 @@ export function resolveGrpcCallContext({
  *  onUnaryError: (data: { ctx: GrpcCallContext, error: Error }) => {},
  *  onUnaryEnd: (data: { ctx: GrpcCallContext }) => {},
  * }} hooks Response interceptors
- *
- * @return { (callContext: GrpcCallContext) => void }
+ * @returns { (callContext: GrpcCallContext) => void }
  *
  */
-
 export const createResponseInterceptor = (hooks) => (ctx) => {
   if (hooks.onStart) hooks.onStart({ ctx });
   if (ctx.isStream) {
@@ -133,12 +129,12 @@ export const createResponseInterceptor = (hooks) => (ctx) => {
 };
 
 /**
- * Create request interceptor.
+ * Creates request interceptor.
  *
  * @param  {{
  *  handler: (ctx: GrpcRequestContext) => {},
  * }} hook Request interceptor
  *
- * @return { (requestContext: GrpcRequestContext) => void }
+ * @returns { (requestContext: GrpcRequestContext) => void }
  */
 export const createRequestInterceptor = (hook) => (ctx) => hook.handler(ctx);

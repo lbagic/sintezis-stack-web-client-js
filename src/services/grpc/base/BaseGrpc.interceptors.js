@@ -7,7 +7,6 @@ import {
 } from "./BaseGrpc.utils";
 
 const router = useRouter();
-
 const re = /.*[T](.*)[Z]/;
 const getTimestamp = () => re.exec(new Date().toISOString())[1];
 const logger = (level, name, payload) =>
@@ -17,7 +16,61 @@ const logger = (level, name, payload) =>
     "font-weight: bold",
     payload
   );
+const defaultOptions = new Options()
+  .setTimeoutMs(15000)
+  .setMaxSizeBytes(10000)
+  .toObject();
 
+/**
+ * Options interceptor (request interceptor).
+ * Used for assigning default grpc options to all requests.
+ */
+export const optionsInterceptor = createRequestInterceptor({
+  handler: ({ request }) => {
+    if (!request.options) request.options = defaultOptions;
+  },
+});
+
+/**
+ * Auth interceptor (request interceptor).
+ * Used for automatic firing of toasts on error/success responses.
+ */
+export const authInterceptor = createRequestInterceptor({
+  handler: ({ token, metadata }) => {
+    if (token && !metadata.Authorization)
+      metadata.Authorization = `Bearer ${token}`;
+  },
+});
+
+/**
+ * Unauthorized (session expired) interceptor.
+ * Used for logging out user on session expired/unauthorized requests.
+ */
+export const unauthorizedInterceptor = createResponseInterceptor({
+  onError({ error }) {
+    if (error?.code === 7 || error?.code === 16) router.push("/logout");
+  },
+});
+
+/**
+ * Notification interceptor.
+ * Used for automatic firing of toasts on error/success responses.
+ */
+export const notificationInterceptor = createResponseInterceptor({
+  onUnaryResponse({ ctx }) {
+    toast.success(ctx.name);
+  },
+  onError({ error }) {
+    const messages = error?.message.split("|");
+    const [type, userMessage, debugMessage] = messages;
+    if (type && userMessage && debugMessage) toast.error(userMessage);
+  },
+});
+
+/**
+ * Debug interceptor.
+ * Used for logging grpc calls to console for easier debugging.
+ */
 export const debugInterceptor = createResponseInterceptor({
   onUnaryResponse({ ctx, response }) {
     logger("log", ctx.name, { ...ctx, response });
@@ -41,41 +94,5 @@ export const debugInterceptor = createResponseInterceptor({
   },
   onStreamEnd({ ctx }) {
     logger("log", `[■ stream end] ${ctx.name}`, ctx);
-  },
-});
-
-export const notificationInterceptor = createResponseInterceptor({
-  onUnaryResponse({ ctx }) {
-    toast.success(ctx.name);
-  },
-  onError({ error }) {
-    const messages = error?.message.split("|");
-    const [type, userMessage, debugMessage] = messages;
-    if (type && userMessage && debugMessage) toast.error(userMessage);
-  },
-});
-
-export const authInterceptor = createRequestInterceptor({
-  handler: ({ token, metadata }) => {
-    if (token && !metadata.Authorization)
-      metadata.Authorization = `Bearer ${token}`;
-  },
-});
-
-const defaultOptions = new Options()
-  .setTimeoutMs(15000)
-  .setMaxSizeBytes(10000)
-  .toObject();
-export const optionsInterceptor = createRequestInterceptor({
-  handler: ({ request }) => {
-    if (!request.options) request.options = defaultOptions;
-  },
-});
-
-export const unauthorizedInterceptor = createResponseInterceptor({
-  onError({ error }) {
-    if (error?.code === 7 || error?.code === 16) {
-      router.push("/logout");
-    }
   },
 });

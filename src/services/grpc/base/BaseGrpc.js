@@ -11,7 +11,10 @@ import {
   resolveGrpcCallContext,
 } from "./BaseGrpc.utils";
 
-const createGrpcInterceptor = (getToken, callMap) => ({
+/**
+ * Bundles multiple interceptors and outputs one interceptor.
+ */
+const bundleInterceptors = (getToken, callMap) => ({
   intercept(req, invoker) {
     const token = getToken?.();
     const requestContext = resolveGrpcRequestContext(req, token);
@@ -38,21 +41,20 @@ const createGrpcInterceptor = (getToken, callMap) => ({
 });
 
 /**
- * Create grpc instance.
+ * Creates a grpc instance.
  *
  * @param {{
  *  hostname: String,
  *  getToken: () => String,
  * }} config Decsripton.
- * @return { GatewayControllerPromiseClient } Return description.
+ * @returns { GatewayControllerPromiseClient } Return description.
  */
-
 export const createGrpc = (config) => {
   const { getToken, hostname } = config;
   if (!hostname) throw new Error("Grpc hostname is missing.");
 
   const callMap = new Map();
-  const interceptor = createGrpcInterceptor(getToken, callMap);
+  const interceptor = bundleInterceptors(getToken, callMap);
   const interceptors = {
     unaryInterceptors: [interceptor],
     streamInterceptors: [interceptor],

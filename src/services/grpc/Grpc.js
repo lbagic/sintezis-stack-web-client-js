@@ -2,6 +2,10 @@ import { useAuthStore } from "../../stores/authStore";
 import { createGrpc } from "./base/BaseGrpc";
 
 const authStore = useAuthStore();
+
+/**
+ * Object with multiple grpc instances.
+ */
 export const Grpc = {
   snt: createGrpc({
     hostname: import.meta.env.VITE_GRPC_ENDPOINT,
@@ -10,13 +14,12 @@ export const Grpc = {
 };
 
 /**
- * Hydrates Grpc model.
+ * Hydrates Grpc model with plain js data.
  *
- * @prop { any } modelInstance Grpc model to hydrate.
- * @prop { object } data Data with which Grpc model is hydrated.
- * @returns Returns hydrated Grpc model Instance.
+ * @param { any } modelInstance Decsripton.
+ * @param { object } data Data with which Grpc model is hydrated.
+ * @returns { any } Returns hydrated Grpc model Instance.
  */
-
 export function hydrateGrpcModel(modelInstance, data) {
   const model = modelInstance.toObject();
 
