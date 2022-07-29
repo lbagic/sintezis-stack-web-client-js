@@ -1,5 +1,5 @@
 <script setup>
-import { toast } from "../components/base/BaseToast.vue";
+import { toast } from "../components/base/toastCtl";
 </script>
 
 <template>
@@ -11,7 +11,7 @@ import { toast } from "../components/base/BaseToast.vue";
     <button class="snt-button danger" @click="toast.error('error')">
       error
     </button>
-    <button class="snt-button grey" @click="toast.info('info')">info</button>
+    <button class="snt-button info" @click="toast.info('info')">info</button>
     <table></table>
   </div>
 </template>

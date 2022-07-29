@@ -37,19 +37,19 @@
   box-shadow: 0 0 3px #0003;
 
   &[data-type="success"] {
-    background: var(--#{$prefix}color-success-lighter);
+    background: var(--#{$prefix}color-success-lightest);
     border-color: var(--#{$prefix}color-success);
-    color: var(--#{$prefix}color-success-contrast);
+    color: var(--#{$prefix}color-success-lightest-contrast);
   }
   &[data-type="error"] {
-    background: var(--#{$prefix}color-danger-lighter);
+    background: var(--#{$prefix}color-danger-lightest);
     border-color: var(--#{$prefix}color-danger);
-    color: var(--#{$prefix}color-danger-contrast);
+    color: var(--#{$prefix}color-danger-lightest-contrast);
   }
   &[data-type="info"] {
-    background: var(--#{$prefix}color-grey-lightest);
-    border-color: var(--#{$prefix}color-grey);
-    color: var(--#{$prefix}color-grey-contrast);
+    background: var(--#{$prefix}color-info-lightest);
+    border-color: var(--#{$prefix}color-info);
+    color: var(--#{$prefix}color-info-lightest-contrast);
   }
 }
 

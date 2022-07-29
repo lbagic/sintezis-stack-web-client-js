@@ -81,22 +81,47 @@
 
 // input hint and error styles
 .#{$prefix}input-help {
-  line-height: 1.25;
-  font-size: 13px;
-  &:nth-of-type(1) {
-    margin-top: 2px;
-  }
+  --line-height: 1.25;
+  --font-size: 13px;
+  --max-height: calc(var(--line-height) * var(--font-size));
+  line-height: var(--line-height);
+  font-size: var(--font-size);
+
+  // input hint styles
   &[data-hint] {
     color: var(--#{$prefix}color-grey);
   }
+
+  // input error styles
   &[data-error] {
     color: var(--#{$prefix}color-danger);
   }
-}
-.#{$prefix}input-error-transition {
-  @include transition(all 0.3s var(--#{$prefix}bezier-1)) {
-    transform: translateY(-3px);
-    opacity: 0;
+
+  // input error transition
+  &-transition {
+    &-enter-active,
+    &-leave-active {
+      transition: all 0.3s var(--#{$prefix}bezier-1);
+    }
+    &-enter-from,
+    &-leave-to {
+      transform: translateY(-3px);
+      opacity: 0;
+      max-height: 0px;
+    }
+    &-leave-from,
+    &-enter-to {
+      max-height: var(--max-height);
+    }
+  }
+
+  // input help spacing between form
+  &-spacing {
+    transition: height 0.2s ease;
+    height: 0px;
+    &[data-show="true"] {
+      height: 3px;
+    }
   }
 }
 

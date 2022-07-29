@@ -1,34 +1,29 @@
 @function generate-color-palette($palette, $variants) {
   $output: ();
-  @each $colorName, $colorValue in $palette {
-    $colorMap: (
-      "base": $colorValue,
+  @each $base-name, $base-value in $palette {
+    $color-map: (
+      "base": $base-value,
+      "contrast": color-contrast($base-value),
     );
-    $colorMap: map-merge(
-      $colorMap,
-      (
-        "contrast": color-contrast($colorValue),
-      )
-    );
-    @each $variant, $map in $variants {
-      $alpha: map-get($map, "alpha") or 0%;
-      $colorMap: map-merge(
-        $colorMap,
+    @each $variant-name, $map in $variants {
+      $variant-value: adjust-color(
+        $base-value,
+        $lightness: map-get($map, "lightness") or 0%,
+        $saturation: map-get($map, "saturation") or 0%,
+        $alpha: map-get($map, "alpha") or 0%
+      );
+      $color-map: map-merge(
+        $color-map,
         (
-          "#{$variant}":
-            adjust-color(
-              $colorValue,
-              $lightness: map-get($map, "lightness") or 0%,
-              $saturation: map-get($map, "saturation") or 0%,
-              $alpha: map-get($map, "alpha") or 0%
-            ),
+          "#{$variant-name}": $variant-value,
+          "#{$variant-name}-contrast": color-contrast($variant-value),
         )
       );
     }
     $output: map-merge(
       $output,
       (
-        "#{$colorName}": $colorMap,
+        "#{$base-name}": $color-map,
       )
     );
   }

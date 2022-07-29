@@ -1,5 +1,6 @@
 <script setup>
-import BaseInput, { useFormData } from "../components/base/BaseInput.vue";
+import BaseInput from "../components/base/BaseInput.vue";
+import { useFormData } from "../components/base/inputCtl";
 
 const form = useFormData({
   text: "",
@@ -42,6 +43,7 @@ const form = useFormData({
         v-model="form.model.password"
         type="password"
         label="password"
+        required
       />
       <BaseInput
         placeholder="placeholder"

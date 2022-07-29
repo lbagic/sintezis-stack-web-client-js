@@ -1,1 +1,1 @@
-import "./string";
+import "./string.js";

@@ -17,18 +17,23 @@
 
 ## Task Overview
 
+### Closed ❌
+
+- Store helpers (collection management)
+  - collection utils should not implemented directly on store, they are better off served as an independant module so they can be reused anywhere, not just in store
+
 ### Proposed 💬 (To discuss)
 
 - Documentation
 - Internationalization support
 - Modal component
 - Date formatter
-- Store helpers (collection management)
 - Table component
 - Loading interceptors and loaders
 - Carousel component
-- Input placeholder
 - Input options
+- Input placeholder
+- Grpc handler updates - so `.then((res) => res.toObject())` can be omitted
 
 ### Exploring 🧠 (Refinement)
 
@@ -36,13 +41,11 @@
 
 ### Accepted 🖥 (In development)
 
-- GRPC & API
-- Store
-- Toast component
-- Base ACL setup
-
 ### Released 🚀 (Ready for use)
 
+- Toast component
+- Store
+- GRPC & API
 - Project development dettings
 - Linter
 - SCSS framework
