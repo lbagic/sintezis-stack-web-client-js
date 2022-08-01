@@ -12,7 +12,7 @@ import { reactive } from "vue";
 /** @type { Record<ToastType, ToastOptions> } */
 const settings = {
   success: { position: "top center", duration: 3 * 1000 },
-  danger: { position: "bottom center", duration: 3 * 1000 },
+  danger: { position: "top center", duration: 3 * 1000 },
   info: { position: "bottom right", duration: 20 * 1000, closable: true },
 };
 
