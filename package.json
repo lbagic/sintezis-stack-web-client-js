@@ -10,7 +10,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@lbagic/collections": "1.0.1",
+    "@lbagic/collections": "^1.0.3",
     "@vueuse/core": "^8.9.4",
     "pinia": "^2.0.14",
     "pinia-plugin-persistedstate": "^1.6.3",
