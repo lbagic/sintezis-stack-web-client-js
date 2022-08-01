@@ -36,12 +36,27 @@
   overflow-wrap: break-word;
   box-shadow: 0 0 3px #0003;
 
+  // toast close icon
+  &[data-closable="true"] {
+    padding: 1rem 1.6rem;
+    pointer-events: none;
+    &::after {
+      position: absolute;
+      right: 4px;
+      padding: 0 4px;
+      pointer-events: all;
+      cursor: pointer;
+      content: "\2716";
+    }
+  }
+
+  // toast variants
   &[data-type="success"] {
     background: var(--#{$prefix}color-success-lightest);
     border-color: var(--#{$prefix}color-success);
     color: var(--#{$prefix}color-success-lightest-contrast);
   }
-  &[data-type="error"] {
+  &[data-type="danger"] {
     background: var(--#{$prefix}color-danger-lightest);
     border-color: var(--#{$prefix}color-danger);
     color: var(--#{$prefix}color-danger-lightest-contrast);

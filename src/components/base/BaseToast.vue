@@ -2,6 +2,12 @@
 import { _toastCtl } from "./toastCtl.js";
 
 const data = _toastCtl.data;
+
+function onClick(event, list, toast) {
+  if (!toast.closable) return;
+  const itemIndex = list.findIndex((el) => el === toast);
+  if (itemIndex >= 0) list.splice(itemIndex, 1);
+}
 </script>
 
 <template>
@@ -22,6 +28,8 @@ const data = _toastCtl.data;
       class="snt-toast"
       :key="toast.id"
       :data-type="toast.type"
+      :data-closable="toast.closable"
+      @click="onClick($event, toasts, toast)"
     >
       {{ toast.message }}
     </div>

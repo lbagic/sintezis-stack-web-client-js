@@ -8,8 +8,8 @@ import { toast } from "../components/base/toastCtl";
     <button class="snt-button success" @click="toast.success('success')">
       success
     </button>
-    <button class="snt-button danger" @click="toast.error('error')">
-      error
+    <button class="snt-button danger" @click="toast.danger('danger')">
+      danger
     </button>
     <button class="snt-button info" @click="toast.info('info')">info</button>
     <table></table>
