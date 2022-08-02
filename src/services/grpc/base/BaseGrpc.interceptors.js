@@ -1,6 +1,6 @@
 import { useRouter } from "vue-router";
 import { Options } from "../../../../util/gen/proto/commons/options_pb";
-import { toast } from "../../../components/base/toastCtl";
+import { toast } from "../../../components/base/toast.ctl";
 
 import {
   createRequestInterceptor,

@@ -1,21 +1,21 @@
 <script setup>
 import { useCssVar } from "@vueuse/core";
-import { _toastCtl } from "./toastCtl.js";
+import { _toastCtl } from "./toast.ctl.js";
 
 const prefix = useCssVar("--prefix");
 
 const data = _toastCtl.data;
 
-function onClick(event, list, toast) {
+function onClick(toastList, toast) {
   if (!toast.closable) return;
-  const itemIndex = list.findIndex((el) => el === toast);
-  if (itemIndex >= 0) list.splice(itemIndex, 1);
+  const itemIndex = toastList.findIndex((el) => el === toast);
+  if (itemIndex >= 0) toastList.splice(itemIndex, 1);
 }
 </script>
 
 <template>
   <TransitionGroup
-    v-for="(toasts, position) in data"
+    v-for="(toastList, position) in data"
     :name="
       position.includes('top')
         ? `${prefix}toast-transition-top`
@@ -27,12 +27,12 @@ function onClick(event, list, toast) {
     :data-position="position"
   >
     <div
-      v-for="toast in toasts"
+      v-for="toast in toastList"
       :class="`${prefix}toast`"
       :key="toast.id"
       :data-type="toast.type"
       :data-closable="toast.closable"
-      @click="onClick($event, toasts, toast)"
+      @click="onClick(toastList, toast)"
     >
       {{ toast.message }}
       <button :class="`${prefix}close-icon`"></button>

@@ -1,5 +1,5 @@
 <script setup>
-import { toast } from "../components/base/toastCtl";
+import { toast } from "../components/base/toast.ctl";
 </script>
 
 <template>

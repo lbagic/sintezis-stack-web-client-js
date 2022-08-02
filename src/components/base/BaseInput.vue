@@ -1,27 +1,7 @@
 <script>
 import { useCssVar } from "@vueuse/core";
 import { computed, onMounted, reactive, useAttrs, watch } from "vue";
-import { _inputCtl } from "./inputCtl";
-
-// # BaseInput roadmap
-
-// | BaseInput                                    | status ✅ |
-// | -------------------------------------------- | --------- |
-// | different input type support                 |           |
-// | validation                                   |           |
-// | error & help text support                    |           |
-// | label support                                |           |
-// | icon support                                 |           |
-// | default input types                          |           |
-// | extendable styling                           |           |
-// | `date`, `time`, `month` support              |           |
-// | `date range` support                         |           |
-// | `textarea`, `select` support                 |           |
-// | `checkbox`, `radio` support                  |           |
-// | `file input` support                         |           |
-// | `@invalid` lazy validation when form submits |           |
-
-// todo: placeholder, options
+import { _inputCtl } from "./input.ctl";
 
 export default {
   inheritAttrs: false,

@@ -20,8 +20,6 @@
 - Table component
 - Loading interceptors and loaders
 - Carousel component
-- Input options
-- Input placeholder
 - Grpc handler updates - so `.then((res) => res.toObject())` can be omitted
 
 ### Exploring 🧠 (Refinement)
