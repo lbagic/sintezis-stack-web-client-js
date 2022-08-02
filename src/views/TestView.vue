@@ -1,6 +1,6 @@
 <script setup>
 import BaseInput from "../components/base/BaseInput.vue";
-import { useFormData } from "../components/base/inputCtl";
+import { useFormData } from "../components/base/input.ctl";
 
 const form = useFormData({
   text: "",

@@ -11,3 +11,4 @@
 | open via url hash       |        |
 | open via url query      |        |
 | open programmaticaly    |        |
+| disable body scroll     |        |
