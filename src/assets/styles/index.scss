@@ -8,8 +8,8 @@
   --#{$prefix}app-color: #212121;
   --#{$prefix}app-background: white;
 
-  --#{$prefix}z-index-toast: 9000;
-  --#{$prefix}z-index-modal: 8000;
+  --#{$prefix}app-toast-z-index: 9000;
+  --#{$prefix}app-modal-z-index: 8000;
 
   @include generate-css-variables($breakpoints, "breakpoint");
   @include generate-css-variables($colors, "color");

@@ -1,10 +1,12 @@
 // toast container
 .#{$prefix}toast-wrapper {
+  --toast-z-index: var(--#{$prefix}app-toast-z-index);
+
   position: fixed;
   display: flex;
   width: 250px;
   max-width: calc(100% - 16px);
-  z-index: var(--#{$prefix}z-index-toast);
+  z-index: var(--toast-z-index);
 
   &[data-position~="top"] {
     top: 1rem;
@@ -41,12 +43,13 @@
     padding: 1rem 1.6rem;
     pointer-events: none;
     &::after {
+      font-size: 16px;
       position: absolute;
       right: 4px;
-      padding: 0 4px;
+      padding: 0 5px;
       pointer-events: all;
       cursor: pointer;
-      content: "\2716";
+      content: "\2715";
     }
   }
 

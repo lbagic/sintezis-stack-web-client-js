@@ -35,6 +35,7 @@ function onClick(event, list, toast) {
       @click="onClick($event, toasts, toast)"
     >
       {{ toast.message }}
+      <button :class="`${prefix}close-icon`"></button>
     </div>
   </TransitionGroup>
 </template>

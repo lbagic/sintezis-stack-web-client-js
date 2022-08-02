@@ -38,6 +38,11 @@ $base-color-variants: (
   "opaque": (
     "alpha": -0.66%,
   ),
+  "opaque-light": (
+    "saturation": -20%,
+    "lightness": 20%,
+    "alpha": -0.66%,
+  ),
 );
 
 $colors: generate-color-palette($base-colors, $base-color-variants);
