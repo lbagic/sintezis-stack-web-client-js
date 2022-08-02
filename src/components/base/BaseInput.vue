@@ -1,4 +1,5 @@
 <script>
+import { useCssVar } from "@vueuse/core";
 import { computed, onMounted, reactive, useAttrs, watch } from "vue";
 import { _inputCtl } from "./inputCtl";
 
@@ -51,6 +52,7 @@ const props = defineProps({
   hideErrorBorder: undefined,
 });
 
+const prefix = useCssVar("--prefix");
 const model = reactive(props.modelValue);
 const inputRef = $ref(null);
 const type = props.type ?? "text";
@@ -175,13 +177,13 @@ onMounted(() => {
 <template>
   <component
     :is="label ? 'label' : 'div'"
-    class="snt-input-root"
+    :class="`${prefix}input-root`"
     :data-type="type"
     :data-label-placement="label && labelPlacement"
   >
     <span
       v-if="label && labelPlacement.includes('start')"
-      class="snt-input-label"
+      :class="`${prefix}input-label`"
       :data-required-asterisk="showRequiredAsterisk"
       :data-label-placement="labelPlacement"
       >{{ label }}</span
@@ -190,7 +192,7 @@ onMounted(() => {
       v-if="config.component === 'default-input'"
       v-bind="$attrs"
       ref="inputRef"
-      class="snt-input"
+      :class="`${prefix}input`"
       :value="model.value"
       :type="type"
       :data-type="type"
@@ -204,7 +206,7 @@ onMounted(() => {
       v-if="config.component === 'number-input'"
       v-bind="$attrs"
       ref="inputRef"
-      class="snt-input"
+      :class="`${prefix}input`"
       :value="model.value"
       :type="type"
       :data-type="type"
@@ -219,7 +221,7 @@ onMounted(() => {
       v-model="model.value"
       v-bind="$attrs"
       ref="inputRef"
-      class="snt-input"
+      :class="`${prefix}input`"
       :type="type"
       :data-type="type"
       :data-error-border="showErrorBorder"
@@ -231,7 +233,7 @@ onMounted(() => {
       v-if="config.component === 'textarea-input'"
       v-bind="$attrs"
       ref="inputRef"
-      class="snt-input"
+      :class="`${prefix}input`"
       :value="model.value"
       :data-type="type"
       :data-error-border="showErrorBorder"
@@ -244,7 +246,7 @@ onMounted(() => {
     <select
       v-if="config.component === 'select-input'"
       v-bind="$attrs"
-      class="snt-input"
+      :class="`${prefix}input`"
       ref="inputRef"
       :value="model.value"
       :data-type="type"
@@ -265,19 +267,19 @@ onMounted(() => {
     </select>
     <span
       v-if="label && labelPlacement.includes('end')"
-      class="snt-input-label"
+      :class="`${prefix}input-label`"
       :data-required-asterisk="showRequiredAsterisk"
       :data-label-placement="labelPlacement"
       >{{ label }}</span
     >
     <div
-      class="snt-input-help-spacing"
+      :class="`${prefix}input-help-spacing`"
       :data-show="!!props.hint || showError"
     ></div>
-    <p class="snt-input-help" data-hint v-if="props.hint">{{ hint }}</p>
-    <Transition name="snt-input-help-transition">
+    <p :class="`${prefix}input-help`" data-hint v-if="props.hint">{{ hint }}</p>
+    <Transition :name="`${prefix}input-help-transition`">
       <p
-        class="snt-input-help"
+        :class="`${prefix}input-help`"
         data-error
         :data-show-error="showError"
         v-if="showError"

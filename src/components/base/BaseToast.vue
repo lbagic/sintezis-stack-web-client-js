@@ -1,5 +1,8 @@
 <script setup>
+import { useCssVar } from "@vueuse/core";
 import { _toastCtl } from "./toastCtl.js";
+
+const prefix = useCssVar("--prefix");
 
 const data = _toastCtl.data;
 
@@ -15,17 +18,17 @@ function onClick(event, list, toast) {
     v-for="(toasts, position) in data"
     :name="
       position.includes('top')
-        ? 'snt-toast-transition-top'
-        : 'snt-toast-transition-bottom'
+        ? `${prefix}toast-transition-top`
+        : `${prefix}toast-transition-bottom`
     "
     tag="div"
-    class="snt-toast-wrapper"
+    :class="`${prefix}toast-wrapper`"
     :key="position"
     :data-position="position"
   >
     <div
       v-for="toast in toasts"
-      class="snt-toast"
+      :class="`${prefix}toast`"
       :key="toast.id"
       :data-type="toast.type"
       :data-closable="toast.closable"
