@@ -144,3 +144,6 @@ textarea[disabled] {
   cursor: default !important;
   pointer-events: none !important;
 }
+*::placeholder {
+  opacity: 1;
+}
