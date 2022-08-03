@@ -1,35 +1,35 @@
-import { useChangeCase } from "@vueuse/integrations/useChangeCase";
+import * as changeCase from "change-case";
 
 String.prototype.toCamelCase = function () {
-  return useChangeCase(this, "camelCase");
+  return changeCase.camelCase(this);
 };
 String.prototype.toCapitalCase = function () {
-  return useChangeCase(this, "capitalCase");
+  return changeCase.capitalCase(this);
 };
 String.prototype.toConstantCase = function () {
-  return useChangeCase(this, "constantCase");
+  return changeCase.constantCase(this);
 };
 String.prototype.toDotCase = function () {
-  return useChangeCase(this, "dotCase");
+  return changeCase.dotCase(this);
 };
 String.prototype.toHeaderCase = function () {
-  return useChangeCase(this, "headerCase");
+  return changeCase.headerCase(this);
 };
 String.prototype.toNoCase = function () {
-  return useChangeCase(this, "noCase");
+  return changeCase.noCase(this);
 };
 String.prototype.toParamCase = function () {
-  return useChangeCase(this, "paramCase");
+  return changeCase.paramCase(this);
 };
 String.prototype.toPascalCase = function () {
-  return useChangeCase(this, "pascalCase");
+  return changeCase.pascalCase(this);
 };
 String.prototype.toPathCase = function () {
-  return useChangeCase(this, "pathCase");
+  return changeCase.pathCase(this);
 };
 String.prototype.toSentenceCase = function () {
-  return useChangeCase(this, "sentenceCase");
+  return changeCase.sentenceCase(this);
 };
 String.prototype.toSnakeCase = function () {
-  return useChangeCase(this, "snakeCase");
+  return changeCase.snakeCase(this);
 };
