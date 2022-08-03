@@ -3,24 +3,48 @@ export {}
 declare global {
   interface String {
     /**
-     * Converts first letter of each word to capital letter.
+     * Converts string to "helloWorld".
      */
-    capitalize(): string;
+    toCamelCase(): string;
     /**
-     * Converts string to snake_case.
+     * Converts string to "Hello World".
      */
-    toSnakeCase() : string;
+    toCapitalCase(): string;
     /**
-     * Converts string to kebab-case.
+     * Converts string to "HELLO_WORLD".
      */
-    toKebabCase() : string;
+    toConstantCase(): string;
     /**
-     * Converts string to camelCase.
+     * Converts string to "hello.world".
      */
-    toCamelCase() : string;
+    toDotCase(): string;
     /**
-     * Converts string to PascalCase.
+     * Converts string to "Hello-World".
      */
-    toPascalCase() : string;
-  }
+    toHeaderCase(): string;
+    /**
+     * Converts string to "hello world".
+     */
+    toNoCase(): string;
+    /**
+     * Converts string to "hello-world".
+     */
+    toParamCase(): string;
+    /**
+     * Converts string to "HelloWorld".
+     */
+    toPascalCase(): string;
+    /**
+     * Converts string to "hello/world".
+     */
+    toPathCase(): string;
+    /**
+     * Converts string to "Hello world".
+     */
+    toSentenceCase(): string;
+    /**
+     * Converts string to "hello_world".
+     */
+    toSnakeCase(): string;
+   }
 }
