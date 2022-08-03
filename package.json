@@ -6,12 +6,12 @@
     "build": "vite build",
     "preview": "vite preview --port 4173",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
-    "lint-staged": "npm run lint -- --no-eslintrc --config ./.eslint-staged.eslintrc.cjs",
     "prepare": "husky install"
   },
   "dependencies": {
     "@lbagic/collections": "^1.0.3",
     "@vueuse/core": "^8.9.4",
+    "@vueuse/integrations": "^9.0.2",
     "pinia": "^2.0.14",
     "pinia-plugin-persistedstate": "^1.6.3",
     "vue": "^3.2.37",

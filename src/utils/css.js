@@ -1,10 +1,7 @@
 import rawCSS from "@/assets/styles/export.module.scss";
 
-// const isJson = (str) =>
-//   typeof str === "string" && str.at(0) === `'` && str.at(-1) === `'`;
 const parseJson = (str) => JSON.parse(str.slice(1, str.length - 1));
 const parsed = parseJson(rawCSS.JSON);
-console.log({ parsed });
 
 /**
  * Breakpoint defintions

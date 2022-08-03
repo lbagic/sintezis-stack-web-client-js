@@ -24,6 +24,9 @@
     background: var(--modal-background-color);
   }
   &[data-fullscreen="false"] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: var(--modal-overlay-color);
     backdrop-filter: blur(1px);
     @each $color, $value in $base-colors {
@@ -31,12 +34,6 @@
         background: var(--#{$prefix}color-#{$color}-opaque-light);
       }
     }
-  }
-  &[data-fullscreen="true"][data-center="true"],
-  &[data-fullscreen="false"] {
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 }
 

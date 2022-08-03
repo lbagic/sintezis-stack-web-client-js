@@ -114,14 +114,12 @@ watch(
   () => model.value,
   (value) => {
     if (inputRef.value === value) return;
-    console.log("onExternal");
     inputRef.value = value;
     runValidation(value);
   }
 );
 
 function onInput(value) {
-  console.log("onInternal");
   model.value = value;
   runValidation(value);
   emit("update:modelValue", model);
