@@ -1,6 +1,7 @@
 <script setup>
 import BaseModal from "../components/base/BaseModal.vue";
 import { modals } from "../components/base/modal.ctl";
+import { messages } from "../utils/translations";
 </script>
 
 <template>
@@ -8,7 +9,8 @@ import { modals } from "../components/base/modal.ctl";
     style="display: grid; padding: 1rem; gap: 1rem; align-content: flex-start"
   >
     <p>AboutView</p>
-
+    <p>{{ $t(messages.login.action) }}</p>
+    <p>{{ $t(messages.login.description) }}</p>
     <div class="container">
       <p>Container with stuff inside</p>
       <p>Modal will open over the component</p>

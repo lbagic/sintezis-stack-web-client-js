@@ -1,22 +1,34 @@
 import { computed, reactive } from "vue";
 
 const settings = {
-  useErrors: true,
+  useErrorMessage: true,
   useErrorBorder: true,
   useRequiredAsterisk: true,
   useHtmlValidation: false,
 };
 
 const htmlErrors = {
-  badInput: "Bad input value.",
-  patternMismatch: "Value is not allowed.",
-  rangeOverflow: "Value is larger than allowed.",
-  rangeUnderflow: "Value is smaller than allowed.",
-  stepMismatch: "Input step mismatch.",
-  tooLong: "Value is too long.",
-  tooShort: "Value is too short.",
-  typeMismatch: "Value is not valid.",
-  valueMissing: "This field is required",
+  badInput: { value: "Bad input value." },
+  patternMismatch: { value: "Value is not allowed." },
+  rangeOverflow: {
+    value: "Maximum allowed value is %t.",
+    parser: (text, { attrs }) => text.replace("%t", attrs.max),
+  },
+  rangeUnderflow: {
+    value: "Minimum allowed value is %t.",
+    parser: (text, { attrs }) => text.replace("%t", attrs.min),
+  },
+  tooLong: {
+    value: "Maximum number of characters is %t.",
+    parser: (text, { attrs }) => text.replace("%t", attrs.maxlength),
+  },
+  tooShort: {
+    value: "Minimum number of characters is %t.",
+    parser: (text, { attrs }) => text.replace("%t", attrs.minlength),
+  },
+  stepMismatch: { value: "Input step mismatch." },
+  typeMismatch: { value: "Value is not valid." },
+  valueMissing: { value: "This field is required" },
 };
 
 const componentConfig = {

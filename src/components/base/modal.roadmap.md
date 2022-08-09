@@ -6,7 +6,7 @@
 | color scheme                               | ✅     |
 | sizing and overflowing                     | ✅     |
 | focus trap                                 | ✅     |
-| focus first focusable element              |        |
+| focus first focusable element              | ✅     |
 | modal stack for multiple fullscreen modals |        |
 | open via ref                               | ✅     |
 | open via url hash                          |        |

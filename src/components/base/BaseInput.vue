@@ -7,29 +7,26 @@ export default {
   inheritAttrs: false,
 };
 
-function useUndefinedProp(prop, setting) {
-  if (prop === undefined) return setting;
-  if (typeof prop === "string") return false;
-  if (typeof prop === "boolean") return prop;
-  return false;
-}
+const { componentConfig, settings, htmlErrors, htmlErrorKeys } = _inputCtl;
 </script>
 
 <script setup>
-const { componentConfig, settings, htmlErrors, htmlErrorKeys } = _inputCtl;
 const attrs = useAttrs();
 const emit = defineEmits(["update:modelValue"]);
 const props = defineProps({
   modelValue: Object,
-  label: String,
-  hint: String,
-  labelPlacement: String,
   type: String,
+  hint: String,
+  label: String,
+  labelPlacement: String,
   validator: Function,
-  hideErrors: undefined,
-  hideHtmlValidation: undefined,
-  hideRequiredAsterisk: undefined,
-  hideErrorBorder: undefined,
+  useErrorBorder: { type: Boolean, default: settings.useErrorBorder },
+  useErrorMessage: { type: Boolean, default: settings.useErrorMessage },
+  useHtmlValidation: { type: Boolean, default: settings.useHtmlValidation },
+  useRequiredAsterisk: {
+    type: Boolean,
+    default: settings.useRequiredAsterisk,
+  },
 });
 
 const prefix = useCssVar("--prefix");
@@ -41,44 +38,36 @@ const config = componentConfig[type];
 if (!config) throw new Error(`Input type "${type}" not supported.`);
 const isRequired = Object.prototype.hasOwnProperty.call(attrs, "required");
 const label = $ref(props.label);
-const labelPlacement = (() => {
+const labelPlacement = $computed(() => {
   const _placement = props.labelPlacement ?? config.labelPlacement ?? "";
   const placement = [];
   placement.push(_placement.includes("inline") ? "inline" : "block");
   placement.push(_placement.includes("end") ? "end" : "start");
   return placement.join(" ");
-})();
+});
 
-const useHtmlValidation = useUndefinedProp(
-  props.hideHtmlValidation,
-  settings.useHtmlValidation
-);
-const useRequiredAsterisk = useUndefinedProp(
-  props.hideRequiredAsterisk,
-  settings.useRequiredAsterisk
-);
-const showRequiredAsterisk = useRequiredAsterisk && isRequired;
+const showRequiredAsterisk = props.useRequiredAsterisk && isRequired;
 
-const useErrors = useUndefinedProp(props.hideErrors, settings.useErrors);
-const showError = computed(
-  () => useErrors && model.isDirty && !model.isValid && !!model.errorMessage
+const showErrorMessage = computed(
+  () =>
+    props.useErrorMessage &&
+    model.isDirty &&
+    !model.isValid &&
+    !!model.errorMessage
 );
 
-const useErrorBorder = useUndefinedProp(
-  props.useErrorBorder,
-  settings.useErrorBorder
-);
 const showErrorBorder = computed(
-  () => useErrorBorder && model.isDirty && !model.isValid
+  () => props.useErrorBorder && model.isDirty && !model.isValid
 );
-
 function runHtmlValidation() {
   const validity = inputRef.validity;
   const isValid = htmlErrorKeys.every((key) => !validity[key]);
   const state = { isValid, errorMessage: null };
   if (!state.isValid) {
     const errorKey = htmlErrorKeys.find((key) => validity[key] === true);
-    state.errorMessage = htmlErrors[errorKey];
+    const message = htmlErrors[errorKey].value;
+    const parser = htmlErrors[errorKey].parser;
+    state.errorMessage = parser ? parser(message, { attrs }) : message;
   }
   return state;
 }
@@ -99,7 +88,7 @@ function runValidation(value) {
   const custom = runCustomValidation(value);
   const isValid = html.isValid && custom.isValid;
   const errorMessage = html.errorMessage || custom.errorMessage;
-  if (useHtmlValidation) {
+  if (props.useHtmlValidation) {
     if (!isValid && errorMessage) inputRef.setCustomValidity(errorMessage);
     else inputRef.setCustomValidity("");
   }
@@ -126,7 +115,7 @@ function onInput(value) {
 }
 
 function onInvalid(event) {
-  if (!useHtmlValidation) {
+  if (!props.useHtmlValidation) {
     event.preventDefault();
     let firstInvalidElement = event.target;
     const formElement = inputRef.closest("form");
@@ -252,15 +241,15 @@ onMounted(() => {
     >
     <div
       :class="`${prefix}input-help-spacing`"
-      :data-show="!!props.hint || showError"
+      :data-show="!!props.hint || showErrorMessage"
     ></div>
     <p :class="`${prefix}input-help`" data-hint v-if="props.hint">{{ hint }}</p>
     <Transition :name="`${prefix}input-help-transition`">
       <p
         :class="`${prefix}input-help`"
         data-error
-        :data-show-error="showError"
-        v-if="showError"
+        :data-show-error="showErrorMessage"
+        v-if="showErrorMessage"
       >
         {{ model.errorMessage }}
       </p>

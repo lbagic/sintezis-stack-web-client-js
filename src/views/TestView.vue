@@ -4,11 +4,12 @@ import { useFormData } from "../components/base/input.ctl";
 
 const form = useFormData({
   text: "",
+  email: "",
   password: "",
   search: "",
   tel: "",
   url: "",
-  color: "",
+  color: null,
   number: null,
   range: null,
   checkbox: false,
@@ -27,7 +28,6 @@ const form = useFormData({
 <template>
   <form
     @submit.prevent
-    ref="formRef"
     class="snt-grid"
     style="padding: 1rem; grid-template-columns: 1fr 1fr"
   >
@@ -40,10 +40,18 @@ const form = useFormData({
       />
       <BaseInput
         placeholder="placeholder"
+        v-model="form.model.email"
+        label="email"
+        type="email"
+        required
+      />
+      <BaseInput
+        placeholder="placeholder"
         v-model="form.model.password"
         type="password"
         label="password"
         required
+        minlength="5"
       />
       <BaseInput
         placeholder="placeholder"
@@ -73,6 +81,7 @@ const form = useFormData({
         placeholder="placeholder"
         v-model="form.model.number"
         type="number"
+        min="25"
         label="number"
       />
       <BaseInput

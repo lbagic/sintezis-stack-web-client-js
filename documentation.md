@@ -1,10 +1,39 @@
 # WebStack Documentation
 
+#### Table of Contents
+
+- [WebStack Documentation](#webstack-documentation) - [Table of Contents](#table-of-contents)
+  - [Utils](#utils)
+    - [String polyfills](#string-polyfills)
+    - [Array Polyfills](#array-polyfills)
+    - [CSS](#css)
+    - [Breakpoint](#breakpoint)
+    - [Date](#date)
+  - [SCSS](#scss)
+    - [Breakpoints](#breakpoints)
+    - [Colors](#colors)
+    - [Other style definitions](#other-style-definitions)
+  - [Buttons (styles)](#buttons-styles)
+  - [Cards (styles)](#cards-styles)
+  - [Tables (styles)](#tables-styles)
+  - [Carousel (unsupported)](#carousel-unsupported)
+  - [Inputs (component)](#inputs-component)
+  - [Modals (component)](#modals-component)
+  - [Toasts (component)](#toasts-component)
+  - [Internationalization (plugin)](#internationalization-plugin)
+- [Roadmap](#roadmap)
+  - [Proposed 💬 (To discuss)](#proposed--to-discuss)
+  - [Accepted 🖥 (In development)](#accepted--in-development)
+  - [Released 🚀 (Ready for use)](#released--ready-for-use)
+  - [Recommended ✅ (Battle tested)](#recommended--battle-tested)
+
+---
+
 ## Utils
 
 Folder: `src/utils/`
 
-#### **<u>String polyfills</u>**
+### String polyfills
 
 Additional methods attached to string ctor.  
 List of supported methods: `toCamelCase`, `toCapitalCase`, `toConstantCase`, `toDotCase`, `toHeaderCase`, `toNoCase`, `toParamCase`, `toPascalCase`, `toPathCase`, `toSentenceCase`, `toSnakeCase`
@@ -13,7 +42,7 @@ List of supported methods: `toCamelCase`, `toCapitalCase`, `toConstantCase`, `to
 
 Reference: https://github.com/blakeembrey/change-case
 
-#### **<u>Array polyfills</u>**
+### Array Polyfills
 
 Additional methods attached to array ctor.  
 List of supported methods: `add`, `remove`, `findOne`, `findMany`
@@ -22,13 +51,13 @@ List of supported methods: `add`, `remove`, `findOne`, `findMany`
 
 Reference: https://github.com/lbagic/collections
 
-#### **<u>Css</u>**
+### CSS
 
 All project css variables are automatically exported to javascript.
 
 > Example: `css.colors.danger.base`
 
-#### **<u>Breakpoint</u>**
+### Breakpoint
 
 Reactive css breakpoints available in javascript form.
 
@@ -36,7 +65,7 @@ Reactive css breakpoints available in javascript form.
 
 Implementation based on https://vueuse.org/core/usebreakpoints/.
 
-#### **<u>Date</u>**
+### Date
 
 Util for formatting dates explicitly.  
 List of supported methods: `format`, `difference`, `duration`, `toMs`
@@ -83,7 +112,7 @@ Folder: `src/assets/styles/`
 
 Custom SCSS framework integrated within project.
 
-#### **<u>Breakpoints</u>**
+### Breakpoints
 
 File: `src/assets/styles/variables/breakpoints.scss`  
 When defining breakpoints in css **always use predefined breakpoints via mixins**.  
@@ -101,14 +130,14 @@ Example:
 }
 ```
 
-#### **<u>Colors</u>**
+### Colors
 
 File: `src/assets/styles/variables/colors.scss`  
 Project color palette definition.
 
 > Example: `background: var(--prefix-color-primary);`
 
-#### **<u>Other style definitions</u>**
+### Other style definitions
 
 Folder: `src/assets/styles/elements/`  
 Style definitions for custom components and utilities.  
@@ -162,31 +191,50 @@ Carousel solution is not provided, consider using third party package, e.g. http
 
 ## Inputs (component)
 
-Modals are used via component `BaseInput` and named export `useInputData` for scaffolding reactive data.  
-Class modifiers: color
+Inputs are used via component `BaseInput` and named export `useFormData` for scaffolding reactive data.
 
-> Modals respect autofocus attribute.
+> Lightweight wrapper around html input that provides input validation and basic validation styles.
 
-| Prop                           | Value   | Description                          |
-| ------------------------------ | ------- | ------------------------------------ |
-| name                           | string  | Name of the modal                    |
-| local                          | boolean | Contained within parent element      |
-| expand                         | boolean | Spans full width and height          |
-| keep-alive                     | boolean | State persists through open/close    |
-| disable-close                  | boolean | Disables all forms of manual closing |
-| disable-close-on-esc           | boolean | Disables closing via escape          |
-| disable-close-on-button        | boolean | Disables closing via close button    |
-| disable-close-on-click-outside | boolean | Disables closing via click-outside   |
+| Prop                  | Value    | Description                                    |
+| --------------------- | -------- | ---------------------------------------------- |
+| type                  | string   | Input type (defaults to text)                  |
+| hint                  | string   | Hint text                                      |
+| label                 | string   | Label text                                     |
+| validator             | function | Custom validator function                      |
+| use-error-border      | boolean  | Enables error border                           |
+| use-error-message     | boolean  | Enables error messages                         |
+| use-html-validation   | boolean  | Enables html warning tooltip                   |
+| use-required-asterisk | boolean  | Enables `*` sign on labels with required field |
+
+```js
+// default settings as defined in input.ctl
+const settings = {
+  useErrorMessage: true,
+  useErrorBorder: true,
+  useRequiredAsterisk: true,
+  useHtmlValidation: false,
+};
+```
 
 Example:
 
 ```html
 <script setup>
-  import { modals } from ".../components/base/modal.ctl.js";
+  import BaseInput from "../components/base/BaseInput.vue";
+  import { useFormData } from "../components/base/input.ctl";
+
+  const form = useFormData({
+    email: "",
+    password: "",
+  });
 </script>
+
 <template>
-  <button @click="modals.login.open">Open modal</button>
-  <BaseModal class="prefix-modal primary" name="login">...</BaseModal>
+  <form @submit.prevent>
+    <BaseInput v-model="form.model.email" type="email" required />
+    <BaseInput v-model="form.model.password" type="password" required />
+    <button type="submit">submit</button>
+  </form>
 </template>
 ```
 
@@ -214,7 +262,7 @@ Example:
 
 ```html
 <script setup>
-  import { modals } from ".../components/base/modal.ctl.js";
+  import { modals } from ".../components/base/modal.ctl";
 </script>
 <template>
   <button @click="modals.login.open">Open modal</button>
@@ -232,7 +280,7 @@ Toasts are used via named export `toast`.
 - options: `position`, `duration`, `closable`
 
 ```js
-// default options as defined in toast.ctl
+// default settings as defined in toast.ctl
 const settings = {
   success: { position: "top center", duration: 3 * 1000 },
   danger: { position: "top center", duration: 3 * 1000 },
@@ -243,14 +291,44 @@ const settings = {
 Example:
 
 ```js
-import { toast } from ".../components/base/toast.ctl.js";
+import { toast } from ".../components/base/toast.ctl";
 
 toast.success("Message", { closable: true, duration: 0 });
 ```
 
-## Internationalization
+---
 
-Internationalization is supported via https://vue-i18n.intlify.dev/.
+## Internationalization (plugin)
+
+Internationalization is supported via vue18n.
+
+Defining messages:
+
+```js
+// Message enums # .../utils/translations/index.js
+export const messages = { login: { action: "", description: "" } };
+```
+
+```js
+// Translations # .../utils/translations/en.js
+export const en = {
+  login: { action: "Log in", description: "Log in description" },
+};
+```
+
+Using translations:
+
+```html
+<script setup>
+  import { messages } from ".../utils/translations";
+</script>
+
+<template>
+  <p>{{ $t(messages.login.action) }}</p>
+</template>
+```
+
+Reference: https://vue-i18n.intlify.dev/.
 
 # Roadmap
 
@@ -265,22 +343,22 @@ Web Stack roadmap containing current status and stages of custom elements.
 
 ### Proposed 💬 (To discuss)
 
-- Internationalization support (plugin)
 - Loading interceptors and loaders (javascript)
+- utils: object iterator
 
 ### Accepted 🖥 (In development)
 
 - Admin panel theme
-- Documentation
 
 ### Released 🚀 (Ready for use)
 
+- Documentation
 - Project settings (settings)
 - Linter (settings)
 - GRPC & API (javascript)
 - Store (javascript)
 - Utils (javascript)
-- SCSS framework (styles & javascript)
+- SCSS framework (styles)
 - Breakpoints (styles & javascript)
 - Buttons (styles)
 - Cards (styles)
@@ -288,5 +366,6 @@ Web Stack roadmap containing current status and stages of custom elements.
 - Inputs (component)
 - Modals (component)
 - Toasts (component)
+- Internationalization (plugin)
 
 ### Recommended ✅ (Battle tested)
