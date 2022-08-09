@@ -89,7 +89,7 @@ const formatDuration = (
   timestamp
 ) => formatDifference(format, 0, timestamp);
 
-const toMilis = (duration = { seconds: 0, minutes: 0, hours: 0, days: 0 }) => {
+const toMs = (duration = { seconds: 0, minutes: 0, hours: 0, days: 0 }) => {
   const transform = {
     seconds: (x) => x * 1000,
     minutes: (x) => x * 1000 * 60,
@@ -102,16 +102,16 @@ const toMilis = (duration = { seconds: 0, minutes: 0, hours: 0, days: 0 }) => {
     .filter((x) => x !== undefined)[0];
 };
 
-const prettyDurationRe = /^(0d|0h|00m|0m)/;
+const durationPrettyRe = /^(0d|0h|00m|0m)/;
 export const date = {
   format: formatDate,
   formatUTC: formatUTCDate,
   difference: formatDifference,
   duration: formatDuration,
-  prettyDuration: (format) => (timestamp) =>
+  durationPretty: (format) => (timestamp) =>
     formatDuration(format, timestamp)
       .split(" ")
-      .filter((el) => !prettyDurationRe.test(el))
+      .filter((el) => !durationPrettyRe.test(el))
       .join(" "),
-  miliseconds: toMilis,
+  toMs: toMs,
 };

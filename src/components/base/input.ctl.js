@@ -1,10 +1,10 @@
 import { computed, reactive } from "vue";
 
 const settings = {
-  useHtmlValidation: false,
-  useRequiredAsterisk: true,
   useErrors: true,
   useErrorBorder: true,
+  useRequiredAsterisk: true,
+  useHtmlValidation: false,
 };
 
 const htmlErrors = {

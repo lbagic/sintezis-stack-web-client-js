@@ -1,4 +1,4 @@
-import "./polyfills";
+import "./utils/polyfills";
 import { router } from "./router/router.js";
 import { pinia } from "./stores/base/store.js";
 

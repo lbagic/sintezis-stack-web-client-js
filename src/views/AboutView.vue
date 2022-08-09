@@ -5,26 +5,9 @@ import { modals } from "../components/base/modal.ctl";
 
 <template>
   <div
-    style="padding: 1rem; display: grid; gap: 1rem; align-content: flex-start"
+    style="display: grid; padding: 1rem; gap: 1rem; align-content: flex-start"
   >
     <p>AboutView</p>
-
-    <div class="container">
-      <p>Container with stuff inside</p>
-      <p>Modal will open over the component</p>
-      <button
-        class="snt-button primary"
-        @click="modals.fullscreen_local.open()"
-      >
-        open local fullscreen modal
-      </button>
-      <BaseModal fullscreen place-here name="fullscreen_local">
-        <button class="snt-button primary">asdf</button>
-        <input type="text" value="<input autofocus />" autofocus />
-        <button class="snt-button primary">asdf</button>
-        <p v-for="n in 100" :key="n">{{ n }} place-here fullscreen</p>
-      </BaseModal>
-    </div>
 
     <div class="container">
       <p>Container with stuff inside</p>
@@ -32,13 +15,27 @@ import { modals } from "../components/base/modal.ctl";
       <button class="snt-button danger" @click="modals.local.open()">
         open local modal
       </button>
-      <BaseModal place-here name="local" class="danger">
+      <BaseModal local keep-alive name="local" class="danger">
         <input type="text" />
         <button class="snt-button primary" autofocus>
           {{'<button autofocus />'}}
         </button>
         <button class="snt-button primary">asdf</button>
-        <p v-for="n in 100" :key="n">{{ n }} place-here</p>
+        <p v-for="n in 100" :key="n">{{ n }} local</p>
+      </BaseModal>
+    </div>
+
+    <div class="container">
+      <p>Container with stuff inside</p>
+      <p>Modal will open over the component</p>
+      <button class="snt-button primary" @click="modals.local_expand.open()">
+        open local fullscreen modal
+      </button>
+      <BaseModal local expand name="local_expand">
+        <button class="snt-button primary">asdf</button>
+        <input type="text" value="<input autofocus />" autofocus />
+        <button class="snt-button primary">asdf</button>
+        <p v-for="n in 100" :key="n">{{ n }} local expand</p>
       </BaseModal>
     </div>
 
@@ -46,20 +43,20 @@ import { modals } from "../components/base/modal.ctl";
       <input type="text" value="<input autofocus />" autofocus />
       <button class="snt-button primary">asdf</button>
       <button class="snt-button primary">asdf</button>
-      <p v-for="n in 100" :key="n">{{ n }} place-here</p>
+      <p v-for="n in 100" :key="n">{{ n }} default</p>
     </BaseModal>
-    <BaseModal fullscreen name="fullscreen">
+    <BaseModal expand name="expand">
       <input type="text" />
       <button class="snt-button primary">asdf</button>
       <button class="snt-button primary">asdf</button>
-      <p v-for="n in 100" :key="n">{{ n }} place-here</p>
+      <p v-for="n in 100" :key="n">{{ n }} default</p>
     </BaseModal>
 
     <button class="snt-button grey" @click="modals.default.open()">
       open default modal
     </button>
-    <button class="snt-button secondary" @click="modals.fullscreen.open()">
-      open fullscreen modal
+    <button class="snt-button secondary" @click="modals.expand.open()">
+      open expand modal
     </button>
   </div>
 </template>

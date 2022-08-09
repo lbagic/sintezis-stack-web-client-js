@@ -5,8 +5,9 @@ import { reactive, watch } from "vue";
  *  isOpen: boolean
  *  open: () => void
  *  close: () => void
- *  placeHere: boolean
- *  fullscreen: boolean
+ *  local: boolean
+ *  expand: boolean
+ *  keepAlive: boolean
  * }} ModalState
  * */
 
@@ -27,7 +28,7 @@ watch(
   () => modals,
   (modals) => {
     const isFullscreenOpen = Object.values(modals).some(
-      (modal) => modal.isOpen && !modal.placeHere
+      (modal) => modal.isOpen && !modal.local
     );
     document.body.style.overflowY = isFullscreenOpen ? "hidden" : "auto";
   },

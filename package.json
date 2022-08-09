@@ -1,12 +1,13 @@
 {
-  "name": "web-client-vue",
+  "name": "web-stack-js",
   "version": "1.0.0",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview --port 4173",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "docs": "vitepress dev docs"
   },
   "dependencies": {
     "@lbagic/collections": "^1.0.3",

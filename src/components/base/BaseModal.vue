@@ -14,11 +14,10 @@ const voidFn = () => undefined;
 
 const emit = defineEmits(["close", "open"]);
 const props = defineProps({
-  fullscreen: Boolean,
-  placeHere: Boolean,
-  name: String,
-  urlQuery: String,
-  urlHash: String,
+  name: { type: String, required: true },
+  local: Boolean,
+  expand: Boolean,
+  keepAlive: Boolean,
   disableCloseOnClickOutside: Boolean,
   disableCloseOnButton: Boolean,
   disableCloseOnEsc: Boolean,
@@ -30,7 +29,7 @@ const modalRef = ref();
 const wrapperRef = ref();
 const colorNames = Object.keys(css.colors);
 const colorFilter = (name) => colorNames.includes(name);
-const focusTrap = props.placeHere
+const focusTrap = props.local
   ? { activate: voidFn, deactivate: voidFn }
   : useFocusTrap(wrapperRef, { initialFocus: false });
 const setInitialFocus = () => {
@@ -45,7 +44,7 @@ const setInitialFocus = () => {
 
 const disabledClose = {
   onClickOutside:
-    props.disableClose || props.disableCloseOnEsc || props.placeHere,
+    props.disableClose || props.disableCloseOnClickOutside || props.local,
   onButton: props.disableClose || props.disableCloseOnButton,
   onEsc: props.disableClose || props.disableCloseOnEsc,
 };
@@ -65,8 +64,9 @@ const state = _modalCtl.createState({
   isOpen: false,
   open,
   close,
-  placeHere: props.placeHere,
-  fullscreen: props.fullscreen,
+  local: props.local,
+  expand: props.expand,
+  keepAlive: props.keepAlive,
 });
 
 if (!disabledClose.onClickOutside) onClickOutside(modalRef, close);
@@ -77,17 +77,16 @@ async function copyColorClassToWrapper() {
 }
 watch(
   () => state.isOpen,
-  async (value) => {
-    await nextTick();
-    if (value) {
+  async (isOpen) => {
+    if (isOpen) {
+      await nextTick();
       copyColorClassToWrapper();
       focusTrap.activate();
       setInitialFocus();
     } else {
-      focusTrap.deactivate;
+      focusTrap.deactivate();
     }
-  },
-  { immediate: true }
+  }
 );
 
 onMounted(() => {
@@ -99,21 +98,22 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <Teleport to="body" :disabled="props.placeHere">
+  <Teleport to="body" :disabled="props.local">
     <Transition :name="`${prefix}modal-transition`">
       <div
         :class="`${prefix}modal-wrapper`"
         ref="wrapperRef"
-        :data-fullscreen="props.fullscreen"
-        :data-place-here="props.placeHere"
+        :data-expand="props.expand"
+        :data-local="props.local"
         tabindex="-1"
         @keydown.esc="() => !disabledClose.onEsc && close()"
-        v-if="state.isOpen"
+        v-if="state.isOpen || props.keepAlive"
+        v-show="state.isOpen || !props.keepAlive"
       >
         <div
           :class="`${prefix}modal`"
           v-bind="$attrs"
-          :data-fullscreen="props.fullscreen"
+          :data-expand="props.expand"
           ref="modalRef"
         >
           <button

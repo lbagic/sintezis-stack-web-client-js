@@ -14,16 +14,16 @@
   height: 100%;
   z-index: var(--modal-z-index);
 
-  &[data-place-here="true"] {
+  &[data-local="true"] {
     position: absolute;
   }
-  &[data-place-here="false"] {
+  &[data-local="false"] {
     position: fixed;
   }
-  &[data-fullscreen="true"] {
+  &[data-expand="true"] {
     background: var(--modal-background-color);
   }
-  &[data-fullscreen="false"] {
+  &[data-expand="false"] {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -42,10 +42,10 @@
   overflow-y: auto;
   padding: var(--modal-padding);
   background: var(--modal-background-color);
-  &[data-fullscreen="true"] {
+  &[data-expand="true"] {
     max-height: 100%;
   }
-  &[data-fullscreen="false"] {
+  &[data-expand="false"] {
     width: 100%;
     max-width: min(var(--modal-width), 100% - var(--modal-padding));
     min-height: 300px;

@@ -33,6 +33,9 @@
   &.large {
     padding: var(--padding-large);
   }
+  &.expand {
+    width: 100%;
+  }
 
   @each $color, $value in $base-colors {
     &.#{$color} {
