@@ -3,7 +3,7 @@ import {
   optionsInterceptor,
   authInterceptor,
   debugInterceptor,
-  unauthorizedInterceptor,
+  unauthInterceptor,
   notificationInterceptor,
 } from "./BaseGrpc.interceptors";
 import {
@@ -31,10 +31,10 @@ const bundleInterceptors = (getToken, callMap) => ({
     });
 
     if (!callContext.isDuplicateCall) {
-      debugInterceptor(callContext);
+      if (!import.meta.env.PROD) debugInterceptor(callContext);
       if (callContext.options.useToasts) notificationInterceptor(callContext);
     }
-    if (token) unauthorizedInterceptor(callContext);
+    if (token) unauthInterceptor(callContext);
 
     return callContext.call;
   },

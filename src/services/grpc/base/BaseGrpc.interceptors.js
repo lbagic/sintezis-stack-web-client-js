@@ -34,7 +34,7 @@ export const optionsInterceptor = createRequestInterceptor({
 
 /**
  * Auth interceptor (request interceptor).
- * Used for automatic firing of toasts on error/success responses.
+ * Used for assigning token to requests.
  */
 export const authInterceptor = createRequestInterceptor({
   handler: ({ token, metadata }) => {
@@ -47,7 +47,7 @@ export const authInterceptor = createRequestInterceptor({
  * Unauthorized (session expired) interceptor.
  * Used for logging out user on session expired/unauthorized requests.
  */
-export const unauthorizedInterceptor = createResponseInterceptor({
+export const unauthInterceptor = createResponseInterceptor({
   onError({ error }) {
     if (error?.code === 7 || error?.code === 16) router.push("/logout");
   },

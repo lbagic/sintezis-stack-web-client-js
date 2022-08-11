@@ -1,11 +1,3 @@
-// Based on example user type
-// type User = {
-//   id: number
-//   userName: string
-//   title: string
-// }
-
-// mocked imports
 let IndexUserRequest,
   GetUserRequest,
   User,
@@ -13,12 +5,12 @@ let IndexUserRequest,
   UpdateUserRequest,
   DeleteUserRequest;
 
-import { Grpc, hydrateGrpcModel } from "./grpc/Grpc";
+import { Grpc, grpcOptions, hydrateGrpcModel } from "./grpc/Grpc";
 
 export const userService = {
   indexUser() {
     return Grpc.snt
-      .getUser(new IndexUserRequest())
+      .getUser(new IndexUserRequest(), grpcOptions({ useToasts: false }))
       .then((res) => res.toObject());
   },
   getUser({ id }) {
@@ -29,7 +21,10 @@ export const userService = {
   createUser({ userName, title }) {
     const model = new User().setUserName(userName).setTitle(title);
     return Grpc.snt
-      .createUser(new CreateUserRequest().setUser(model))
+      .createUser(
+        new CreateUserRequest().setUser(model),
+        grpcOptions({ useToasts: false })
+      )
       .then((res) => res.toObject());
   },
   updateUser(partialData, existingData) {
@@ -37,10 +32,16 @@ export const userService = {
     const data = { ...existingData, ...partialData };
     hydrateGrpcModel(model, data);
     return Grpc.snt
-      .updateUser(new UpdateUserRequest().setUser(model))
+      .updateUser(
+        new UpdateUserRequest().setUser(model),
+        grpcOptions({ useToasts: false })
+      )
       .then((res) => res.toObject());
   },
   deleteUser({ id }) {
-    return Grpc.snt.deleteUser(new DeleteUserRequest().setId(id));
+    return Grpc.snt.deleteUser(
+      new DeleteUserRequest().setId(id),
+      grpcOptions({ useToasts: false })
+    );
   },
 };
