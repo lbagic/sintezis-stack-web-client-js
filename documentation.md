@@ -369,3 +369,38 @@ Web Stack roadmap containing current status and stages of custom elements.
 - Internationalization (plugin)
 
 ### Recommended ✅ (Battle tested)
+
+## BaseInput roadmap
+
+| Feature                         | Status |
+| ------------------------------- | ------ |
+| validation                      | ✅     |
+| label support                   | ✅     |
+| error & help text support       | ✅     |
+| icon support                    |        |
+| placeholders                    |        |
+| option                          |        |
+| `date`, `time`, `month` support | native |
+| `date range` support            |        |
+| `textarea`, `select` support    | native |
+| `checkbox`, `radio` support     | native |
+| `file input` support            | native |
+
+## BaseModal roadmap
+
+| Feature                                    | Status |
+| ------------------------------------------ | ------ |
+| modal & overlay support                    | ✅     |
+| color scheme                               | ✅     |
+| sizing and overflowing                     | ✅     |
+| focus trap                                 | ✅     |
+| focus first focusable element              | ✅     |
+| modal stack for multiple fullscreen modals |        |
+| open via ref                               | ✅     |
+| open via url hash                          |        |
+| open via url query                         |        |
+| open programmaticaly                       | ✅     |
+| disable body scroll                        | ✅     |
+| close via escape                           | ✅     |
+| close via clickaway                        | ✅     |
+| close via close button                     | ✅     |

@@ -1,5 +1,5 @@
 import { GoogleAuthProvider } from "firebase/auth";
-import { useFirebaseAuth } from "./base/firebase";
+import { useFirebaseAuth } from "../firebase";
 
 const instance = new GoogleAuthProvider();
 instance.addScope("https://www.googleapis.com/auth/userinfo.email");

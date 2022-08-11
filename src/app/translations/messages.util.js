@@ -1,7 +1,3 @@
-// @ts-check
-
-import { en } from "./en";
-
 /**
  * i18n message enum factory.
  *
@@ -10,7 +6,8 @@ import { en } from "./en";
  * @param { string | undefined } parent Messages available for i18n.
  * @returns { T } Returns enums usable with $t.
  */
-function createMessageEnums(messages, parent = undefined) {
+
+export function createMessageEnums(messages, parent = undefined) {
   const entries = Object.entries(messages);
   /** @type { any } */
   const output = Object.fromEntries(
@@ -22,14 +19,3 @@ function createMessageEnums(messages, parent = undefined) {
   );
   return output;
 }
-
-export const messages = createMessageEnums({
-  login: {
-    action: "",
-    description: "",
-  },
-});
-
-export const translations = {
-  en,
-};

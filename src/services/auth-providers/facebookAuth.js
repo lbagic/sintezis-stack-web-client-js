@@ -1,5 +1,5 @@
 import { FacebookAuthProvider } from "firebase/auth";
-import { useFirebaseAuth } from "./base/firebase";
+import { useFirebaseAuth } from "../firebase";
 
 const instance = new FacebookAuthProvider();
 instance.addScope("email");

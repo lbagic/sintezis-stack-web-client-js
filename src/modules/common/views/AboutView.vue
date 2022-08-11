@@ -1,7 +1,7 @@
 <script setup>
-import BaseModal from "../components/base/BaseModal.vue";
-import { modals } from "../components/base/modal.ctl";
-import { messages } from "../utils/translations";
+import { messages } from "../../../app/translations/messages";
+import BaseModal from "../../../components/base/BaseModal.vue";
+import { modals } from "../../../components/base/modal.ctl";
 </script>
 
 <template>

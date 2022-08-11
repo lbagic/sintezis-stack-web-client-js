@@ -1,11 +1,11 @@
+import { Grpc, grpcOptions, hydrateGrpcModel } from "../../services/grpc";
+
 let IndexUserRequest,
   GetUserRequest,
   User,
   CreateUserRequest,
   UpdateUserRequest,
   DeleteUserRequest;
-
-import { Grpc, grpcOptions, hydrateGrpcModel } from "./grpc/Grpc";
 
 export const userService = {
   indexUser() {

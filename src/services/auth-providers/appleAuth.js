@@ -1,5 +1,5 @@
 import { OAuthProvider } from "firebase/auth";
-import { useFirebaseAuth } from "./base/firebase";
+import { useFirebaseAuth } from "../firebase";
 
 const instance = new OAuthProvider("apple.com");
 instance.addScope("email");

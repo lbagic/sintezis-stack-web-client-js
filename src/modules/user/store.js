@@ -2,15 +2,13 @@ import { defineStore } from "pinia";
 
 /**
  * @returns {{
- *  user?: User,
+ *  users?: User[],
  * }}
  */
-
 export const userStoreState = () => ({
-  user: undefined,
+  users: [],
 });
 
-export const useUserStore = defineStore({
-  id: "user",
+export const useUserStore = defineStore("user", {
   state: userStoreState,
 });

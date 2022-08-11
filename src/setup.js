@@ -1,14 +1,7 @@
-import "./utils/polyfills";
-import { router } from "./router/router.js";
-import { pinia } from "./stores/base/store.js";
-import { createI18n } from "vue-i18n";
-import { translations } from "./utils/translations";
-
-const i18n = createI18n({
-  locale: "en",
-  fallbackLocale: "en",
-  messages: translations,
-});
+import { i18nPlugin } from "./app/plugins/i18n";
+import "./app/polyfills";
+import { router } from "./app/router.js";
+import { pinia } from "./app/store.js";
 
 /**
  * Application setup file.
@@ -19,5 +12,5 @@ const i18n = createI18n({
 export function setup(app) {
   app.use(pinia);
   app.use(router);
-  app.use(i18n);
+  app.use(i18nPlugin);
 }

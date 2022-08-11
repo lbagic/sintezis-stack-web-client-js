@@ -4,12 +4,11 @@ import {
   VerifyEmailRequest,
 } from "../../../util/gen/proto/auth/auth_request_pb";
 import { AuthProviderEnum } from "../../../util/gen/proto/commons/enum_pb";
-import { AppleAuth } from "./auth-providers/AppleAuth";
-import { FacebookAuth } from "./auth-providers/FacebookAuth";
-import { GoogleAuth } from "./auth-providers/GoogleAuth";
-import { TwitterAuth } from "./auth-providers/TwitterAuth";
-import { Grpc } from "./base/Grpc";
-import { grpcOptions } from "./base/Grpc.utils";
+import { appleAuth } from "../../services/auth-providers/appleAuth";
+import { facebookAuth } from "../../services/auth-providers/facebookAuth";
+import { googleAuth } from "../../services/auth-providers/googleAuth";
+import { twitterAuth } from "../../services/auth-providers/twitterAuth";
+import { Grpc, grpcOptions } from "../../services/grpc";
 
 export const authService = {
   login: ({ email, password }) =>
@@ -37,7 +36,8 @@ export const authService = {
       )
       .then((res) => res.toObject()),
   googleLogin: () =>
-    GoogleAuth.signIn()
+    googleAuth
+      .signIn()
       .then(({ credential }) =>
         Grpc.snt.login(
           new LoginRequest()
@@ -48,7 +48,8 @@ export const authService = {
       )
       .then((res) => res.toObject()),
   facebookLogin: () =>
-    FacebookAuth.signIn()
+    facebookAuth
+      .signIn()
       .then(({ credential }) =>
         Grpc.snt.login(
           new LoginRequest()
@@ -59,7 +60,8 @@ export const authService = {
       )
       .then((res) => res.toObject()),
   twitterLogin: () =>
-    TwitterAuth.signIn()
+    twitterAuth
+      .signIn()
       .then(({ credential }) =>
         Grpc.snt.login(
           new LoginRequest()
@@ -71,7 +73,8 @@ export const authService = {
       )
       .then((res) => res.toObject()),
   appleLogin: () =>
-    AppleAuth.signIn()
+    appleAuth
+      .signIn()
       .then(({ credential }) =>
         Grpc.snt.login(
           new LoginRequest()
