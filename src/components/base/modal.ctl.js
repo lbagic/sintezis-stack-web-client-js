@@ -12,7 +12,7 @@ import { reactive, watch } from "vue";
  * */
 
 /** @type { Record<string, ModalState> } Object for programmatic control of modals. */
-export const modals = reactive({});
+export const modal = reactive({});
 /**
  * Create modal state.
  *
@@ -25,9 +25,9 @@ function createState(state) {
 
 // watcher for toggling body scroll
 watch(
-  () => modals,
-  (modals) => {
-    const isFullscreenOpen = Object.values(modals).some(
+  () => modal,
+  (modal) => {
+    const isFullscreenOpen = Object.values(modal).some(
       (modal) => modal.isOpen && !modal.local
     );
     document.body.style.overflowY = isFullscreenOpen ? "hidden" : "auto";
@@ -37,12 +37,12 @@ watch(
 
 let modalId = 1;
 export const _modalCtl = reactive({
-  modals,
+  modal,
   createState,
   mount(id, state) {
-    modals[id ?? modalId++] = state;
+    modal[id ?? modalId++] = state;
   },
   unmount(id) {
-    delete modals[id];
+    delete modal[id];
   },
 });
