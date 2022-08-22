@@ -2,11 +2,11 @@ import { defineStore } from "pinia";
 
 /**
  * @returns {{
- *  users?: User[],
+ *  user: User,
  * }}
  */
 export const userStoreState = () => ({
-  users: [],
+  user: [],
 });
 
 export const useUserStore = defineStore("user", {

@@ -18,13 +18,13 @@ export const authService = {
         grpcOptions({ useToasts: false })
       )
       .then((res) => res.toObject()),
-  register: ({ email, password, password_confirmation }) =>
+  register: ({ email, password, passwordConfirmation }) =>
     Grpc.snt
       .register(
         new RegisterRequest()
           .setEmail(email)
           .setPassword(password)
-          .setPasswordConfirmation(password_confirmation),
+          .setPasswordConfirmation(passwordConfirmation),
         grpcOptions({ useToasts: false })
       )
       .then((res) => res.toObject()),
