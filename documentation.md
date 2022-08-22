@@ -1,31 +1,157 @@
 # WebStack Documentation
 
-#### Table of Contents
-
-- [WebStack Documentation](#webstack-documentation) - [Table of Contents](#table-of-contents)
+- [WebStack Documentation](#webstack-documentation)
+  - [Input (component)](#input-component)
+      - [**Usage example:**](#usage-example)
+  - [Modal (component)](#modal-component)
+      - [**Usage example:**](#usage-example-1)
+  - [Toast (component)](#toast-component)
+      - [**Usage example:**](#usage-example-2)
   - [Utils](#utils)
     - [String polyfills](#string-polyfills)
+      - [**Usage example:**](#usage-example-3)
     - [Array Polyfills](#array-polyfills)
+      - [**Usage example:**](#usage-example-4)
     - [CSS](#css)
+      - [**Usage example:**](#usage-example-5)
     - [Breakpoint](#breakpoint)
+      - [**Usage example:**](#usage-example-6)
     - [Date](#date)
+      - [**Usage example:**](#usage-example-7)
   - [SCSS](#scss)
     - [Breakpoints](#breakpoints)
+      - [**Usage example:**](#usage-example-8)
     - [Colors](#colors)
+      - [**Usage example:**](#usage-example-9)
     - [Other style definitions](#other-style-definitions)
   - [Buttons (styles)](#buttons-styles)
+      - [**Usage example:**](#usage-example-10)
   - [Cards (styles)](#cards-styles)
+      - [**Usage example:**](#usage-example-11)
   - [Tables (styles)](#tables-styles)
+      - [**Usage example:**](#usage-example-12)
   - [Carousel (unsupported)](#carousel-unsupported)
-  - [Inputs (component)](#inputs-component)
-  - [Modals (component)](#modals-component)
-  - [Toasts (component)](#toasts-component)
   - [Internationalization (plugin)](#internationalization-plugin)
+      - [**Usage example:**](#usage-example-13)
 - [Roadmap](#roadmap)
-  - [Proposed 💬 (To discuss)](#proposed--to-discuss)
-  - [Accepted 🖥 (In development)](#accepted--in-development)
-  - [Released 🚀 (Ready for use)](#released--ready-for-use)
-  - [Recommended ✅ (Battle tested)](#recommended--battle-tested)
+    - [Proposed 💬 (To discuss)](#proposed--to-discuss)
+    - [Accepted 🖥 (In development)](#accepted--in-development)
+    - [Released 🚀 (Ready for use)](#released--ready-for-use)
+    - [Recommended ✅ (Battle tested)](#recommended--battle-tested)
+  - [BaseInput roadmap](#baseinput-roadmap)
+  - [BaseModal roadmap](#basemodal-roadmap)
+
+---
+
+## Input (component)
+
+Component name - `BaseInput`  
+Data modelling function - `useFormData`
+
+#### **Usage example:**
+
+```html
+<script setup>
+  import BaseInput from "../components/base/BaseInput.vue";
+  import { useFormData } from "../components/base/input.ctl";
+
+  const form = useFormData({
+    email: "",
+  });
+</script>
+
+<template>
+  <form @submit.prevent>
+    <BaseInput v-model="form.model.email" type="email" required />
+    <button type="submit">submit</button>
+  </form>
+</template>
+```
+
+**Props:**
+| Prop | Value | Description |
+| --------------------- | -------- | ---------------------------------------------- |
+| type | string | Input type (defaults to text) |
+| hint | string | Hint text |
+| label | string | Label text |
+| validator | function | Custom validator function |
+| use-error-border | boolean | Enables error border |
+| use-error-message | boolean | Enables error messages |
+| use-html-validation | boolean | Enables html warning tooltip |
+| use-required-asterisk | boolean | Enables `*` sign on labels with required field |
+
+**Global settings (_input_.ctl.js\_):**
+
+```js
+const settings = {
+  useErrorMessage: true,
+  useErrorBorder: true,
+  useRequiredAsterisk: true,
+  useHtmlValidation: false,
+};
+```
+
+---
+
+## Modal (component)
+
+Component name - `BaseModal`  
+Modal control object - `modal`  
+Class modifiers - color
+
+Modals respect autofocus attribute when it is used on elements within modal.
+
+#### **Usage example:**
+
+```html
+<script setup>
+  import { modal } from ".../components/base/modal.ctl";
+</script>
+<template>
+  <button @click="modal.login.open">Open modal</button>
+  <BaseModal class="primary" name="login">...</BaseModal>
+</template>
+```
+
+**Props:**
+
+| Prop                           | Value   | Description                          |
+| ------------------------------ | ------- | ------------------------------------ |
+| name                           | string  | Name of the modal                    |
+| local                          | boolean | Contained within parent element      |
+| expand                         | boolean | Spans full width and height          |
+| keep-alive                     | boolean | State persists through open/close    |
+| disable-close                  | boolean | Disables all forms of manual closing |
+| disable-close-on-esc           | boolean | Disables closing via escape          |
+| disable-close-on-button        | boolean | Disables closing via close button    |
+| disable-close-on-click-outside | boolean | Disables closing via click-outside   |
+
+---
+
+## Toast (component)
+
+Toast control object - `toast`  
+Class modifiers - color
+
+#### **Usage example:**
+
+```js
+import { toast } from ".../components/base/toast.ctl";
+
+toast.success("Success message");
+toast.danger("Danger message");
+toast.info("Info message");
+```
+
+**Global settings (_toast.ctl.js_):**
+
+```js
+const settings = {
+  success: { position: "top center", duration: 3 * 1000 },
+  danger: { position: "top center", duration: 3 * 1000 },
+  info: { position: "bottom right", duration: 20 * 1000, closable: true },
+};
+```
 
 ---
 
@@ -38,7 +164,12 @@ Folder: `src/utils/`
 Additional methods attached to string ctor.  
 List of supported methods: `toCamelCase`, `toCapitalCase`, `toConstantCase`, `toDotCase`, `toHeaderCase`, `toNoCase`, `toParamCase`, `toPascalCase`, `toPathCase`, `toSentenceCase`, `toSnakeCase`
 
-> Example: `'Hello world'.toPascalCase()`
+#### **Usage example:**
+
+```js
+const string = "Hello world";
+const pascalString = string.toPascalCase();
+```
 
 Reference: https://github.com/blakeembrey/change-case
 
@@ -47,7 +178,12 @@ Reference: https://github.com/blakeembrey/change-case
 Additional methods attached to array ctor.  
 List of supported methods: `add`, `remove`, `findOne`, `findMany`
 
-> Example: `[{id: 1}].add([{id: 1}, {id: 2}])`
+#### **Usage example:**
+
+```js
+const data = [{ id: 1 }];
+data.add([{ id: 1 }, { id: 2 }]);
+```
 
 Reference: https://github.com/lbagic/collections
 
@@ -55,13 +191,24 @@ Reference: https://github.com/lbagic/collections
 
 All project css variables are automatically exported to javascript.
 
-> Example: `css.colors.danger.base`
+#### **Usage example:**
+
+```js
+import { css } from "./utils/css";
+const dangerColor = css.colors.danger.base;
+```
 
 ### Breakpoint
 
 Reactive css breakpoints available in javascript form.
 
-> Example: `breakpoint.s` or `breakpoint.between("m", "xl")`
+#### **Usage example:**
+
+```js
+import { breakpoint } from "./utils/breakpoint";
+const isSmall = breakpoint.s;
+const isBetweenMAndXL = breakpoint.between("m", "xl");
+```
 
 Implementation based on https://vueuse.org/core/usebreakpoints/.
 
@@ -70,21 +217,7 @@ Implementation based on https://vueuse.org/core/usebreakpoints/.
 Util for formatting dates explicitly.  
 List of supported methods: `format`, `difference`, `duration`, `toMs`
 
-Format Parameters:
-
-```js
-{
-    hour: ["-h2", "-h"],
-    minute: ["-min2", "-min"],
-    second: ["-sec2", "-sec"],
-    weekday: ["-dl", "-ds"],
-    day: ["-d2", "-d"],
-    month: ["-ml", "-ms", "-m2", "-m"],
-    year: ["-y2", "-y"],
-}
-```
-
-Example:
+#### **Usage example:**
 
 ```js
 import { date } from ".../utils/date.js";
@@ -104,6 +237,20 @@ date.duration(
 // 0w, 3d, 12h, 0min, 0sec
 ```
 
+**Format parameters:**
+
+```js
+{
+    hour: ["-h2", "-h"],
+    minute: ["-min2", "-min"],
+    second: ["-sec2", "-sec"],
+    weekday: ["-dl", "-ds"],
+    day: ["-d2", "-d"],
+    month: ["-ml", "-ms", "-m2", "-m"],
+    year: ["-y2", "-y"],
+}
+```
+
 ---
 
 ## SCSS
@@ -118,7 +265,7 @@ File: `src/assets/styles/variables/breakpoints.scss`
 When defining breakpoints in css **always use predefined breakpoints via mixins**.  
 For usage within javascript refer to [breakpoint util](#ubreakpointu).
 
-Example:
+#### **Usage example:**
 
 ```scss
 @include s {
@@ -135,7 +282,11 @@ Example:
 File: `src/assets/styles/variables/colors.scss`  
 Project color palette definition.
 
-> Example: `background: var(--prefix-color-primary);`
+#### **Usage example:**
+
+```css
+background: var(--prefix-color-primary);
+```
 
 ### Other style definitions
 
@@ -149,9 +300,13 @@ Notable mentions: `containers`, `typography`
 
 Buttons are defined via styles, use by attaching appropriate classes.  
 Class: `prefix-button`  
-Class modifiers: color (palette color), size (`small`, `large`, `expand`)
+Class modifiers: color, size (`small`, `large`, `expand`)
 
-> Example: \<button class="prefix-button primary small">\</button>
+#### **Usage example:**
+
+```html
+<button class="prefix-button primary small">A Button</button>
+```
 
 Reference: `src/assets/styles/elements/buttons.scss`
 
@@ -163,7 +318,11 @@ Cards are defined via styles, use by attaching appropriate classes.
 Class: `prefix-card`  
 Class modifiers: color
 
-> Example: \<div class="prefix-card primary">\</div>
+#### **Usage example:**
+
+```html
+<div class="prefix-card primary">A Card</div>
+```
 
 Reference: `src/assets/styles/elements/cards.scss`
 
@@ -175,7 +334,28 @@ Tables are defined via styles, use by attaching appropriate classes.
 Class: `prefix-table`  
 Class modifiers: color
 
-> Example: \<table class="prefix-table primary">\</table>
+#### **Usage example:**
+
+```html
+<table class="prefix-table primary">
+  <header>
+    <tr>
+      <th>Row header 1</th>
+      <th>Row header 2</th>
+    </tr>
+  </header>
+  <body>
+    <tr>
+      <td>Row 1.1</td>
+      <td>Row 1.2</td>
+    </tr>
+    <tr>
+      <td>Row 2.1</td>
+      <td>Row 2.2</td>
+    </tr>
+  </body>
+</table>
+```
 
 Reference: `src/assets/styles/elements/tables.scss`
 
@@ -189,138 +369,31 @@ Carousel solution is not provided, consider using third party package, e.g. http
 
 ---
 
-## Inputs (component)
-
-Inputs are used via component `BaseInput` and named export `useFormData` for scaffolding reactive data.
-
-> Lightweight wrapper around html input that provides input validation and basic validation styles.
-
-| Prop                  | Value    | Description                                    |
-| --------------------- | -------- | ---------------------------------------------- |
-| type                  | string   | Input type (defaults to text)                  |
-| hint                  | string   | Hint text                                      |
-| label                 | string   | Label text                                     |
-| validator             | function | Custom validator function                      |
-| use-error-border      | boolean  | Enables error border                           |
-| use-error-message     | boolean  | Enables error messages                         |
-| use-html-validation   | boolean  | Enables html warning tooltip                   |
-| use-required-asterisk | boolean  | Enables `*` sign on labels with required field |
-
-```js
-// default settings as defined in input.ctl
-const settings = {
-  useErrorMessage: true,
-  useErrorBorder: true,
-  useRequiredAsterisk: true,
-  useHtmlValidation: false,
-};
-```
-
-Example:
-
-```html
-<script setup>
-  import BaseInput from "../components/base/BaseInput.vue";
-  import { useFormData } from "../components/base/input.ctl";
-
-  const form = useFormData({
-    email: "",
-    password: "",
-  });
-</script>
-
-<template>
-  <form @submit.prevent>
-    <BaseInput v-model="form.model.email" type="email" required />
-    <BaseInput v-model="form.model.password" type="password" required />
-    <button type="submit">submit</button>
-  </form>
-</template>
-```
-
----
-
-## Modals (component)
-
-Modals are used via component `BaseModal`.  
-Class modifiers: color
-
-> Modals respect autofocus attribute when it is used on element within modal.
-
-| Prop                           | Value   | Description                          |
-| ------------------------------ | ------- | ------------------------------------ |
-| name                           | string  | Name of the modal                    |
-| local                          | boolean | Contained within parent element      |
-| expand                         | boolean | Spans full width and height          |
-| keep-alive                     | boolean | State persists through open/close    |
-| disable-close                  | boolean | Disables all forms of manual closing |
-| disable-close-on-esc           | boolean | Disables closing via escape          |
-| disable-close-on-button        | boolean | Disables closing via close button    |
-| disable-close-on-click-outside | boolean | Disables closing via click-outside   |
-
-Example:
-
-```html
-<script setup>
-  import { modals } from ".../components/base/modal.ctl";
-</script>
-<template>
-  <button @click="modals.login.open">Open modal</button>
-  <BaseModal class="primary" name="login">...</BaseModal>
-</template>
-```
-
----
-
-## Toasts (component)
-
-Toasts are used via named export `toast`.
-
-- variants: `success`, `danger`, `info`
-- options: `position`, `duration`, `closable`
-
-```js
-// default settings as defined in toast.ctl
-const settings = {
-  success: { position: "top center", duration: 3 * 1000 },
-  danger: { position: "top center", duration: 3 * 1000 },
-  info: { position: "bottom right", duration: 20 * 1000, closable: true },
-};
-```
-
-Example:
-
-```js
-import { toast } from ".../components/base/toast.ctl";
-
-toast.success("Message", { closable: true, duration: 0 });
-```
-
----
-
 ## Internationalization (plugin)
 
 Internationalization is supported via vue18n.
 
-Defining messages:
+#### **Usage example:**
+
+1. Defining messages:
 
 ```js
-// Message enums # .../utils/translations/index.js
+// Message enums # ./utils/translations/index.js
 export const messages = { login: { action: "", description: "" } };
 ```
 
 ```js
-// Translations # .../utils/translations/en.js
+// Translations # ./utils/translations/en.js
 export const en = {
   login: { action: "Log in", description: "Log in description" },
 };
 ```
 
-Using translations:
+2. Using translations:
 
 ```html
 <script setup>
-  import { messages } from ".../utils/translations";
+  import { messages } from "./utils/translations";
 </script>
 
 <template>

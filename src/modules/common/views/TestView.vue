@@ -1,184 +1,85 @@
 <script setup>
 import BaseInput from "../../../components/base/BaseInput.vue";
 import { useFormData } from "../../../components/base/input.ctl";
+import BaseModal from "../../../components/base/BaseModal.vue";
+import { modal } from "../../../components/base/modal.ctl";
+import { toast } from "../../../components/base/toast.ctl";
 
 const form = useFormData({
-  text: "",
   email: "",
-  password: "",
-  search: "",
-  tel: "",
-  url: "",
-  color: null,
-  number: null,
-  range: null,
-  checkbox: false,
-  checkboxMulti: [],
-  radio: null,
-  file: "",
-  textarea: "",
-  select: null,
-  datetime_local: "",
-  date: "",
-  time: "",
-  month: "",
 });
 </script>
 
 <template>
-  <form
-    @submit.prevent
-    class="snt-grid"
-    style="padding: 1rem; grid-template-columns: 1fr 1fr"
-  >
-    <div>
+  <div class="test-view-wrapper">
+    <form @submit.prevent>
+      <h2>Form example:</h2>
       <BaseInput
-        placeholder="placeholder"
-        v-model="form.model.text"
-        label="text"
-        required
-      />
-      <BaseInput
-        placeholder="placeholder"
+        placeholder="user@mail.com"
         v-model="form.model.email"
-        label="email"
-        type="email"
+        label="User email"
         required
-      />
-      <BaseInput
-        placeholder="placeholder"
-        v-model="form.model.password"
-        type="password"
-        label="password"
-        required
-        minlength="5"
-      />
-      <BaseInput
-        placeholder="placeholder"
-        v-model="form.model.search"
-        type="search"
-        label="search"
-      />
-      <BaseInput
-        placeholder="placeholder"
-        v-model="form.model.tel"
-        type="tel"
-        label="tel"
-      />
-      <BaseInput
-        placeholder="placeholder"
-        v-model="form.model.url"
-        type="url"
-        label="url"
-      />
-      <BaseInput
-        placeholder="placeholder"
-        v-model="form.model.color"
-        type="color"
-        label="color"
-      />
-      <BaseInput
-        placeholder="placeholder"
-        v-model="form.model.number"
-        type="number"
-        min="25"
-        label="number"
-      />
-      <BaseInput
-        placeholder="placeholder"
-        v-model="form.model.range"
-        type="range"
-        label="range"
-      />
-      <BaseInput
-        placeholder="placeholder"
-        v-model="form.model.checkbox"
-        type="checkbox"
-        label="checkbox toggle"
-        label-placement="inline start"
-        hint="I am a hint"
-      />
-      <BaseInput
-        placeholder="placeholder"
-        v-model="form.model.checkboxMulti"
-        type="checkbox"
-        label="multi checkbox - John"
-        value="John"
-      />
-      <BaseInput
-        placeholder="placeholder"
-        v-model="form.model.checkboxMulti"
-        type="checkbox"
-        label="multi checkbox - Sinclair"
-        value="Sinclair"
-      />
-      <BaseInput
-        placeholder="placeholder"
-        v-model="form.model.checkboxMulti"
-        type="checkbox"
-        label="multi checkbox - Dom"
-        value="Dom"
-      />
-      <BaseInput
-        placeholder="placeholder"
-        v-model="form.model.radio"
-        type="radio"
-        label="radio one"
-        value="Radio box 1"
-      />
-      <BaseInput
-        placeholder="placeholder"
-        v-model="form.model.radio"
-        type="radio"
-        label="radio two"
-        value="Radio box 2"
-      />
-      <BaseInput
-        placeholder="placeholder"
-        v-model="form.model.file"
-        type="file"
-        label="file"
-      />
-      <BaseInput
-        placeholder="placeholder"
-        v-model="form.model.textarea"
-        type="textarea"
-        label="textarea"
-      />
-      <BaseInput
-        placeholder="placeholder"
-        v-model="form.model.select"
-        type="select"
-        label="select"
-      />
-      <BaseInput
-        placeholder="placeholder"
-        v-model="form.model.datetime_local"
-        type="datetime-local"
-        label="datetime-local"
-      />
-      <BaseInput
-        placeholder="placeholder"
-        v-model="form.model.date"
-        type="date"
-        label="date"
-      />
-      <BaseInput
-        placeholder="placeholder"
-        v-model="form.model.time"
-        type="time"
-        label="time"
-      />
-      <BaseInput
-        placeholder="placeholder"
-        v-model="form.model.month"
-        type="month"
-        label="month"
       />
       <button type="submit" class="snt-button primary">submit</button>
+      <pre>form: {{ form }}</pre>
+    </form>
+
+    <div>
+      <h2>Modal example:</h2>
+      <button class="snt-button primary" @click="modal.localModal.open">
+        Open local modal
+      </button>
+      <button class="snt-button secondary" @click="modal.expandedModal.open">
+        Open expanded modal
+      </button>
+      <div
+        style="
+          height: 500px;
+          width: 500px;
+          position: relative;
+          border: 1px solid black;
+        "
+      >
+        <BaseModal local keep-alive name="localModal" class="primary">
+          <input placeholder="I am autofocused" autofocus />
+          <p>local modal</p>
+        </BaseModal>
+      </div>
+      <BaseModal expand keep-alive name="expandedModal">
+        <input placeholder="I am autofocused" autofocus />
+        <p>expanded modal</p>
+      </BaseModal>
     </div>
-    <pre style="font-size: 10px">FORM: {{ form }}</pre>
-  </form>
+
+    <div>
+      <h2>Toast example</h2>
+      <button
+        class="snt-button success"
+        @click="toast.success('Success message')"
+      >
+        Trigger success toast
+      </button>
+      <button class="snt-button danger" @click="toast.danger('Danger message')">
+        Trigger danger toast
+      </button>
+      <button class="snt-button info" @click="toast.info('Info message')">
+        Trigger info toast
+      </button>
+    </div>
+  </div>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.test-view-wrapper {
+  display: grid;
+  gap: 1rem;
+  & > * {
+    display: grid;
+    gap: 0.5rem;
+    align-content: flex-start;
+  }
+}
+h2 {
+  font-size: 1.4rem;
+}
+</style>
