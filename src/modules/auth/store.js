@@ -2,13 +2,16 @@ import { defineStore } from "pinia";
 
 /**
  * @returns {{
- *  data?: undefined,
+ *  token: string,
  * }}
  */
 export const authStoreState = () => ({
-  data: undefined,
+  token: "",
 });
 
 export const useAuthStore = defineStore("auth", {
   state: authStoreState,
+  getters: {
+    isLoggedIn: (ctx) => !!ctx.token,
+  },
 });

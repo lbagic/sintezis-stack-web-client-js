@@ -2,7 +2,7 @@
 
 <template>
   <div>
-    <p>AboutView</p>
+    <p>ProfileView</p>
   </div>
 </template>
 

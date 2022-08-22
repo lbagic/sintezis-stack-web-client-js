@@ -16,7 +16,7 @@ const form = useFormData({
       <h2>Form example:</h2>
       <BaseInput
         placeholder="user@mail.com"
-        v-model="form.model.email"
+        v-model="form.model.asdf"
         label="User email"
         required
       />

@@ -10,7 +10,7 @@ export const authRoutes = [
   },
   {
     path: "/register",
-    component: () => import("./views/LogoutView.vue"),
+    component: () => import("./views/RegisterView.vue"),
     meta: { userOnly: true, title: "Register" },
   },
   {

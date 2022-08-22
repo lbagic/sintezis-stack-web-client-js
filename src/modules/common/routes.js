@@ -9,10 +9,6 @@ export const commonRoutes = [
     meta: { userOnly: true },
   },
   {
-    path: "/about",
-    component: () => import("./views/AboutView.vue"),
-  },
-  {
     path: "/test",
     component: () => import("./views/TestView.vue"),
   },
