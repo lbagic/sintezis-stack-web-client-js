@@ -8,8 +8,8 @@ import BaseToast from "./components/base/BaseToast.vue";
     <nav>
       <RouterLink class="snt-button primary" to="/">Home</RouterLink>
       <RouterLink class="snt-button secondary" to="/login">Login</RouterLink>
-      <RouterLink class="snt-button success outline" to="/user/profile"
-        >User Profile</RouterLink
+      <RouterLink class="snt-button success outline" to="/items"
+        >Items</RouterLink
       >
       <RouterLink class="snt-button danger text" to="/test">Test</RouterLink>
     </nav>

@@ -3,7 +3,7 @@ import { createPersistedState } from "pinia-plugin-persistedstate";
 
 export const pinia = createPinia();
 
-// Attach persisted state plugin
+// Persist state plugin
 pinia.use(
   createPersistedState({
     storage: localStorage,
@@ -13,3 +13,13 @@ pinia.use(
     },
   })
 );
+
+// Reset plugin
+pinia.use(({ store, options }) => {
+  const reset = Object.keys(store.$state).reduce((o, key) => {
+    o[key] = () => store.$patch({ [key]: options.state()[key] });
+    return o;
+  }, {});
+  if (import.meta.env.DEV) store._customProperties.add("reset");
+  return { reset };
+});

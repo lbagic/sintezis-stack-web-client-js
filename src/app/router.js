@@ -3,7 +3,7 @@ import { ROLES } from "../constants/ROLES";
 import { authRoutes } from "../modules/auth/routes";
 import { useAuthStore } from "../modules/auth/store";
 import { commonRoutes } from "../modules/common/routes";
-import { userRoutes } from "../modules/user/routes";
+import { itemRoutes } from "../modules/items/routes";
 
 const settings = {
   defaultRoute: {
@@ -20,7 +20,7 @@ const settings = {
 export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   /** @type {import("vue-router").RouteRecordRaw[]} */
-  routes: [...commonRoutes, ...authRoutes, ...userRoutes],
+  routes: [...commonRoutes, ...authRoutes, ...itemRoutes],
 });
 
 router.beforeEach((to, from, next) => {
