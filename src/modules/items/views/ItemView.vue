@@ -2,7 +2,7 @@
 
 <template>
   <div>
-    <p>ProfileView</p>
+    <p>ItemView</p>
   </div>
 </template>
 
