@@ -13,6 +13,7 @@
     "@lbagic/collections": "^1.0.3",
     "@vueuse/core": "^8.9.4",
     "@vueuse/integrations": "^9.0.2",
+    "axios": "^0.27.2",
     "change-case": "^4.1.2",
     "focus-trap": "^6.9.4",
     "pinia": "^2.0.14",

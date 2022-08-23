@@ -44,14 +44,14 @@ const bundleInterceptors = (getToken, callMap) => ({
  * Creates a grpc instance.
  *
  * @param {{
- *  hostname: String,
+ *  baseURL: String,
  *  getToken: () => String,
  * }} config Decsripton.
  * @returns { GatewayControllerPromiseClient } Return description.
  */
 export const createGrpc = (config) => {
-  const { getToken, hostname } = config;
-  if (!hostname) throw new Error("Grpc hostname is missing.");
+  const { getToken, baseURL } = config;
+  if (!baseURL) throw new Error("Grpc baseURL is missing.");
 
   const callMap = new Map();
   const interceptor = bundleInterceptors(getToken, callMap);
@@ -60,5 +60,5 @@ export const createGrpc = (config) => {
     streamInterceptors: [interceptor],
   };
 
-  return new GatewayControllerPromiseClient(hostname, undefined, interceptors);
+  return new GatewayControllerPromiseClient(baseURL, undefined, interceptors);
 };

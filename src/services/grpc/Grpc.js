@@ -3,21 +3,18 @@ import { createGrpc } from "./base/BaseGrpc";
 
 const authStore = useAuthStore();
 
-/**
- * Object with multiple grpc instances.
- */
 export const Grpc = {
   snt: createGrpc({
-    hostname: import.meta.env.VITE_GRPC_ENDPOINT,
+    baseUrl: import.meta.env.VITE_SNT_GRPC_ENDPOINT,
     getToken: () => authStore.token,
   }),
 };
 
 /**
- * Hydrates Grpc model with plain js data.
+ * Hydrate Grpc model with plain js data.
  *
  * @param { any } modelInstance Decsripton.
- * @param { object } data Data with which Grpc model is hydrated.
+ * @param { Record<string, any> } data Data with which Grpc model is hydrated.
  * @returns { any } Returns hydrated Grpc model Instance.
  */
 export function hydrateGrpcModel(modelInstance, data) {
@@ -39,7 +36,7 @@ export function hydrateGrpcModel(modelInstance, data) {
 }
 
 /**
- * Handles custom Grpc options.
+ * Add custom Grpc options.
  *
  * @typedef {{
  *   useToasts: Boolean,
