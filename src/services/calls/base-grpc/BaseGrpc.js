@@ -1,11 +1,10 @@
 import { GatewayControllerPromiseClient } from "../../../../util/gen/services/services_grpc_web_pb";
-import {
-  optionsInterceptor,
-  authInterceptor,
-  debugInterceptor,
-  unauthInterceptor,
-  notificationInterceptor,
-} from "./BaseGrpc.interceptors";
+import { authInterceptor } from "../interceptors/authInterceptor";
+import { logInterceptor } from "../interceptors/logInterceptor";
+import { notificationInterceptor } from "../interceptors/notificationInterceptor";
+import { optionsInterceptor } from "../interceptors/optionsInterceptor";
+import { unAuthInterceptor } from "../interceptors/unAuthInterceptor";
+
 import {
   resolveGrpcRequestContext,
   resolveGrpcCallContext,
@@ -19,8 +18,8 @@ const bundleInterceptors = (getToken, callMap) => ({
     const token = getToken?.();
     const requestContext = resolveGrpcRequestContext(req, token);
 
-    optionsInterceptor(requestContext);
-    authInterceptor(requestContext);
+    optionsInterceptor.grpc(requestContext);
+    authInterceptor.grpc(requestContext);
 
     // Initiate grpc call
     const callContext = resolveGrpcCallContext({
@@ -31,10 +30,11 @@ const bundleInterceptors = (getToken, callMap) => ({
     });
 
     if (!callContext.isDuplicateCall) {
-      if (!import.meta.env.PROD) debugInterceptor(callContext);
-      if (callContext.options.useToasts) notificationInterceptor(callContext);
+      if (!import.meta.env.PROD) logInterceptor.grpc(callContext);
+      if (callContext.options.useToasts)
+        notificationInterceptor.grpc(callContext);
     }
-    if (token) unauthInterceptor(callContext);
+    if (token) unAuthInterceptor.grpc(callContext);
 
     return callContext.call;
   },

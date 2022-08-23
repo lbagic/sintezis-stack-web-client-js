@@ -1,4 +1,6 @@
 import axios from "axios";
+import { authInterceptor } from "../interceptors/authInterceptor";
+import { logInterceptor } from "../interceptors/logInterceptor";
 
 /**
  * Creates an api instance.
@@ -13,14 +15,8 @@ export const createApi = (config) => {
   if (!baseURL) throw new Error("Api baseURL is missing.");
   const instance = axios.create({ baseURL });
 
-  instance.interceptors.request.use(
-    (config) => {
-      const token = getToken();
-      if (token) config.headers = { Authorization: `Bearer ${token}` };
-      return config;
-    },
-    (error) => Promise.reject(error)
-  );
+  authInterceptor.api(instance, { getToken });
+  logInterceptor.api(instance);
 
   return instance;
 };
