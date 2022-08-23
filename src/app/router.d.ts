@@ -1,5 +1,4 @@
 import { ROLES } from "../constants/ROLES"
-
 export {}
 
 declare module 'vue-router' {
