@@ -1,4 +1,4 @@
-import { Grpc, grpcOptions, hydrateGrpcModel } from "../../services/grpc";
+import { Grpc, grpcOptions, hydrateGrpcModel } from "../../services/grpc/Grpc";
 
 let IndexUserRequest,
   GetUserRequest,

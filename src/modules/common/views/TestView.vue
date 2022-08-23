@@ -16,7 +16,7 @@ const form = useFormData({
       <h2>Form example:</h2>
       <BaseInput
         placeholder="user@mail.com"
-        v-model="form.model.asdf"
+        v-model="form.model.email"
         label="User email"
         required
       />
@@ -40,14 +40,16 @@ const form = useFormData({
           border: 1px solid black;
         "
       >
-        <BaseModal local keep-alive name="localModal" class="primary">
-          <input placeholder="I am autofocused" autofocus />
+        <BaseModal local name="localModal" class="primary">
           <p>local modal</p>
+          <p>Input with "autofocus" attribute</p>
+          <input placeholder="I am autofocused" autofocus />
         </BaseModal>
       </div>
-      <BaseModal expand keep-alive name="expandedModal">
-        <input placeholder="I am autofocused" autofocus />
+      <BaseModal expand name="expandedModal">
         <p>expanded modal</p>
+        <p>Input with "autofocus" attribute</p>
+        <input placeholder="I am autofocused" autofocus />
       </BaseModal>
     </div>
 
