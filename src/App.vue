@@ -1,18 +1,11 @@
 <script setup>
-import { RouterLink, RouterView } from "vue-router";
 import BaseToast from "./components/base/BaseToast.vue";
+import AppNavigation from "./components/AppNavigation.vue";
 </script>
 
 <template>
   <header>
-    <nav>
-      <RouterLink class="snt-button primary" to="/">Home</RouterLink>
-      <RouterLink class="snt-button secondary" to="/login">Login</RouterLink>
-      <RouterLink class="snt-button success outline" to="/items"
-        >Items</RouterLink
-      >
-      <RouterLink class="snt-button danger text" to="/test">Test</RouterLink>
-    </nav>
+    <AppNavigation />
   </header>
 
   <RouterView />
