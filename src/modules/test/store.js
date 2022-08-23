@@ -5,12 +5,12 @@ import { defineStore } from "pinia";
  *  items: any[],
  * }}
  */
-export const itemStoreState = () => ({
+export const testStoreState = () => ({
   items: [],
 });
 
-export const useItemStore = defineStore("item", {
-  state: itemStoreState,
+export const useTestStore = defineStore("test", {
+  state: testStoreState,
   actions: {
     addItems() {
       this.items.push("item");

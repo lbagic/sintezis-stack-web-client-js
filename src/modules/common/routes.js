@@ -10,11 +10,4 @@ export const commonRoutes = [
       title: "Home",
     },
   },
-  {
-    path: "/test",
-    component: () => import("./views/TestView.vue"),
-    meta: {
-      title: "Test",
-    },
-  },
 ];
