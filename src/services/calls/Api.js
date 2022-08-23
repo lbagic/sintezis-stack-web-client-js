@@ -1,11 +1,11 @@
 import { useAuthStore } from "../../modules/auth/store";
-import { createApi } from "./base/BaseApi";
+import { createApi } from "./base-api/BaseApi";
 
 const authStore = useAuthStore();
 
 export const Api = {
   snt: createApi({
-    hostname: import.meta.env.VITE_SNT_API_ENDPOINT,
+    baseURL: import.meta.env.VITE_SNT_API_ENDPOINT,
     getToken: () => authStore.token,
   }),
 };

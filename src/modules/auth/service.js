@@ -8,7 +8,7 @@ import { appleAuth } from "../../services/auth-providers/appleAuth";
 import { facebookAuth } from "../../services/auth-providers/facebookAuth";
 import { googleAuth } from "../../services/auth-providers/googleAuth";
 import { twitterAuth } from "../../services/auth-providers/twitterAuth";
-import { Grpc, grpcOptions } from "../../services/grpc/Grpc";
+import { Grpc, grpcOptions } from "../../services/calls/Grpc";
 
 export const authService = {
   login: ({ email, password }) =>

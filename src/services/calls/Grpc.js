@@ -1,11 +1,11 @@
 import { useAuthStore } from "../../stores/authStore";
-import { createGrpc } from "./base/BaseGrpc";
+import { createGrpc } from "./base-grpc/BaseGrpc";
 
 const authStore = useAuthStore();
 
 export const Grpc = {
   snt: createGrpc({
-    baseUrl: import.meta.env.VITE_SNT_GRPC_ENDPOINT,
+    baseURL: import.meta.env.VITE_SNT_GRPC_ENDPOINT,
     getToken: () => authStore.token,
   }),
 };
