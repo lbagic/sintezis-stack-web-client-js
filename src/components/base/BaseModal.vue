@@ -25,6 +25,10 @@ const props = defineProps({
 });
 
 const prefix = useCssVar("--prefix");
+const baseZIndex = Number(
+  useCssVar(`--${prefix.value}app-modal-z-index`).value
+);
+let zIndex = $ref(Number(baseZIndex.value));
 const modalRef = ref();
 const wrapperRef = ref();
 const colorNames = Object.keys(css.colors);
@@ -51,11 +55,16 @@ const disabledClose = {
 
 function open() {
   if (state.isOpen) return;
+  zIndex = _modalCtl.stack.length + baseZIndex;
+  console.log(zIndex);
+  if (!props.local) _modalCtl.stack.push(state);
   state.isOpen = true;
   emit("open");
 }
-function close() {
+function close(forceClose = true) {
   if (!state.isOpen) return;
+  if (state.paused && !forceClose) return;
+  if (!props.local) _modalCtl.stack.pop();
   state.isOpen = false;
   emit("close");
 }
@@ -67,9 +76,10 @@ const state = _modalCtl.createState({
   local: props.local,
   expand: props.expand,
   keepAlive: props.keepAlive,
+  paused: false,
 });
 
-if (!disabledClose.onClickOutside) onClickOutside(modalRef, close);
+if (!disabledClose.onClickOutside) onClickOutside(modalRef, () => close(false));
 
 async function copyColorClassToWrapper() {
   const colors = [...modalRef.value.classList].filter(colorFilter);
@@ -86,6 +96,13 @@ watch(
     } else {
       focusTrap.deactivate();
     }
+  }
+);
+watch(
+  () => state.paused,
+  (isPaused) => {
+    if (isPaused) focusTrap.pause();
+    else focusTrap.unpause();
   }
 );
 
@@ -105,8 +122,10 @@ onUnmounted(() => {
         ref="wrapperRef"
         :data-expand="props.expand"
         :data-local="props.local"
+        :data-paused="state.paused"
         tabindex="-1"
-        @keydown.esc="() => !disabledClose.onEsc && close()"
+        :style="{ zIndex }"
+        @keydown.esc="() => !disabledClose.onEsc && close(false)"
         v-if="state.isOpen || props.keepAlive"
         v-show="state.isOpen || !props.keepAlive"
       >
@@ -118,9 +137,10 @@ onUnmounted(() => {
         >
           <button
             v-if="!disabledClose.onButton"
-            @click="close"
+            @click="close(false)"
             :class="`${prefix}modal-close-button`"
           ></button>
+          <pre>{{ state.paused }}</pre>
           <slot></slot>
         </div>
       </div>

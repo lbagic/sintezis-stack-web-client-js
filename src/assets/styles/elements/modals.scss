@@ -3,16 +3,16 @@
   --modal-border-color: var(--#{$prefix}color-grey-lighter);
   --modal-overlay-color: var(--#{$prefix}color-grey-opaque);
   --modal-shadow-color: var(--#{$prefix}color-grey-opaque);
-  --modal-z-index: var(--#{$prefix}z-index-modal);
   --modal-border-radius: 3px;
   --modal-padding: 16px;
   --modal-width: 600px;
+
+  transition: background 0.3s cubic-bezier(0.8, 0.4, 0.2, 0.8);
 
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
-  z-index: var(--modal-z-index);
 
   &[data-local="true"] {
     position: absolute;
@@ -20,20 +20,25 @@
   &[data-local="false"] {
     position: fixed;
   }
-  &[data-expand="true"] {
+  &[data-expand="true"][data-paused="false"] {
     background: var(--modal-background-color);
   }
   &[data-expand="false"] {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--modal-overlay-color);
-    backdrop-filter: blur(1px);
-    @each $color, $value in $base-colors {
-      &.#{$color} {
-        background: var(--#{$prefix}color-#{$color}-opaque-light);
+    &[data-paused="false"] {
+      background: var(--modal-overlay-color);
+      backdrop-filter: blur(1px);
+      @each $color, $value in $base-colors {
+        &.#{$color} {
+          background: var(--#{$prefix}color-#{$color}-opaque-light);
+        }
       }
     }
+  }
+  &[data-paused="true"] {
+    background: transparent;
   }
 }
 
