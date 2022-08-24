@@ -468,7 +468,7 @@ Web Stack roadmap containing current status and stages of custom elements.
 | sizing and overflowing                     | ✅     |
 | focus trap                                 | ✅     |
 | focus first focusable element              | ✅     |
-| modal stack for multiple fullscreen modals |        |
+| modal stack for multiple fullscreen modals | ✅     |
 | open via ref                               | ✅     |
 | open via url hash                          |        |
 | open via url query                         |        |

@@ -8,41 +8,52 @@ import { reactive, watch } from "vue";
  *  local: boolean
  *  expand: boolean
  *  keepAlive: boolean
+ *  paused: boolean
  * }} ModalState
  * */
 
 /** @type { Record<string, ModalState> } Object for programmatic control of modals. */
 export const modal = reactive({});
+const modals = modal;
+
 /**
  * Create modal state.
  *
- * @param { ModalState } state Decsripton.
- * @returns { type } Return description.
+ * @param { ModalState } state.
+ * @returns { ModalState }.
  */
 function createState(state) {
   return reactive(state);
 }
 
 // watcher for toggling body scroll
+
+let modalId = 1;
+export const _modalCtl = reactive({
+  modals,
+  /** @type { ModalState[] } */
+  stack: [],
+  createState,
+  mount(id, state) {
+    const identifier = id ?? modalId++;
+    modals[identifier] = state;
+  },
+  unmount(id) {
+    delete modals[id];
+  },
+});
+
 watch(
-  () => modal,
-  (modal) => {
-    const isFullscreenOpen = Object.values(modal).some(
-      (modal) => modal.isOpen && !modal.local
-    );
+  () => _modalCtl.stack.length,
+  (stackLength) => {
+    if (stackLength) {
+      const last = _modalCtl.stack.at(-1);
+      _modalCtl.stack.forEach((modal) => (modal.paused = true));
+      setTimeout(() => (last.paused = false));
+    }
+    console.log(_modalCtl.stack.map((el) => el.paused));
+    const isFullscreenOpen = _modalCtl.stack.some((modal) => !modal.local);
     document.body.style.overflowY = isFullscreenOpen ? "hidden" : "auto";
   },
   { deep: true }
 );
-
-let modalId = 1;
-export const _modalCtl = reactive({
-  modal,
-  createState,
-  mount(id, state) {
-    modal[id ?? modalId++] = state;
-  },
-  unmount(id) {
-    delete modal[id];
-  },
-});
