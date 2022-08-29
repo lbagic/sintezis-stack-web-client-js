@@ -56,7 +56,6 @@ const disabledClose = {
 function open() {
   if (state.isOpen) return;
   zIndex = _modalCtl.stack.length + baseZIndex;
-  console.log(zIndex);
   if (!props.local) _modalCtl.stack.push(state);
   state.isOpen = true;
   emit("open");
@@ -140,7 +139,6 @@ onUnmounted(() => {
             @click="close(false)"
             :class="`${prefix}modal-close-button`"
           ></button>
-          <pre>{{ state.paused }}</pre>
           <slot></slot>
         </div>
       </div>

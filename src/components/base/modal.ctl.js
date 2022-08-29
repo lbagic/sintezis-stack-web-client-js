@@ -51,7 +51,6 @@ watch(
       _modalCtl.stack.forEach((modal) => (modal.paused = true));
       setTimeout(() => (last.paused = false));
     }
-    console.log(_modalCtl.stack.map((el) => el.paused));
     const isFullscreenOpen = _modalCtl.stack.some((modal) => !modal.local);
     document.body.style.overflowY = isFullscreenOpen ? "hidden" : "auto";
   },
