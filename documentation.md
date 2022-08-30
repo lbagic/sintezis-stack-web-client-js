@@ -39,7 +39,6 @@
     - [Released 🚀 (Ready for use)](#released--ready-for-use)
     - [Recommended ✅ (Battle tested)](#recommended--battle-tested)
   - [BaseInput roadmap](#baseinput-roadmap)
-  - [BaseModal roadmap](#basemodal-roadmap)
 
 ---
 
@@ -118,6 +117,8 @@ Modals respect autofocus attribute when it is used on elements within modal.
 | Prop                           | Value   | Description                          |
 | ------------------------------ | ------- | ------------------------------------ |
 | name                           | string  | Name of the modal                    |
+| hash                           | string  | Route hash on which modal will open  |
+| query                          | string  | Route query on which modal will open |
 | local                          | boolean | Contained within parent element      |
 | expand                         | boolean | Spans full width and height          |
 | keep-alive                     | boolean | State persists through open/close    |
@@ -458,22 +459,3 @@ Web Stack roadmap containing current status and stages of custom elements.
 | `textarea`, `select` support    | native |
 | `checkbox`, `radio` support     | native |
 | `file input` support            | native |
-
-## BaseModal roadmap
-
-| Feature                                    | Status |
-| ------------------------------------------ | ------ |
-| modal & overlay support                    | ✅     |
-| color scheme                               | ✅     |
-| sizing and overflowing                     | ✅     |
-| focus trap                                 | ✅     |
-| focus first focusable element              | ✅     |
-| modal stack for multiple fullscreen modals | ✅     |
-| open via ref                               | ✅     |
-| open via url hash                          |        |
-| open via url query                         |        |
-| open programmaticaly                       | ✅     |
-| disable body scroll                        | ✅     |
-| close via escape                           | ✅     |
-| close via clickaway                        | ✅     |
-| close via close button                     | ✅     |

@@ -1,58 +1,95 @@
 import { reactive, watch } from "vue";
 
 /**
+ * @typedef { Readonly<{
+ *  name?: string,
+ *  hash?: string,
+ *  query?: string,
+ *  local: boolean,
+ *  expand: boolean,
+ *  keepAlive: boolean,
+ *  disableCloseOnClickOutside: boolean,
+ *  disableCloseOnButton: boolean,
+ *  disableCloseOnEsc: boolean,
+ *  disableClose: boolean,
+ * }> } ModalProps
+ *
  * @typedef {{
- *  isOpen: boolean
+ *  isOpen: boolean,
+ *  isPaused: boolean,
+ *  zIndex: number,
+ * }} ModalState
+ *
+ * @typedef {{
+ *  state: ModalState
+ *  props: ModalProps
  *  open: () => void
  *  close: () => void
- *  local: boolean
- *  expand: boolean
- *  keepAlive: boolean
- *  paused: boolean
- * }} ModalState
+ * }} ModalCtl
  * */
 
-/** @type { Record<string, ModalState> } Object for programmatic control of modals. */
-export const modal = reactive({});
-const modals = modal;
-
 /**
- * Create modal state.
- *
- * @param { ModalState } state.
- * @returns { ModalState }.
+ * @type {{
+ *  modals: Record<string, ModalCtl>
+ *  openNonLocalModals: { state: ModalState, props: ModalProps }[]
+ * }}
  */
-function createState(state) {
-  return reactive(state);
-}
-
-// watcher for toggling body scroll
-
-let modalId = 1;
-export const _modalCtl = reactive({
-  modals,
-  /** @type { ModalState[] } */
-  stack: [],
-  createState,
-  mount(id, state) {
-    const identifier = id ?? modalId++;
-    modals[identifier] = state;
-  },
-  unmount(id) {
-    delete modals[id];
-  },
+const ctl = reactive({
+  modals: {},
+  openNonLocalModals: [],
 });
 
-watch(
-  () => _modalCtl.stack.length,
-  (stackLength) => {
-    if (stackLength) {
-      const last = _modalCtl.stack.at(-1);
-      _modalCtl.stack.forEach((modal) => (modal.paused = true));
-      setTimeout(() => (last.paused = false));
-    }
-    const isFullscreenOpen = _modalCtl.stack.some((modal) => !modal.local);
-    document.body.style.overflowY = isFullscreenOpen ? "hidden" : "auto";
+/**
+ * @type {{
+ *  mount: (config: ModalCtl) => void
+ *  unmount: (config: { props: ModalProps }) => void
+ *  open: (config: { state: ModalState, props: ModalProps, baseZIndex: number }) => void
+ *  close: (config: { state: ModalState, props: ModalProps, forceClose: boolean }) => void
+ * }}
+ */
+export const _modalCtl = {
+  mount({ state, props, open, close }) {
+    const name = props.name;
+    if (ctl.modals[name])
+      throw new Error(`Modal with name "${name}" already exists.`);
+    ctl.modals[name] = { state, props, open, close };
   },
-  { deep: true }
+  unmount({ props }) {
+    const name = props.name;
+    delete ctl.modals[name];
+  },
+  open({ state, props, baseZIndex }) {
+    if (state.isOpen) return;
+    if (!props.local) {
+      ctl.openNonLocalModals.push({ state, props });
+      state.zIndex = baseZIndex + ctl.openNonLocalModals.length;
+    }
+    state.isOpen = true;
+    return true;
+  },
+  close({ state, props, forceClose }) {
+    if (!state.isOpen || (state.isPaused && !forceClose)) return;
+    if (!props.local) {
+      ctl.openNonLocalModals.pop();
+    }
+    state.isOpen = false;
+    return true;
+  },
+};
+
+watch(
+  () => ctl.openNonLocalModals.length,
+  (stackLength) => {
+    // toggle focus pause for non local modals
+    if (stackLength) {
+      const items = ctl.openNonLocalModals.slice(0, -1);
+      const lastItem = ctl.openNonLocalModals.at(-1);
+      items.forEach((modal) => (modal.state.isPaused = true));
+      setTimeout(() => (lastItem.state.isPaused = false));
+    }
+    // toggle body scroll
+    document.body.style.overflowY = stackLength ? "hidden" : "auto";
+  }
 );
+
+export const modal = ctl.modals;
