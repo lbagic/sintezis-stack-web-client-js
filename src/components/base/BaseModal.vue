@@ -5,16 +5,27 @@ export default {
 </script>
 
 <script setup>
-import { onClickOutside, useCssVar } from "@vueuse/core";
+import { onClickOutside } from "@vueuse/core";
 import { useFocusTrap } from "@vueuse/integrations/useFocusTrap";
-import { nextTick, onMounted, onUnmounted, ref, watch } from "vue";
+import {
+  getCurrentInstance,
+  nextTick,
+  onMounted,
+  onUnmounted,
+  reactive,
+  ref,
+  watch,
+} from "vue";
+import { useRouter } from "vue-router";
 import { css } from "../../utils/css.js";
 import { _modalCtl } from "./modal.ctl.js";
-const voidFn = () => undefined;
 
+const router = useRouter();
 const emit = defineEmits(["close", "open"]);
 const props = defineProps({
-  name: { type: String, required: true },
+  name: String,
+  hash: String,
+  query: String,
   local: Boolean,
   expand: Boolean,
   keepAlive: Boolean,
@@ -24,93 +35,111 @@ const props = defineProps({
   disableClose: Boolean,
 });
 
-const prefix = useCssVar("--prefix");
-const baseZIndex = Number(
-  useCssVar(`--${prefix.value}app-modal-z-index`).value
-);
-let zIndex = $ref(Number(baseZIndex.value));
-const modalRef = ref();
-const wrapperRef = ref();
+if (!props.name && !props.hash && !props.query) {
+  const instance = getCurrentInstance();
+  throw new Error(
+    `${instance.type.__name} in "${instance.parent.type.__name}" must have at least one identifier prop: name, hash or query.`
+  );
+}
+
+const getCssVar = (name) =>
+  getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+const prefix = getCssVar("--prefix");
 const colorNames = Object.keys(css.colors);
-const colorFilter = (name) => colorNames.includes(name);
-const focusTrap = props.local
-  ? { activate: voidFn, deactivate: voidFn }
-  : useFocusTrap(wrapperRef, { initialFocus: false });
-const setInitialFocus = () => {
-  const focusElement =
-    modalRef.value.querySelector("[autofocus]") ||
-    modalRef.value.querySelector(
-      `a, button:not(.${prefix.value}modal-close-button), input, textarea, select, summary`
-    ) ||
-    wrapperRef.value;
-  focusElement?.focus?.();
+const baseZIndex = Number(getCssVar(`--${prefix}app-modal-z-index`));
+
+const refs = {
+  modal: ref(),
+  wrapper: ref(),
 };
 
-const disabledClose = {
-  onClickOutside:
-    props.disableClose || props.disableCloseOnClickOutside || props.local,
-  onButton: props.disableClose || props.disableCloseOnButton,
-  onEsc: props.disableClose || props.disableCloseOnEsc,
+const state = reactive({
+  isOpen: false,
+  isPaused: false,
+  zIndex: baseZIndex,
+});
+
+const util = {
+  filterColorName: (name) => colorNames.includes(name),
+  getFocusElement: () =>
+    refs.modal.value.querySelector("[autofocus]") ||
+    refs.modal.value.querySelector(
+      `a, button:not(.${prefix}modal-close-button), input, textarea, select, summary`
+    ) ||
+    refs.wrapper.value,
 };
+
+const useClose = {
+  onClickOutside: !(
+    props.disableClose ||
+    props.disableCloseOnClickOutside ||
+    props.local
+  ),
+  onButton: !(props.disableClose || props.disableCloseOnButton),
+  onEsc: !(props.disableClose || props.disableCloseOnEsc),
+};
+
+const focusTrap = props.local
+  ? { activate: () => util.getFocusElement()?.focus?.(), deactivate: () => {} }
+  : useFocusTrap(refs.wrapper, { initialFocus: util.getFocusElement });
+
+async function initColor() {
+  const color = [...refs.modal.value.classList].find(util.filterColorName);
+  if (color) refs.wrapper.value.classList.add(color);
+}
+
+if (useClose.onClickOutside) onClickOutside(refs.modal, () => close(false));
 
 function open() {
-  if (state.isOpen) return;
-  zIndex = _modalCtl.stack.length + baseZIndex;
-  if (!props.local) _modalCtl.stack.push(state);
-  state.isOpen = true;
+  const isOpened = _modalCtl.open({ state, props, baseZIndex });
+  if (!isOpened) return;
+  nextTick(() => {
+    initColor();
+    focusTrap.activate();
+  });
   emit("open");
 }
 function close(forceClose = true) {
-  if (!state.isOpen) return;
-  if (state.paused && !forceClose) return;
-  if (!props.local) _modalCtl.stack.pop();
-  state.isOpen = false;
+  const isClosed = _modalCtl.close({ state, props, forceClose });
+  if (!isClosed) return;
+  if (props.hash || props.query) {
+    const route = { ...router.currentRoute.value };
+    if (props.hash) route.hash = props.hash === route.hash ? "" : route.hash;
+    if (props.query)
+      route.query = Object.fromEntries(
+        Object.entries(route.query).filter(([key]) => key !== props.query)
+      );
+    router.replace(route);
+  }
+  focusTrap.deactivate();
   emit("close");
 }
 
-const state = _modalCtl.createState({
-  isOpen: false,
-  open,
-  close,
-  local: props.local,
-  expand: props.expand,
-  keepAlive: props.keepAlive,
-  paused: false,
-});
-
-if (!disabledClose.onClickOutside) onClickOutside(modalRef, () => close(false));
-
-async function copyColorClassToWrapper() {
-  const colors = [...modalRef.value.classList].filter(colorFilter);
-  wrapperRef.value.classList.add(...colors);
-}
 watch(
-  () => state.isOpen,
-  async (isOpen) => {
-    if (isOpen) {
-      await nextTick();
-      copyColorClassToWrapper();
-      focusTrap.activate();
-      setInitialFocus();
-    } else {
-      focusTrap.deactivate();
-    }
-  }
-);
-watch(
-  () => state.paused,
+  () => state.isPaused,
   (isPaused) => {
     if (isPaused) focusTrap.pause();
     else focusTrap.unpause();
   }
 );
 
-onMounted(() => {
-  _modalCtl.mount(props.name, state);
-});
-onUnmounted(() => {
-  _modalCtl.unmount(props.name);
-});
+if (props.hash) {
+  watch(
+    () => router.currentRoute.value.hash,
+    (hash) => (hash === props.hash ? open() : close(false))
+  );
+}
+if (props.query) {
+  watch(
+    () => router.currentRoute.value.query,
+    (query) =>
+      Object.keys(query).includes(props.query) ? open() : close(false)
+  );
+}
+if (props.name) {
+  onMounted(() => _modalCtl.mount({ state, props, open, close }));
+  onUnmounted(() => _modalCtl.unmount({ props }));
+}
 </script>
 
 <template>
@@ -118,13 +147,13 @@ onUnmounted(() => {
     <Transition :name="`${prefix}modal-transition`">
       <div
         :class="`${prefix}modal-wrapper`"
-        ref="wrapperRef"
+        :ref="(el) => (refs.wrapper.value = el)"
         :data-expand="props.expand"
         :data-local="props.local"
-        :data-paused="state.paused"
+        :data-paused="state.isPaused"
         tabindex="-1"
-        :style="{ zIndex }"
-        @keydown.esc="() => !disabledClose.onEsc && close(false)"
+        :style="{ zIndex: state.zIndex }"
+        @keydown.esc="() => useClose.onEsc && close(false)"
         v-if="state.isOpen || props.keepAlive"
         v-show="state.isOpen || !props.keepAlive"
       >
@@ -132,10 +161,10 @@ onUnmounted(() => {
           :class="`${prefix}modal`"
           v-bind="$attrs"
           :data-expand="props.expand"
-          ref="modalRef"
+          :ref="(el) => (refs.modal.value = el)"
         >
           <button
-            v-if="!disabledClose.onButton"
+            v-if="useClose.onButton"
             @click="close(false)"
             :class="`${prefix}modal-close-button`"
           ></button>
