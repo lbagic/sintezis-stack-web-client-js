@@ -26,12 +26,25 @@ const form = useFormData({
 
     <div>
       <h2>Modal example:</h2>
+      <button class="snt-button primary" @click="modal.defaultModal.open">
+        Open default modal
+      </button>
       <button class="snt-button primary" @click="modal.localModal.open">
         Open local modal
       </button>
       <button class="snt-button secondary" @click="modal.expandedModal.open">
         Open expanded modal
       </button>
+      <BaseModal name="defaultModal">
+        <p>default modal</p>
+        <p>Input with "autofocus" attribute</p>
+        <input placeholder="I am autofocused" autofocus />
+      </BaseModal>
+      <BaseModal expand name="expandedModal">
+        <p>expanded modal</p>
+        <p>Input with "autofocus" attribute</p>
+        <input placeholder="I am autofocused" autofocus />
+      </BaseModal>
       <div
         style="
           height: 500px;
@@ -46,11 +59,6 @@ const form = useFormData({
           <input placeholder="I am autofocused" autofocus />
         </BaseModal>
       </div>
-      <BaseModal expand name="expandedModal">
-        <p>expanded modal</p>
-        <p>Input with "autofocus" attribute</p>
-        <input placeholder="I am autofocused" autofocus />
-      </BaseModal>
     </div>
 
     <div>
