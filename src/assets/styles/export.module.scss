@@ -2,6 +2,7 @@
   JSON: generate-json(
     (
       breakpoints: $breakpoints,
+      containers: $containers,
       prefix: $prefix,
       colors: $colors,
     )
