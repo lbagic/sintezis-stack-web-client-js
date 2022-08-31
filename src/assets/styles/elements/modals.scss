@@ -53,6 +53,11 @@
   &[data-expand="false"] {
     width: 100%;
     max-width: min(var(--modal-width), 100% - var(--modal-padding));
+    @each $container, $size in $containers {
+      &.#{$prefix}container-#{$container} {
+        max-width: min($size, 100% - var(--modal-padding));
+      }
+    }
     min-height: 300px;
     max-height: calc(100% - 32px);
     border-width: 1px;

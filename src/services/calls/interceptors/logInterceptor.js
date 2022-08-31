@@ -45,6 +45,10 @@ export const logInterceptor = {
         logger("log", name, response);
         return response;
       },
-      (error) => Promise.reject(error)
+      (error) => {
+        const name = error.config.url;
+        logger("warn", name, error);
+        return Promise.reject(error);
+      }
     ),
 };

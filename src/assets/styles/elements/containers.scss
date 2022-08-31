@@ -9,25 +9,11 @@
 .#{$prefix}container {
   padding: 16px;
 }
-.#{$prefix}container-s {
-  @extend %#{$prefix}container-base;
-  max-width: 400px;
-}
-.#{$prefix}container-m {
-  @extend %#{$prefix}container-base;
-  max-width: 600px;
-}
-.#{$prefix}container-l {
-  @extend %#{$prefix}container-base;
-  max-width: 800px;
-}
-.#{$prefix}container-xl {
-  @extend %#{$prefix}container-base;
-  max-width: 1200px;
-}
-.#{$prefix}container-expand {
-  @extend %#{$prefix}container-base;
-  max-width: initial;
+@each $container, $size in $containers {
+  .#{$prefix}container-#{$container} {
+    @extend %#{$prefix}container-base;
+    max-width: $size;
+  }
 }
 
 .#{$prefix}grid {
