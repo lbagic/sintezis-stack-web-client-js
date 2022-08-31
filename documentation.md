@@ -68,18 +68,19 @@ Data modelling function - `useFormData`
 ```
 
 **Props:**
-| Prop | Value | Description |
-| --------------------- | -------- | ---------------------------------------------- |
-| type | string | Input type (defaults to text) |
-| hint | string | Hint text |
-| label | string | Label text |
-| validator | function | Custom validator function |
-| use-error-border | boolean | Enables error border |
-| use-error-message | boolean | Enables error messages |
-| use-html-validation | boolean | Enables html warning tooltip |
-| use-required-asterisk | boolean | Enables `*` sign on labels with required field |
 
-**Global settings (_input_.ctl.js\_):**
+| Prop                  | Value    | Description                                    |
+| --------------------- | -------- | ---------------------------------------------- |
+| type                  | string   | Input type (defaults to text)                  |
+| hint                  | string   | Hint text                                      |
+| label                 | string   | Label text                                     |
+| validator             | function | Custom validator function                      |
+| use-error-border      | boolean  | Enables error border                           |
+| use-error-message     | boolean  | Enables error messages                         |
+| use-html-validation   | boolean  | Enables html warning tooltip                   |
+| use-required-asterisk | boolean  | Enables `*` sign on labels with required field |
+
+**Global settings (_input.ctl.js_):**
 
 ```js
 const settings = {
