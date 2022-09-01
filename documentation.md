@@ -419,6 +419,8 @@ Web Stack roadmap containing current status and stages of custom elements.
 ### Proposed 💬 (To discuss)
 
 - Loading interceptors and loaders (javascript)
+- modals style overriding - not possible with classes
+- forms - form builder
 - utils: object iterator
 
 ### Accepted 🖥 (In development)
