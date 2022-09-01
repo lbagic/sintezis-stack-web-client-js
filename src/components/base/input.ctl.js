@@ -1,4 +1,6 @@
 import { computed, reactive } from "vue";
+import { i18nPlugin } from "../../app/plugins/i18n";
+import { messages } from "../../app/translations/messages";
 
 const settings = {
   useErrorMessage: true,
@@ -7,28 +9,30 @@ const settings = {
   useHtmlValidation: false,
 };
 
+const { t } = i18nPlugin.global;
+
 const htmlErrors = {
-  badInput: { value: "Bad input value." },
-  patternMismatch: { value: "Value is not allowed." },
+  badInput: { value: t(messages.formErrors.badInput) },
+  patternMismatch: { value: t(messages.formErrors.patternMismatch) },
   rangeOverflow: {
-    value: "Maximum allowed value is %t.",
+    value: t(messages.formErrors.rangeOverflow),
     parser: (text, { attrs }) => text.replace("%t", attrs.max),
   },
   rangeUnderflow: {
-    value: "Minimum allowed value is %t.",
+    value: t(messages.formErrors.rangeUnderflow),
     parser: (text, { attrs }) => text.replace("%t", attrs.min),
   },
   tooLong: {
-    value: "Maximum number of characters is %t.",
+    value: t(messages.formErrors.tooLong),
     parser: (text, { attrs }) => text.replace("%t", attrs.maxlength),
   },
   tooShort: {
-    value: "Minimum number of characters is %t.",
+    value: t(messages.formErrors.tooShort),
     parser: (text, { attrs }) => text.replace("%t", attrs.minlength),
   },
-  stepMismatch: { value: "Input step mismatch." },
-  typeMismatch: { value: "Value is not valid." },
-  valueMissing: { value: "This field is required" },
+  stepMismatch: { value: t(messages.formErrors.stepMismatch) },
+  typeMismatch: { value: t(messages.formErrors.typeMismatch) },
+  valueMissing: { value: t(messages.formErrors.valueMissing) },
 };
 
 const componentConfig = {
