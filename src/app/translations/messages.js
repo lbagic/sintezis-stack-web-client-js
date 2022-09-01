@@ -8,6 +8,17 @@ export const messageTranslations = {
 };
 
 export const messages = createMessageEnums({
+  formErrors: {
+    badInput: "",
+    patternMismatch: "",
+    rangeOverflow: "",
+    rangeUnderflow: "",
+    tooLong: "",
+    tooShort: "",
+    stepMismatch: "",
+    typeMismatch: "",
+    valueMissing: "",
+  },
   login: {
     action: "",
     description: "",
