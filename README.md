@@ -10,7 +10,7 @@ This template should help get you started developing with Vue 3 in Vite.
 
 See [Vite Configuration Reference](https://vitejs.dev/config/).
 
-## Project Setup
+## Setup local development
 
 Install dependencies:
 
@@ -24,17 +24,17 @@ Create .env file:
 cp .env.example .env
 ```
 
+Run development server:
+
+```sh
+npm run dev
+```
+
 Install suggested vscode extensions:
 
 - volar: https://marketplace.visualstudio.com/items?itemName=Vue.volar
 - prettier: https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode
 - eslint: https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
-
-## Setup Local Development Server
-
-```sh
-npm run dev
-```
 
 ## Compile and Minify for Production
 
