@@ -10,7 +10,7 @@ This template should help get you started developing with Vue 3 in Vite.
 
 See [Vite Configuration Reference](https://vitejs.dev/config/).
 
-## Local Setup
+## Project Setup
 
 Install dependencies:
 
@@ -30,7 +30,7 @@ Install suggested vscode extensions:
 - prettier: https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode
 - eslint: https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
 
-## Setup Dev Server (Local)
+## Setup Local Development Server
 
 ```sh
 npm run dev
