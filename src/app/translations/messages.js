@@ -3,7 +3,7 @@
 import { en } from "./en";
 import { createMessageEnums } from "./messages.util";
 
-export const messageTranslations = {
+export const languages = {
   en,
 };
 
