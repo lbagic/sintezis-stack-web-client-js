@@ -126,14 +126,16 @@ watch(
 if (props.hash) {
   watch(
     () => router.currentRoute.value.hash,
-    (hash) => (hash === props.hash ? open() : close(false))
+    (hash) => (hash === props.hash ? open() : close(false)),
+    { immediate: true }
   );
 }
 if (props.query) {
   watch(
     () => router.currentRoute.value.query,
     (query) =>
-      Object.keys(query).includes(props.query) ? open() : close(false)
+      Object.keys(query).includes(props.query) ? open() : close(false),
+    { immediate: true }
   );
 }
 if (props.name) {

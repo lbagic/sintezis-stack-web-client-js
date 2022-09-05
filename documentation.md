@@ -2,11 +2,11 @@
 
 - [WebStack Documentation](#webstack-documentation)
   - [Input (component)](#input-component)
-      - [**Usage example:**](#usage-example)
+    - [**Usage example:**](#usage-example)
   - [Modal (component)](#modal-component)
-      - [**Usage example:**](#usage-example-1)
+    - [**Usage example:**](#usage-example-1)
   - [Toast (component)](#toast-component)
-      - [**Usage example:**](#usage-example-2)
+    - [**Usage example:**](#usage-example-2)
   - [Utils](#utils)
     - [String polyfills](#string-polyfills)
       - [**Usage example:**](#usage-example-3)
@@ -25,19 +25,19 @@
       - [**Usage example:**](#usage-example-9)
     - [Other style definitions](#other-style-definitions)
   - [Buttons (styles)](#buttons-styles)
-      - [**Usage example:**](#usage-example-10)
+    - [**Usage example:**](#usage-example-10)
   - [Cards (styles)](#cards-styles)
-      - [**Usage example:**](#usage-example-11)
+    - [**Usage example:**](#usage-example-11)
   - [Tables (styles)](#tables-styles)
-      - [**Usage example:**](#usage-example-12)
+    - [**Usage example:**](#usage-example-12)
   - [Carousel (unsupported)](#carousel-unsupported)
   - [Internationalization (plugin)](#internationalization-plugin)
-      - [**Usage example:**](#usage-example-13)
+    - [**Usage example:**](#usage-example-13)
 - [Roadmap](#roadmap)
-    - [Proposed 💬 (To discuss)](#proposed--to-discuss)
-    - [Accepted 🖥 (In development)](#accepted--in-development)
-    - [Released 🚀 (Ready for use)](#released--ready-for-use)
-    - [Recommended ✅ (Battle tested)](#recommended--battle-tested)
+  - [Proposed 💬 (To discuss)](#proposed--to-discuss)
+  - [Accepted 🖥 (In development)](#accepted--in-development)
+  - [Released 🚀 (Ready for use)](#released--ready-for-use)
+  - [Recommended ✅ (Battle tested)](#recommended--battle-tested)
   - [BaseInput roadmap](#baseinput-roadmap)
 
 ---
@@ -69,16 +69,17 @@ Data modelling function - `useFormData`
 
 **Props:**
 
-| Prop                  | Value    | Description                                    |
-| --------------------- | -------- | ---------------------------------------------- |
-| type                  | string   | Input type (defaults to text)                  |
-| hint                  | string   | Hint text                                      |
-| label                 | string   | Label text                                     |
-| validator             | function | Custom validator function                      |
-| use-error-border      | boolean  | Enables error border                           |
-| use-error-message     | boolean  | Enables error messages                         |
-| use-html-validation   | boolean  | Enables html warning tooltip                   |
-| use-required-asterisk | boolean  | Enables `*` sign on labels with required field |
+| Prop                  | Value           | Description                                    |
+| --------------------- | --------------- | ---------------------------------------------- |
+| type                  | string          | Input type (defaults to text)                  |
+| hint                  | string          | Hint text                                      |
+| label                 | string          | Label text                                     |
+| options               | object \| array | List of options for select input               |
+| validator             | function        | Custom validator function                      |
+| use-error-border      | boolean         | Enables error border                           |
+| use-error-message     | boolean         | Enables error messages                         |
+| use-html-validation   | boolean         | Enables html warning tooltip                   |
+| use-required-asterisk | boolean         | Enables `*` sign on labels with required field |
 
 **Global settings (_input.ctl.js_):**
 
@@ -451,16 +452,17 @@ Web Stack roadmap containing current status and stages of custom elements.
 
 ## BaseInput roadmap
 
-| Feature                         | Status |
-| ------------------------------- | ------ |
-| validation                      | ✅     |
-| label support                   | ✅     |
-| error & help text support       | ✅     |
-| icon support                    |        |
-| placeholders                    |        |
-| option                          |        |
-| `date`, `time`, `month` support | native |
-| `date range` support            |        |
-| `textarea`, `select` support    | native |
-| `checkbox`, `radio` support     | native |
-| `file input` support            | native |
+| Feature                         | Status     |
+| ------------------------------- | ---------- |
+| validation                      | ✅         |
+| label support                   | ✅         |
+| error & help text support       | ✅         |
+| support basic v-model           | ✅         |
+| support list of options         | ✅         |
+| placeholders                    | ✅ partial |
+| icon support                    |            |
+| `date`, `time`, `month` support | native     |
+| `date range` support            |            |
+| `textarea`, `select` support    | native     |
+| `checkbox`, `radio` support     | native     |
+| `file input` support            | native     |

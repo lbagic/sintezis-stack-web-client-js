@@ -1,7 +1,7 @@
 <script>
 import { useCssVar } from "@vueuse/core";
-import { computed, onMounted, reactive, useAttrs, watch } from "vue";
-import { _inputCtl } from "./input.ctl";
+import { onMounted, reactive, useAttrs, watch } from "vue";
+import { useFormData, _inputCtl } from "./input.ctl";
 
 export default {
   inheritAttrs: false,
@@ -14,12 +14,13 @@ const { componentConfig, settings, htmlErrors, htmlErrorKeys } = _inputCtl;
 const attrs = useAttrs();
 const emit = defineEmits(["update:modelValue"]);
 const props = defineProps({
-  modelValue: Object,
+  modelValue: undefined,
   type: String,
   hint: String,
   label: String,
   labelPlacement: String,
   validator: Function,
+  options: undefined,
   useErrorBorder: { type: Boolean, default: settings.useErrorBorder },
   useErrorMessage: { type: Boolean, default: settings.useErrorMessage },
   useHtmlValidation: { type: Boolean, default: settings.useHtmlValidation },
@@ -30,14 +31,25 @@ const props = defineProps({
 });
 
 const prefix = useCssVar("--prefix");
-const model = reactive(props.modelValue);
+const model = reactive(
+  props.modelValue?._formDataModel
+    ? props.modelValue
+    : useFormData({ value: props.modelValue }).model.value
+);
 const inputRef = $ref(null);
-const type = props.type ?? "text";
+const type = $computed(() => props.type || "text");
+const options = $computed(() =>
+  Array.isArray(props.options)
+    ? Object.fromEntries(props.options.map((key) => [key, key]))
+    : props.options
+);
 
-const config = componentConfig[type];
+const config = $computed(() => componentConfig[type]);
 if (!config) throw new Error(`Input type "${type}" not supported.`);
-const isRequired = Object.prototype.hasOwnProperty.call(attrs, "required");
-const label = $ref(props.label);
+const isRequired = $computed(() =>
+  Object.prototype.hasOwnProperty.call(attrs, "required")
+);
+
 const labelPlacement = $computed(() => {
   const _placement = props.labelPlacement ?? config.labelPlacement ?? "";
   const placement = [];
@@ -46,9 +58,11 @@ const labelPlacement = $computed(() => {
   return placement.join(" ");
 });
 
-const showRequiredAsterisk = props.useRequiredAsterisk && isRequired;
+const showRequiredAsterisk = $computed(
+  () => props.useRequiredAsterisk && isRequired
+);
 
-const showErrorMessage = computed(
+const showErrorMessage = $computed(
   () =>
     props.useErrorMessage &&
     model.isDirty &&
@@ -56,7 +70,7 @@ const showErrorMessage = computed(
     !!model.errorMessage
 );
 
-const showErrorBorder = computed(
+const showErrorBorder = $computed(
   () => props.useErrorBorder && model.isDirty && !model.isValid
 );
 function runHtmlValidation() {
@@ -109,9 +123,15 @@ watch(
 );
 
 function onInput(value) {
-  model.value = value;
-  runValidation(value);
-  emit("update:modelValue", model);
+  const parsedValue = config?.parseInputValue
+    ? config.parseInputValue(value)
+    : value;
+  model.value = parsedValue;
+  runValidation(parsedValue);
+  emit(
+    "update:modelValue",
+    props.modelValue?._formDataModel ? model : model.value
+  );
 }
 
 function onInvalid(event) {
@@ -143,21 +163,20 @@ onMounted(() => {
 
 <template>
   <component
-    :is="label ? 'label' : 'div'"
+    :is="props.label ? 'label' : 'div'"
     :class="`${prefix}input-root`"
     :data-type="type"
-    :data-label-placement="label && labelPlacement"
+    :data-label-placement="props.label && labelPlacement"
   >
     <span
-      v-if="label && labelPlacement.includes('start')"
+      v-if="props.label && labelPlacement.includes('start')"
       :class="`${prefix}input-label`"
       :data-required-asterisk="showRequiredAsterisk"
       :data-label-placement="labelPlacement"
-      >{{ label }}</span
+      >{{ props.label }}</span
     >
     <input
       v-if="config.component === 'default-input'"
-      v-bind="$attrs"
       ref="inputRef"
       :class="`${prefix}input`"
       :value="model.value"
@@ -165,13 +184,13 @@ onMounted(() => {
       :data-type="type"
       :data-error-border="showErrorBorder"
       :data-valid="model.isValid"
+      v-bind="$attrs"
       @input="onInput($event.target.value)"
       @invalid="onInvalid($event)"
       @blur="onBlur"
     />
     <input
       v-if="config.component === 'number-input'"
-      v-bind="$attrs"
       ref="inputRef"
       :class="`${prefix}input`"
       :value="model.value"
@@ -179,6 +198,7 @@ onMounted(() => {
       :data-type="type"
       :data-error-border="showErrorBorder"
       :data-valid="model.isValid"
+      v-bind="$attrs"
       @input="onInput($event.target.valueAsNumber)"
       @invalid="onInvalid($event)"
       @blur="onBlur"
@@ -186,25 +206,25 @@ onMounted(() => {
     <input
       v-if="config.component === 'toggle-input'"
       v-model="model.value"
-      v-bind="$attrs"
       ref="inputRef"
       :class="`${prefix}input`"
       :type="type"
       :data-type="type"
       :data-error-border="showErrorBorder"
       :data-valid="model.isValid"
+      v-bind="$attrs"
       @invalid="onInvalid($event)"
       @blur="onBlur"
     />
     <textarea
       v-if="config.component === 'textarea-input'"
-      v-bind="$attrs"
       ref="inputRef"
       :class="`${prefix}input`"
       :value="model.value"
       :data-type="type"
       :data-error-border="showErrorBorder"
       :data-valid="model.isValid"
+      v-bind="$attrs"
       @input="onInput($event.target.value)"
       @invalid="onInvalid($event)"
       @blur="onBlur"
@@ -212,7 +232,6 @@ onMounted(() => {
     </textarea>
     <select
       v-if="config.component === 'select-input'"
-      v-bind="$attrs"
       :class="`${prefix}input`"
       ref="inputRef"
       :value="model.value"
@@ -221,6 +240,7 @@ onMounted(() => {
       :data-valid="model.isValid"
       :data-has-placeholder="!!$attrs.placeholder"
       :data-has-value="model.value !== undefined && model.value !== null"
+      v-bind="$attrs"
       @input="onInput($event.target.value)"
       @invalid="onInvalid($event)"
       @blur="onBlur"
@@ -228,16 +248,16 @@ onMounted(() => {
       <option v-if="$attrs.placeholder" value="" selected disabled hidden>
         {{ $attrs.placeholder }}
       </option>
-      <option value="1">opt 1</option>
-      <option value="2">opt 2</option>
-      <option value="3">opt 3</option>
+      <option v-for="(value, key) in options" :value="key" :key="value">
+        {{ value }}
+      </option>
     </select>
     <span
-      v-if="label && labelPlacement.includes('end')"
+      v-if="props.label && labelPlacement.includes('end')"
       :class="`${prefix}input-label`"
       :data-required-asterisk="showRequiredAsterisk"
       :data-label-placement="labelPlacement"
-      >{{ label }}</span
+      >{{ props.label }}</span
     >
     <div
       :class="`${prefix}input-help-spacing`"
