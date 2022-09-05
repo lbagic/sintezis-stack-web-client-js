@@ -2,8 +2,8 @@ import { createI18n } from "vue-i18n";
 import { languages } from "../translations/messages";
 
 export const i18nPlugin = createI18n({
-  locale: "hr",
-  fallbackLocale: "hr",
+  locale: "en",
+  fallbackLocale: "en",
   messages: languages,
   legacy: false,
 });
