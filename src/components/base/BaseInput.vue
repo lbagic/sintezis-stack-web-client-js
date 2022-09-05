@@ -1,6 +1,6 @@
 <script>
 import { useCssVar } from "@vueuse/core";
-import { computed, onMounted, reactive, useAttrs, watch } from "vue";
+import { onMounted, reactive, useAttrs, watch } from "vue";
 import { useFormData, _inputCtl } from "./input.ctl";
 
 export default {
@@ -36,12 +36,14 @@ const model = reactive(
     : useFormData({ value: props.modelValue }).model.value
 );
 const inputRef = $ref(null);
-const type = props.type ?? "text";
+const type = $computed(() => props.type || "text");
 
-const config = componentConfig[type];
+const config = $computed(() => componentConfig[type]);
 if (!config) throw new Error(`Input type "${type}" not supported.`);
-const isRequired = Object.prototype.hasOwnProperty.call(attrs, "required");
-const label = $ref(props.label);
+const isRequired = $computed(() =>
+  Object.prototype.hasOwnProperty.call(attrs, "required")
+);
+
 const labelPlacement = $computed(() => {
   const _placement = props.labelPlacement ?? config.labelPlacement ?? "";
   const placement = [];
@@ -50,9 +52,11 @@ const labelPlacement = $computed(() => {
   return placement.join(" ");
 });
 
-const showRequiredAsterisk = props.useRequiredAsterisk && isRequired;
+const showRequiredAsterisk = $computed(
+  () => props.useRequiredAsterisk && isRequired
+);
 
-const showErrorMessage = computed(
+const showErrorMessage = $computed(
   () =>
     props.useErrorMessage &&
     model.isDirty &&
@@ -60,7 +64,7 @@ const showErrorMessage = computed(
     !!model.errorMessage
 );
 
-const showErrorBorder = computed(
+const showErrorBorder = $computed(
   () => props.useErrorBorder && model.isDirty && !model.isValid
 );
 function runHtmlValidation() {
@@ -150,17 +154,17 @@ onMounted(() => {
 
 <template>
   <component
-    :is="label ? 'label' : 'div'"
+    :is="props.label ? 'label' : 'div'"
     :class="`${prefix}input-root`"
     :data-type="type"
-    :data-label-placement="label && labelPlacement"
+    :data-label-placement="props.label && labelPlacement"
   >
     <span
-      v-if="label && labelPlacement.includes('start')"
+      v-if="props.label && labelPlacement.includes('start')"
       :class="`${prefix}input-label`"
       :data-required-asterisk="showRequiredAsterisk"
       :data-label-placement="labelPlacement"
-      >{{ label }}</span
+      >{{ props.label }}</span
     >
     <input
       v-if="config.component === 'default-input'"
@@ -240,11 +244,11 @@ onMounted(() => {
       <option value="3">opt 3</option>
     </select>
     <span
-      v-if="label && labelPlacement.includes('end')"
+      v-if="props.label && labelPlacement.includes('end')"
       :class="`${prefix}input-label`"
       :data-required-asterisk="showRequiredAsterisk"
       :data-label-placement="labelPlacement"
-      >{{ label }}</span
+      >{{ props.label }}</span
     >
     <div
       :class="`${prefix}input-help-spacing`"
