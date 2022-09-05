@@ -9,3 +9,6 @@ export const i18nPlugin = createI18n({
 });
 
 export const translate = i18nPlugin.global.t;
+export const translatedMessages = $computed(
+  () => i18nPlugin.global.messages.value[i18nPlugin.global.locale.value]
+);
