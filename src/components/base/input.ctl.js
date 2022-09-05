@@ -99,6 +99,7 @@ export function useFormData(properties) {
       return [
         key,
         {
+          _formDataModel: true,
           get value() {
             return data[key];
           },

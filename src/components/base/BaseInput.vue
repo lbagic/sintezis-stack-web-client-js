@@ -1,7 +1,7 @@
 <script>
 import { useCssVar } from "@vueuse/core";
 import { computed, onMounted, reactive, useAttrs, watch } from "vue";
-import { _inputCtl } from "./input.ctl";
+import { useFormData, _inputCtl } from "./input.ctl";
 
 export default {
   inheritAttrs: false,
@@ -14,7 +14,7 @@ const { componentConfig, settings, htmlErrors, htmlErrorKeys } = _inputCtl;
 const attrs = useAttrs();
 const emit = defineEmits(["update:modelValue"]);
 const props = defineProps({
-  modelValue: Object,
+  modelValue: undefined,
   type: String,
   hint: String,
   label: String,
@@ -30,7 +30,11 @@ const props = defineProps({
 });
 
 const prefix = useCssVar("--prefix");
-const model = reactive(props.modelValue);
+const model = reactive(
+  props.modelValue?._formDataModel
+    ? props.modelValue
+    : useFormData({ value: props.modelValue }).model.value
+);
 const inputRef = $ref(null);
 const type = props.type ?? "text";
 
@@ -111,7 +115,10 @@ watch(
 function onInput(value) {
   model.value = value;
   runValidation(value);
-  emit("update:modelValue", model);
+  emit(
+    "update:modelValue",
+    props.modelValue?._formDataModel ? model : model.value
+  );
 }
 
 function onInvalid(event) {
@@ -157,7 +164,6 @@ onMounted(() => {
     >
     <input
       v-if="config.component === 'default-input'"
-      v-bind="$attrs"
       ref="inputRef"
       :class="`${prefix}input`"
       :value="model.value"
@@ -165,13 +171,13 @@ onMounted(() => {
       :data-type="type"
       :data-error-border="showErrorBorder"
       :data-valid="model.isValid"
+      v-bind="$attrs"
       @input="onInput($event.target.value)"
       @invalid="onInvalid($event)"
       @blur="onBlur"
     />
     <input
       v-if="config.component === 'number-input'"
-      v-bind="$attrs"
       ref="inputRef"
       :class="`${prefix}input`"
       :value="model.value"
@@ -179,6 +185,7 @@ onMounted(() => {
       :data-type="type"
       :data-error-border="showErrorBorder"
       :data-valid="model.isValid"
+      v-bind="$attrs"
       @input="onInput($event.target.valueAsNumber)"
       @invalid="onInvalid($event)"
       @blur="onBlur"
@@ -186,25 +193,25 @@ onMounted(() => {
     <input
       v-if="config.component === 'toggle-input'"
       v-model="model.value"
-      v-bind="$attrs"
       ref="inputRef"
       :class="`${prefix}input`"
       :type="type"
       :data-type="type"
       :data-error-border="showErrorBorder"
       :data-valid="model.isValid"
+      v-bind="$attrs"
       @invalid="onInvalid($event)"
       @blur="onBlur"
     />
     <textarea
       v-if="config.component === 'textarea-input'"
-      v-bind="$attrs"
       ref="inputRef"
       :class="`${prefix}input`"
       :value="model.value"
       :data-type="type"
       :data-error-border="showErrorBorder"
       :data-valid="model.isValid"
+      v-bind="$attrs"
       @input="onInput($event.target.value)"
       @invalid="onInvalid($event)"
       @blur="onBlur"
@@ -212,7 +219,6 @@ onMounted(() => {
     </textarea>
     <select
       v-if="config.component === 'select-input'"
-      v-bind="$attrs"
       :class="`${prefix}input`"
       ref="inputRef"
       :value="model.value"
@@ -221,6 +227,7 @@ onMounted(() => {
       :data-valid="model.isValid"
       :data-has-placeholder="!!$attrs.placeholder"
       :data-has-value="model.value !== undefined && model.value !== null"
+      v-bind="$attrs"
       @input="onInput($event.target.value)"
       @invalid="onInvalid($event)"
       @blur="onBlur"
