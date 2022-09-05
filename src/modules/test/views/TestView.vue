@@ -1,8 +1,11 @@
-<script setup></script>
+<script setup>
+import BaseModal from "../../../components/base/BaseModal.vue";
+</script>
 
 <template>
   <div>
-    <p>TestView</p>
+    <RouterLink to="#asdf">asdf</RouterLink>
+    <BaseModal hash="#asdf">Modal here</BaseModal>
   </div>
 </template>
 
