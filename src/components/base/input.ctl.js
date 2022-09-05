@@ -136,3 +136,10 @@ export function useFormData(properties) {
   );
   return reactive({ isValid, data, validation, errors, model });
 }
+
+export const useFormDataConfig = (config) => {
+  const data = Object.fromEntries(
+    Object.entries(config).map(([key, { value }]) => [key, value])
+  );
+  return useFormData(data);
+};
