@@ -20,6 +20,7 @@ const props = defineProps({
   label: String,
   labelPlacement: String,
   validator: Function,
+  options: undefined,
   useErrorBorder: { type: Boolean, default: settings.useErrorBorder },
   useErrorMessage: { type: Boolean, default: settings.useErrorMessage },
   useHtmlValidation: { type: Boolean, default: settings.useHtmlValidation },
@@ -37,6 +38,11 @@ const model = reactive(
 );
 const inputRef = $ref(null);
 const type = $computed(() => props.type || "text");
+const options = $computed(() =>
+  Array.isArray(props.options)
+    ? Object.fromEntries(props.options.map((key) => [key, key]))
+    : props.options
+);
 
 const config = $computed(() => componentConfig[type]);
 if (!config) throw new Error(`Input type "${type}" not supported.`);
@@ -117,8 +123,11 @@ watch(
 );
 
 function onInput(value) {
-  model.value = value;
-  runValidation(value);
+  const parsedValue = config?.parseInputValue
+    ? config.parseInputValue(value)
+    : value;
+  model.value = parsedValue;
+  runValidation(parsedValue);
   emit(
     "update:modelValue",
     props.modelValue?._formDataModel ? model : model.value
@@ -239,9 +248,9 @@ onMounted(() => {
       <option v-if="$attrs.placeholder" value="" selected disabled hidden>
         {{ $attrs.placeholder }}
       </option>
-      <option value="1">opt 1</option>
-      <option value="2">opt 2</option>
-      <option value="3">opt 3</option>
+      <option v-for="(value, key) in options" :value="key" :key="value">
+        {{ value }}
+      </option>
     </select>
     <span
       v-if="props.label && labelPlacement.includes('end')"

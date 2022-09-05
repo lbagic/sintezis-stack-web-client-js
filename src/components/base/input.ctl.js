@@ -49,7 +49,13 @@ const componentConfig = {
   checkbox: { component: "toggle-input", labelPlacement: "inline end" },
   radio: { component: "toggle-input", labelPlacement: "inline end" },
   textarea: { component: "textarea-input" },
-  select: { component: "select-input" },
+  select: {
+    component: "select-input",
+    parseInputValue: (value) => {
+      const int = parseInt(value);
+      return isNaN(int) ? value : int;
+    },
+  },
   "datetime-local": { component: "default-input" },
   date: { component: "default-input" },
   time: { component: "default-input" },
