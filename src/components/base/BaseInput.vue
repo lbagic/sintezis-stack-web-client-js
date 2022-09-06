@@ -46,9 +46,7 @@ const options = $computed(() =>
 
 const config = $computed(() => componentConfig[type]);
 if (!config) throw new Error(`Input type "${type}" not supported.`);
-const isRequired = $computed(() =>
-  Object.prototype.hasOwnProperty.call(attrs, "required")
-);
+const isRequired = $computed(() => attrs?.required);
 
 const labelPlacement = $computed(() => {
   const _placement = props.labelPlacement ?? config.labelPlacement ?? "";
@@ -177,28 +175,28 @@ onMounted(() => {
     >
     <input
       v-if="config.component === 'default-input'"
-      ref="inputRef"
       :class="`${prefix}input`"
+      v-bind="$attrs"
+      ref="inputRef"
       :value="model.value"
       :type="type"
       :data-type="type"
       :data-error-border="showErrorBorder"
       :data-valid="model.isValid"
-      v-bind="$attrs"
       @input="onInput($event.target.value)"
       @invalid="onInvalid($event)"
       @blur="onBlur"
     />
     <input
       v-if="config.component === 'number-input'"
-      ref="inputRef"
       :class="`${prefix}input`"
+      v-bind="$attrs"
+      ref="inputRef"
       :value="model.value"
       :type="type"
       :data-type="type"
       :data-error-border="showErrorBorder"
       :data-valid="model.isValid"
-      v-bind="$attrs"
       @input="onInput($event.target.valueAsNumber)"
       @invalid="onInvalid($event)"
       @blur="onBlur"
@@ -218,13 +216,13 @@ onMounted(() => {
     />
     <textarea
       v-if="config.component === 'textarea-input'"
-      ref="inputRef"
       :class="`${prefix}input`"
+      v-bind="$attrs"
+      ref="inputRef"
       :value="model.value"
       :data-type="type"
       :data-error-border="showErrorBorder"
       :data-valid="model.isValid"
-      v-bind="$attrs"
       @input="onInput($event.target.value)"
       @invalid="onInvalid($event)"
       @blur="onBlur"
@@ -233,6 +231,7 @@ onMounted(() => {
     <select
       v-if="config.component === 'select-input'"
       :class="`${prefix}input`"
+      v-bind="$attrs"
       ref="inputRef"
       :value="model.value"
       :data-type="type"
@@ -240,7 +239,6 @@ onMounted(() => {
       :data-valid="model.isValid"
       :data-has-placeholder="!!$attrs.placeholder"
       :data-has-value="model.value !== undefined && model.value !== null"
-      v-bind="$attrs"
       @input="onInput($event.target.value)"
       @invalid="onInvalid($event)"
       @blur="onBlur"
