@@ -10,9 +10,7 @@
 /** @type { InvertEnum } */
 export function invertEnum(obj) {
   return Object.freeze(
-    Object.fromEntries(
-      Object.entries(obj).map(([key, value]) => [value, parseInt(key)])
-    )
+    Object.fromEntries(Object.entries(obj).map(([key, value]) => [value, key]))
   );
 }
 
@@ -22,6 +20,6 @@ export function createEnum(obj) {
   return {
     enum: obj,
     inverted: inverted,
-    messages: inverted,
+    messages: obj,
   };
 }
