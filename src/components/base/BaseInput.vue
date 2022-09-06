@@ -44,9 +44,19 @@ const options = $computed(() =>
     : props.options
 );
 
+const isSelected = $computed(
+  () =>
+    Object.prototype.hasOwnProperty.call(options, model.value) &&
+    model.value !== ""
+);
+
 const config = $computed(() => componentConfig[type]);
 if (!config) throw new Error(`Input type "${type}" not supported.`);
-const isRequired = $computed(() => attrs?.required);
+const isRequired = $computed(
+  () =>
+    Object.prototype.hasOwnProperty.call(attrs, "required") &&
+    attrs.required !== false
+);
 
 const labelPlacement = $computed(() => {
   const _placement = props.labelPlacement ?? config.labelPlacement ?? "";
@@ -124,6 +134,7 @@ function onInput(value) {
   const parsedValue = config?.parseInputValue
     ? config.parseInputValue(value)
     : value;
+  if (parsedValue === model.value) return;
   model.value = parsedValue;
   runValidation(parsedValue);
   emit(
@@ -233,19 +244,26 @@ onMounted(() => {
       :class="`${prefix}input`"
       v-bind="$attrs"
       ref="inputRef"
-      :value="model.value"
+      :value="isSelected ? model.value : undefined"
       :data-type="type"
       :data-error-border="showErrorBorder"
       :data-valid="model.isValid"
       :data-has-placeholder="!!$attrs.placeholder"
-      :data-has-value="model.value !== undefined && model.value !== null"
+      :data-has-value="isSelected"
       @input="onInput($event.target.value)"
       @invalid="onInvalid($event)"
       @blur="onBlur"
     >
-      <option v-if="$attrs.placeholder" value="" selected disabled hidden>
+      <option
+        v-if="$attrs.placeholder"
+        :selected="!isSelected"
+        disabled
+        hidden
+        value=""
+      >
         {{ $attrs.placeholder }}
       </option>
+      <option v-if="!isRequired && isSelected"></option>
       <option v-for="(value, key) in options" :value="key" :key="value">
         {{ value }}
       </option>
