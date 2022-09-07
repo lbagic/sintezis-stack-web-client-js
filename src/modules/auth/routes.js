@@ -1,4 +1,4 @@
-import { ROLES } from "../../constants/ROLES";
+import { ROLES } from "../../enums/ROLES";
 
 /**
  * VueRouter routes.
@@ -10,7 +10,8 @@ export const authRoutes = [
     component: () => import("./views/LoginView.vue"),
     meta: {
       title: "Log In",
-      authorizedRoles: [ROLES.GUEST],
+      authorizeRole: ({ roleId }) =>
+        !Object.values(ROLES.enum).includes(roleId),
     },
   },
   {
@@ -18,7 +19,8 @@ export const authRoutes = [
     component: () => import("./views/RegisterView.vue"),
     meta: {
       title: "Register",
-      authorizedRoles: [ROLES.GUEST],
+      authorizeRole: ({ roleId }) =>
+        !Object.values(ROLES.enum).includes(roleId),
     },
   },
 ];

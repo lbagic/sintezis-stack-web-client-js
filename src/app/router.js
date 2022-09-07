@@ -1,38 +1,55 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { ROLES } from "../constants/ROLES";
+import { ROLES } from "../enums/ROLES";
+
 import { authRoutes } from "../modules/auth/routes";
 import { useAuthStore } from "../modules/auth/store";
 import { commonRoutes } from "../modules/common/routes";
 import { testRoutes } from "../modules/test/routes";
 
-const settings = {
-  defaultRoute: {
-    [ROLES.GUEST]: { notAuthorized: "/login", notFound: "/" },
-    [ROLES.USER]: { notAuthorized: "/", notFound: "/" },
-    [ROLES.ADMIN]: { notAuthorized: "/", notFound: "/" },
+const defaultRoutes = {
+  roles: {
+    [ROLES.enum.ADMIN]: { notAuthorized: "/", notFound: "/" },
+    [ROLES.enum.USER]: { notAuthorized: "/", notFound: "/" },
   },
-  authorizeLocation: (role, location) =>
-    location.matched
-      .filter((route) => route.meta.authorizedRoles?.length)
-      .every((route) => route.meta.authorizedRoles.includes(role)),
+  guest: { notAuthorized: "/login", notFound: "/" },
 };
 
+function getDefaultRoute({ roleId }) {
+  const route = defaultRoutes.roles[roleId];
+  return route ? route : defaultRoutes.guest;
+}
+
+function authorizeRoute({ roleId, location }) {
+  return location.matched.every((route) => {
+    const authorizeRole = route.meta?.authorizeRole;
+    return authorizeRole ? authorizeRole({ roleId }) : true;
+  });
+}
+
+// Vue Router
 export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   /** @type {import("vue-router").RouteRecordRaw[]} */
-  routes: [...commonRoutes, ...authRoutes, ...testRoutes],
+  routes: [
+    // Registered vue routes
+    ...commonRoutes,
+    ...authRoutes,
+    ...testRoutes,
+  ],
 });
 
+// Vue Router guard
 router.beforeEach((to, from, next) => {
   document.title = to.meta?.title ?? "Application";
-  const { role } = useAuthStore();
+  const { roleId } = useAuthStore();
+  const defaultRoute = getDefaultRoute({ roleId });
 
   const isNotFound = !to.matched.length;
-  const isNotAuthorized = !settings.authorizeLocation(role, to);
+  const isNotAuthorized = !authorizeRoute({ roleId, location: to });
 
   return isNotFound
-    ? next(settings.defaultRoute[role].notFound)
+    ? next(defaultRoute.notFound)
     : isNotAuthorized
-    ? next(settings.defaultRoute[role].notAuthorized)
+    ? next(defaultRoute.notAuthorized)
     : next();
 });

@@ -13,7 +13,7 @@ export function createMessageEnums(messages, parent = undefined) {
   const output = Object.fromEntries(
     entries.map(([key, value]) => {
       const path = parent ? `${parent}.${key}` : key;
-      if (typeof value === "string") return [key, path];
+      if (typeof value === "object") return [key, path];
       return [key, createMessageEnums(value, path)];
     })
   );

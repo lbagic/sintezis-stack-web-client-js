@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import { ROLES } from "../../constants/ROLES";
 
 /**
  * @returns {{
@@ -15,8 +14,8 @@ export const authStoreState = () => ({
 export const useAuthStore = defineStore("auth", {
   state: authStoreState,
   getters: {
-    loggedIn: (ctx) => !!ctx.token,
-    role: (ctx) => ctx.user?.role ?? ROLES.GUEST,
+    isLoggedIn: (ctx) => !!ctx.token,
+    roleId: (ctx) => ctx.user?.roleId,
   },
   persist: true,
 });
