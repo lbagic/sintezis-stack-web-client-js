@@ -16,3 +16,5 @@ export function setup(app) {
   app.use(router);
   app.use(i18nPlugin);
 }
+
+export const appName = "Application";

@@ -2,7 +2,7 @@
 
 <template>
   <div>
-    <p>RegisterView</p>
+    <p>AuthLoginView</p>
   </div>
 </template>
 

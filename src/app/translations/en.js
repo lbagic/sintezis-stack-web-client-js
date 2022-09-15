@@ -1,4 +1,4 @@
-//@ts-check
+// @ts-check
 
 /** @type { typeof import('./messages').messages } */
 export const en = {

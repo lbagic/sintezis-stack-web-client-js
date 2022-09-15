@@ -2,7 +2,7 @@
 
 <template>
   <div>
-    <p>HomeView</p>
+    <p>IndexView</p>
   </div>
 </template>
 
