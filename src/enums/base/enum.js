@@ -1,25 +1,20 @@
+import { flipObject } from "../../utils/object";
+
 /**
- * @typedef { <T>(obj: T) => Readonly<{ [K in keyof T as T[K]]: K }> } InvertEnum
- * @typedef { <T>(obj: T) => {
+ * @type { <T>(obj: T) => {
  *    enum: T,
- *    inverted: Readonly<{ [K in keyof T as T[K]]: K }>
+ *    flip: Readonly<{ [K in keyof T as T[K]]: K }>
+ *    keys: Readonly<Array<keyof T>>,
  *    messages: Readonly<{ [K in keyof T]: string }>
- * }} CreateEnum
- **/
-
-/** @type { InvertEnum } */
-export function invertEnum(obj) {
-  return Object.freeze(
-    Object.fromEntries(Object.entries(obj).map(([key, value]) => [value, key]))
-  );
-}
-
-/** @type { CreateEnum } */
+ *    values: Readonly<Array<T[keyof T]>>,
+ * }}
+ * */
 export function createEnum(obj) {
-  const inverted = invertEnum(obj);
-  return {
+  return Object.freeze({
     enum: obj,
-    inverted: inverted,
+    flip: Object.freeze(flipObject(obj)),
+    keys: Object.freeze(Object.keys(obj)),
+    values: Object.freeze(Object.values(obj)),
     messages: obj,
-  };
+  });
 }
