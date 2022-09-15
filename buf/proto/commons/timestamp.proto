@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package elude.proto;
+
+option go_package = "./;gen";
+
+option java_multiple_files = true;
+option java_outer_classname = "TimestampProto";
+option java_package = "co.sintezis.elude";
+
+// Timestamp is a simple util implementation that allows either nanos (for compat with golang) or seconds.
+// Gets time from unix time.
+message Timestamp {
+  int64 seconds = 1; // Number of seconds in a timestamp.
+  int32 nanos = 2; // Number of nano seconds in a timestamp.
+}

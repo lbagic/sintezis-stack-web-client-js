@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package elude.proto;
+
+option go_package = "./;gen";
+
+import "proto/commons/enum.proto";
+import "proto/models/location.proto";
+import "validate/validate.proto";
+
+// FeaturedLocation message is returned as part of GetFeaturedLocationsByCity and GetFeaturedLocationsByCoordinates. Contains all the info
+// about randomly generated featured locations.
+message FeaturedLocation {
+    int32 id = 1; // Featured location id.
+    BudgetTierEnum budget_tier = 2 [(validate.rules).enum.defined_only = true]; // Featured location budget tier.
+    string currency = 3 [(validate.rules).string = {min_len: 1}]; // Featured location currency, 3 letter currency code (eg, USD, EUR, HRK).
+    int32 adults = 4 [(validate.rules).int32 = {gte: 1}]; // Number of travellers age 12 and older.
+    int32 children = 5; // Number of travellers between ages 2 (included) and 12.
+    int32 infants = 6; // Number of travellers younger than 2.
+    int32 number_of_results = 7; // Number of results. Not used.
+    string departure_date = 8; // Featured location departure date.
+    string return_date = 9; // Featured location return date.
+    Location departure_location = 10; // Featured departure location.
+    Location arrival_location = 11; // Featured arrival location.
+}

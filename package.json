@@ -7,9 +7,12 @@
     "preview": "vite preview --port 4173",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
     "prepare": "husky install",
-    "docs": "vitepress dev docs"
+    "docs": "vitepress dev docs",
+    "generate": "buf generate"
   },
   "dependencies": {
+    "@bufbuild/connect-web": "^0.2.1",
+    "@bufbuild/protobuf": "^0.1.1",
     "@lbagic/collections": "^1.0.3",
     "@vueuse/core": "^8.9.4",
     "@vueuse/integrations": "^9.0.2",
@@ -23,13 +26,13 @@
     "vue-router": "^4.1.2"
   },
   "devDependencies": {
+    "@bufbuild/protoc-gen-connect-web": "^0.2.1",
+    "@bufbuild/protoc-gen-es": "^0.1.1",
     "@rushstack/eslint-patch": "^1.1.0",
     "@vitejs/plugin-vue": "^2.3.3",
     "@vue/eslint-config-prettier": "^7.0.0",
     "eslint": "^8.5.0",
     "eslint-plugin-vue": "^9.0.0",
-    "google-protobuf": "^3.19.3",
-    "grpc-web": "^1.3.0",
     "husky": "^8.0.0",
     "lint-staged": "^13.0.3",
     "prettier": "^2.5.1",

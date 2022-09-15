@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package elude.proto;
+
+option go_package = "./;gen";
+
+// Options are sent with every request, and contain common options such as timeout and max size.
+message Options {
+    int32 timeout_ms = 1; // This timeout will be in milliseconds.
+    int32 max_size_bytes = 2; // This is the the maximum total data that we send back e.g. 1000 bytes.
+}

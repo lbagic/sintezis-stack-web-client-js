@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package elude.proto;
+
+option go_package = "./;gen";
+
+import "validate/validate.proto";
+import "proto/commons/timestamp.proto";
+
+// Used in all requests and responses, contains information about the current session.
+message SessionInfo {
+    string session_id = 1 [(validate.rules).string = {uuid: true, ignore_empty: true}]; // Internal reservation ID (redis elude backend) TODO errors if session ID is expired.
+    Timestamp expiration_ts = 2; // Expiration timestamp for session id.
+  }
