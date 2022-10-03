@@ -1,41 +1,15 @@
 import { computed, reactive } from "vue";
-import { i18nPlugin } from "../../app/plugins/i18n";
-import { messages } from "../../app/translations/messages";
+import { runInputValidation } from "./input.validation";
 
 const settings = {
   useErrorMessage: true,
   useErrorBorder: true,
   useRequiredAsterisk: true,
   useHtmlValidation: false,
+  labelPlacement: "block start",
 };
 
-const { t } = i18nPlugin.global;
-
-const htmlErrors = {
-  badInput: { value: t(messages.formErrors.badInput) },
-  patternMismatch: { value: t(messages.formErrors.patternMismatch) },
-  rangeOverflow: {
-    value: t(messages.formErrors.rangeOverflow),
-    parser: (text, { attrs }) => text.replace("%t", attrs.max),
-  },
-  rangeUnderflow: {
-    value: t(messages.formErrors.rangeUnderflow),
-    parser: (text, { attrs }) => text.replace("%t", attrs.min),
-  },
-  tooLong: {
-    value: t(messages.formErrors.tooLong),
-    parser: (text, { attrs }) => text.replace("%t", attrs.maxlength),
-  },
-  tooShort: {
-    value: t(messages.formErrors.tooShort),
-    parser: (text, { attrs }) => text.replace("%t", attrs.minlength),
-  },
-  stepMismatch: { value: t(messages.formErrors.stepMismatch) },
-  typeMismatch: { value: t(messages.formErrors.typeMismatch) },
-  valueMissing: { value: t(messages.formErrors.valueMissing) },
-};
-
-const componentConfig = {
+const config = {
   text: { component: "default-input" },
   email: { component: "default-input" },
   password: { component: "default-input" },
@@ -49,38 +23,29 @@ const componentConfig = {
   checkbox: { component: "toggle-input", labelPlacement: "inline end" },
   radio: { component: "toggle-input", labelPlacement: "inline end" },
   textarea: { component: "textarea-input" },
-  select: {
-    component: "select-input",
-    parseInputValue: (value) => {
-      const int = parseInt(value);
-      return isNaN(int) ? value : int;
-    },
-  },
+  select: { component: "select-input" },
   "datetime-local": { component: "default-input" },
   date: { component: "default-input" },
   time: { component: "default-input" },
   month: { component: "default-input" },
 };
 
-const htmlErrorKeys = Object.keys(htmlErrors);
-
 export const _inputCtl = {
   settings,
-  htmlErrors,
-  htmlErrorKeys,
-  componentConfig,
+  config,
+  runInputValidation,
 };
 
 /**
  * Generates reactive form data.
  *
  * @template T
- * @param {T} properties Decsripton.
+ * @param { T } properties Decsripton.
  * @returns {{
  *   data: T;
  *   validation: Record<keyof T, boolean>;
  *   errors: Partial<Record<keyof T, string | null>>;
- *   model: Record<keyof T, {value: any, isValid: boolean, errorMessage: string | null, isDirty: boolean}>
+ *   model: Record<keyof T, { value: any, isValid: boolean, errorMessage: string | null, isDirty: boolean }>
  *   isValid: boolean;
  * }}
  *   Return description.

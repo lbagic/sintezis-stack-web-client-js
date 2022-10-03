@@ -1,18 +1,16 @@
 <script>
 import { useCssVar } from "@vueuse/core";
-import { onMounted, reactive, useAttrs, watch } from "vue";
+import { mergeProps, onMounted, useAttrs, watch } from "vue";
 import { useFormData, _inputCtl } from "./input.ctl";
 
 export default {
   inheritAttrs: false,
 };
 
-const { componentConfig, settings, htmlErrors, htmlErrorKeys } = _inputCtl;
+const { config: cfg, settings, runInputValidation } = _inputCtl;
 </script>
 
 <script setup>
-const attrs = useAttrs();
-const emit = defineEmits(["update:modelValue"]);
 const props = defineProps({
   modelValue: undefined,
   type: String,
@@ -30,46 +28,48 @@ const props = defineProps({
   },
 });
 
+const attrs = useAttrs();
+const emit = defineEmits(["update:modelValue"]);
 const prefix = useCssVar("--prefix");
-const model = reactive(
-  props.modelValue?._formDataModel
-    ? props.modelValue
-    : useFormData({ value: props.modelValue }).model.value
-);
 const inputRef = $ref(null);
 const type = $computed(() => props.type || "text");
+const config = $computed(() => cfg[type]);
+if (!config) throw new Error(`Input type "${type}" not supported.`);
+if (type === "radio" && !attrs.value)
+  throw new Error(`Input type radio should have "value" property assigned.`);
+
+const isDataModel = $ref(props.modelValue?._formDataModel);
+const model = isDataModel
+  ? props.modelValue
+  : useFormData({ key: props.modelValue }).model.key;
+
 const options = $computed(() =>
   Array.isArray(props.options)
     ? Object.fromEntries(props.options.map((key) => [key, key]))
     : props.options
 );
-
 const isSelected = $computed(
   () =>
-    Object.prototype.hasOwnProperty.call(options, model.value) &&
+    options &&
+    Object.values(options).includes(model.value) &&
     model.value !== ""
 );
-
-const config = $computed(() => componentConfig[type]);
-if (!config) throw new Error(`Input type "${type}" not supported.`);
 const isRequired = $computed(
   () =>
     Object.prototype.hasOwnProperty.call(attrs, "required") &&
     attrs.required !== false
 );
-
 const labelPlacement = $computed(() => {
-  const _placement = props.labelPlacement ?? config.labelPlacement ?? "";
+  const _placement =
+    props.labelPlacement ?? config.labelPlacement ?? settings.labelPlacement;
   const placement = [];
   placement.push(_placement.includes("inline") ? "inline" : "block");
   placement.push(_placement.includes("end") ? "end" : "start");
   return placement.join(" ");
 });
-
 const showRequiredAsterisk = $computed(
   () => props.useRequiredAsterisk && isRequired
 );
-
 const showErrorMessage = $computed(
   () =>
     props.useErrorMessage &&
@@ -77,71 +77,45 @@ const showErrorMessage = $computed(
     !model.isValid &&
     !!model.errorMessage
 );
-
 const showErrorBorder = $computed(
   () => props.useErrorBorder && model.isDirty && !model.isValid
 );
-function runHtmlValidation() {
-  const validity = inputRef.validity;
-  const isValid = htmlErrorKeys.every((key) => !validity[key]);
-  const state = { isValid, errorMessage: null };
-  if (!state.isValid) {
-    const errorKey = htmlErrorKeys.find((key) => validity[key] === true);
-    const message = htmlErrors[errorKey].value;
-    const parser = htmlErrors[errorKey].parser;
-    state.errorMessage = parser ? parser(message, { attrs }) : message;
-  }
-  return state;
-}
+const componentAttributes = $computed(() => {
+  const attributes = mergeProps(attrs, {
+    ref: "inputRef",
+    class: `${prefix.value}input`,
+    type,
+    "data-type": type,
+    "data-error-border": showErrorBorder,
+    "data-valid": model.isValid,
+    onBlur,
+    onInvalid,
+  });
+  if (type === "select")
+    Object.assign(attributes, {
+      "data-has-placeholder": !!attrs.placeholder,
+      "data-has-value": isSelected,
+    });
 
-function runCustomValidation(value) {
-  const validator = props.validator;
-  const state = { isValid: true, errorMessage: null };
-  if (!validator || typeof validator !== "function") return state;
-  const output = validator(value);
-  if (output === true) return state;
-  state.isValid = false;
-  if (typeof output === "string" && output.length) state.errorMessage = output;
-  return state;
-}
+  return attributes;
+});
 
 function runValidation(value) {
-  const html = runHtmlValidation();
-  const custom = runCustomValidation(value);
-  const isValid = html.isValid && custom.isValid;
-  const errorMessage = html.errorMessage || custom.errorMessage;
-  if (props.useHtmlValidation) {
-    if (!isValid && errorMessage) inputRef.setCustomValidity(errorMessage);
-    else inputRef.setCustomValidity("");
-  }
-
-  model.isValid = isValid;
-  model.errorMessage = errorMessage;
-
-  return { isValid, errorMessage };
+  runInputValidation({ model, value, props, inputRef, attrs });
 }
 
 watch(
+  () => props.modelValue,
+  (value) => value !== model.value && (model.value = value)
+);
+watch(
   () => model.value,
   (value) => {
-    if (inputRef.value === value) return;
     inputRef.value = value;
     runValidation(value);
+    if (!isDataModel) emit("update:modelValue", value);
   }
 );
-
-function onInput(value) {
-  const parsedValue = config?.parseInputValue
-    ? config.parseInputValue(value)
-    : value;
-  if (parsedValue === model.value) return;
-  model.value = parsedValue;
-  runValidation(parsedValue);
-  emit(
-    "update:modelValue",
-    props.modelValue?._formDataModel ? model : model.value
-  );
-}
 
 function onInvalid(event) {
   if (!props.useHtmlValidation) {
@@ -186,73 +160,29 @@ onMounted(() => {
     >
     <input
       v-if="config.component === 'default-input'"
-      :class="`${prefix}input`"
-      v-bind="$attrs"
-      ref="inputRef"
-      :value="model.value"
-      :type="type"
-      :data-type="type"
-      :data-error-border="showErrorBorder"
-      :data-valid="model.isValid"
-      @input="onInput($event.target.value)"
-      @invalid="onInvalid($event)"
-      @blur="onBlur"
+      v-bind="componentAttributes"
+      v-model="model.value"
     />
     <input
       v-if="config.component === 'number-input'"
-      :class="`${prefix}input`"
-      v-bind="$attrs"
-      ref="inputRef"
-      :value="model.value"
-      :type="type"
-      :data-type="type"
-      :data-error-border="showErrorBorder"
-      :data-valid="model.isValid"
-      @input="onInput($event.target.valueAsNumber)"
-      @invalid="onInvalid($event)"
-      @blur="onBlur"
+      v-bind="componentAttributes"
+      v-model="model.value"
     />
     <input
       v-if="config.component === 'toggle-input'"
+      v-bind="componentAttributes"
       v-model="model.value"
-      ref="inputRef"
-      :class="`${prefix}input`"
-      :type="type"
-      :data-type="type"
-      :data-error-border="showErrorBorder"
-      :data-valid="model.isValid"
-      v-bind="$attrs"
-      @invalid="onInvalid($event)"
-      @blur="onBlur"
     />
     <textarea
       v-if="config.component === 'textarea-input'"
-      :class="`${prefix}input`"
-      v-bind="$attrs"
-      ref="inputRef"
-      :value="model.value"
-      :data-type="type"
-      :data-error-border="showErrorBorder"
-      :data-valid="model.isValid"
-      @input="onInput($event.target.value)"
-      @invalid="onInvalid($event)"
-      @blur="onBlur"
+      v-bind="componentAttributes"
+      v-model="model.value"
     >
     </textarea>
     <select
       v-if="config.component === 'select-input'"
-      :class="`${prefix}input`"
-      v-bind="$attrs"
-      ref="inputRef"
-      :value="isSelected ? model.value : undefined"
-      :data-type="type"
-      :data-error-border="showErrorBorder"
-      :data-valid="model.isValid"
-      :data-has-placeholder="!!$attrs.placeholder"
-      :data-has-value="isSelected"
-      @input="onInput($event.target.value)"
-      @invalid="onInvalid($event)"
-      @blur="onBlur"
+      v-bind="componentAttributes"
+      v-model="model.value"
     >
       <option
         v-if="$attrs.placeholder"
@@ -264,8 +194,8 @@ onMounted(() => {
         {{ $attrs.placeholder }}
       </option>
       <option v-if="!isRequired && isSelected"></option>
-      <option v-for="(value, key) in options" :value="key" :key="value">
-        {{ value }}
+      <option v-for="(value, key) in options" :value="value" :key="key">
+        {{ key }}
       </option>
     </select>
     <span
