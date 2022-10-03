@@ -7,7 +7,9 @@
   --font-size: 16px;
   --line-height: 1.5;
   --padding-x: 8px;
-  --padding-y: calc((var(--height) - var(--font-size) * 1.5) / 2);
+  --padding-y: calc(
+    (var(--height) - var(--font-size) * var(--line-height)) / 2
+  );
   --text-color: var(--#{$prefix}app-color);
   --placeholder-color: #999;
 }
