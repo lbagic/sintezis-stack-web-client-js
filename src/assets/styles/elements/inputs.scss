@@ -29,7 +29,11 @@
     padding: var(--padding-y) var(--padding-x);
     line-height: var(--line-height);
   }
-  &[data-type="select"] {
+  &[data-type="select"],
+  &[data-datalist="true"] {
+    &::-webkit-calendar-picker-indicator {
+      opacity: 0;
+    }
     --select-icon-size: 12px;
     -webkit-appearance: none;
     -moz-appearance: none;

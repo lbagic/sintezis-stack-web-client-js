@@ -9,6 +9,11 @@ const settings = {
   labelPlacement: "block start",
 };
 
+/** @typedef { 'default-input' | 'textarea-input' | 'select-input' } ComponentTypes */
+/** @typedef { 'inline start' | 'inline end' | 'block start' | 'block end' } LabelPlacement */
+/** @typedef { { component: ComponentTypes, labelPlacement?: LabelPlacement  } } ComponentConfig */
+
+/** @type { Record<any, ComponentConfig> } */
 const config = {
   text: { component: "default-input" },
   email: { component: "default-input" },
@@ -18,10 +23,10 @@ const config = {
   url: { component: "default-input" },
   color: { component: "default-input" },
   file: { component: "default-input" },
-  number: { component: "number-input" },
-  range: { component: "number-input" },
-  checkbox: { component: "toggle-input", labelPlacement: "inline end" },
-  radio: { component: "toggle-input", labelPlacement: "inline end" },
+  number: { component: "default-input" },
+  range: { component: "default-input" },
+  checkbox: { component: "default-input", labelPlacement: "inline end" },
+  radio: { component: "default-input", labelPlacement: "inline end" },
   textarea: { component: "textarea-input" },
   select: { component: "select-input" },
   "datetime-local": { component: "default-input" },

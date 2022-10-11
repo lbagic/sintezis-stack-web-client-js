@@ -8,6 +8,7 @@ export default {
 };
 
 const { config: cfg, settings, runInputValidation } = _inputCtl;
+let id = 0;
 </script>
 
 <script setup>
@@ -28,11 +29,13 @@ const props = defineProps({
   },
 });
 
+const identifier = id++;
 const attrs = useAttrs();
 const emit = defineEmits(["update:modelValue"]);
 const prefix = useCssVar("--prefix");
 const inputRef = $ref(null);
 const type = $computed(() => props.type || "text");
+/** @type { typeof cfg[string] } */
 const config = $computed(() => cfg[type]);
 if (!config) throw new Error(`Input type "${type}" not supported.`);
 if (type === "radio" && !attrs.value)
@@ -42,11 +45,15 @@ const isDataModel = $ref(props.modelValue?._formDataModel);
 const model = isDataModel
   ? props.modelValue
   : useFormData({ key: props.modelValue }).model.key;
+let datalistModel = $ref("");
 
 const options = $computed(() =>
   Array.isArray(props.options)
     ? Object.fromEntries(props.options.map((key) => [key, key]))
     : props.options
+);
+const flipOptions = $computed(() =>
+  Object.fromEntries(Object.entries(options).map(([k, v]) => [v, k]))
 );
 const isSelected = $computed(
   () =>
@@ -59,6 +66,7 @@ const isRequired = $computed(
     Object.prototype.hasOwnProperty.call(attrs, "required") &&
     attrs.required !== false
 );
+const isDatalist = $computed(() => !!options && type === "text");
 const labelPlacement = $computed(() => {
   const _placement =
     props.labelPlacement ?? config.labelPlacement ?? settings.labelPlacement;
@@ -88,9 +96,13 @@ const componentAttributes = $computed(() => {
     "data-type": type,
     "data-error-border": showErrorBorder,
     "data-valid": model.isValid,
+    "data-datalist": isDatalist,
     onBlur,
     onInvalid,
   });
+  if (isDatalist) {
+    attributes.list = `datalist-${identifier}`;
+  }
   if (type === "select") {
     Object.assign(attributes, {
       "data-has-placeholder": !!attrs.placeholder,
@@ -106,18 +118,38 @@ function runValidation(value) {
   runInputValidation({ model, value, props, inputRef, attrs });
 }
 
+function updateDatalistModel(value) {
+  if (value === "") return;
+  const option = flipOptions[value];
+  if (datalistModel !== option) datalistModel = option;
+}
+
 watch(
   () => props.modelValue,
-  (value) => value !== model.value && (model.value = value)
+  (value) => {
+    if (value === model.value) return;
+    model.value = value;
+    if (isDatalist) updateDatalistModel(value);
+  }
 );
 watch(
   () => model.value,
   (value) => {
+    if (isDatalist) updateDatalistModel(value);
     inputRef.value = value;
     runValidation(value);
     if (!isDataModel) emit("update:modelValue", value);
   }
 );
+if (isDatalist)
+  watch(
+    () => datalistModel,
+    (raw) => {
+      const value = options[raw] ?? "";
+      if (!isDataModel) emit("update:modelValue", value);
+      else model.value = value;
+    }
+  );
 
 function onInvalid(event) {
   if (!props.useHtmlValidation) {
@@ -160,27 +192,31 @@ onMounted(() => {
       :data-label-placement="labelPlacement"
       >{{ props.label }}</span
     >
+    <!-- DEFAULT INPUT -->
     <input
-      v-if="config.component === 'default-input'"
+      v-if="config.component === 'default-input' && !isDatalist"
       v-bind="componentAttributes"
       v-model="model.value"
     />
-    <input
-      v-if="config.component === 'number-input'"
-      v-bind="componentAttributes"
-      v-model="model.value"
-    />
-    <input
-      v-if="config.component === 'toggle-input'"
-      v-bind="componentAttributes"
-      v-model="model.value"
-    />
+    <!-- DEFAULT INPUT WITH OPTIONS -->
+    <template v-if="config.component === 'default-input' && isDatalist">
+      <input v-bind="componentAttributes" v-model="datalistModel" />
+      <datalist :id="`datalist-${identifier}`">
+        <option
+          v-for="(value, key) in options"
+          :value="key"
+          :key="key"
+        ></option>
+      </datalist>
+    </template>
+    <!-- TEXTAREA INPUT -->
     <textarea
       v-if="config.component === 'textarea-input'"
       v-bind="componentAttributes"
       v-model="model.value"
     >
     </textarea>
+    <!-- SELECT INPUT -->
     <select
       v-if="config.component === 'select-input'"
       v-bind="componentAttributes"
