@@ -91,11 +91,13 @@ const componentAttributes = $computed(() => {
     onBlur,
     onInvalid,
   });
-  if (type === "select")
+  if (type === "select") {
     Object.assign(attributes, {
       "data-has-placeholder": !!attrs.placeholder,
       "data-has-value": isSelected,
     });
+    delete attributes.type;
+  }
 
   return attributes;
 });

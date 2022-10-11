@@ -10,10 +10,19 @@ export const commonRoutes = [
 ];
 
 if (!import.meta.env.PROD)
-  commonRoutes.push({
-    path: "/test",
-    component: () => import("./views/TestView.vue"),
-    meta: {
-      title: "Test",
+  commonRoutes.push(
+    {
+      path: "/test",
+      component: () => import("./views/TestView.vue"),
+      meta: {
+        title: "Test",
+      },
     },
-  });
+    {
+      path: "/test-inputs",
+      component: () => import("./views/TestInputsView.vue"),
+      meta: {
+        title: "Test",
+      },
+    }
+  );

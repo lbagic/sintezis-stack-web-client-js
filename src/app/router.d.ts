@@ -1,5 +1,4 @@
 import { ROLES } from "../enums/ROLES"
-export {}
 
 type UserRoleId = typeof ROLES.values[number]
 
@@ -9,3 +8,5 @@ declare module 'vue-router' {
     authorize: (currentRole?: UserRoleId) => boolean
   }
 }
+
+export {}
