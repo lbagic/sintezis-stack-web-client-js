@@ -20,6 +20,14 @@
   &[data-type="select"][data-has-value="false"][data-has-placeholder="true"] {
     color: var(--placeholder-color);
   }
+  &[data-type="date"],
+  &[data-type="datetime-local"],
+  &[data-type="month"],
+  &[data-type="time"] {
+    &[data-has-value="false"] {
+      color: var(--placeholder-color);
+    }
+  }
   &:not([data-type="checkbox"]):not([data-type="radio"]):not([data-type="range"]) {
     min-height: var(--height);
     height: var(--height);

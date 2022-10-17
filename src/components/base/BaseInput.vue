@@ -103,6 +103,16 @@ const componentAttributes = $computed(() => {
   if (isDatalist) {
     attributes.list = `datalist-${identifier}`;
   }
+  if (
+    type === "date" ||
+    type === "datetime-local" ||
+    type === "month" ||
+    type === "time"
+  ) {
+    Object.assign(attributes, {
+      "data-has-value": model.value !== "",
+    });
+  }
   if (type === "select") {
     Object.assign(attributes, {
       "data-has-placeholder": !!attrs.placeholder,
