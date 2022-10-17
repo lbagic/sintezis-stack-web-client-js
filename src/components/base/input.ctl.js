@@ -1,6 +1,8 @@
 import { computed, reactive } from "vue";
 import { runInputValidation } from "./input.validation";
 
+// TODO - rework with tags instead of custom component types
+
 const settings = {
   useErrorMessage: true,
   useErrorBorder: true,

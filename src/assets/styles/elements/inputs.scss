@@ -20,11 +20,11 @@
   &[data-type="select"][data-has-value="false"][data-has-placeholder="true"] {
     color: var(--placeholder-color);
   }
-  &[data-type="date"],
-  &[data-type="datetime-local"],
-  &[data-type="month"],
-  &[data-type="time"] {
-    &[data-has-value="false"] {
+  &:not(:focus)[data-has-value="false"] {
+    &[data-type="date"],
+    &[data-type="datetime-local"],
+    &[data-type="month"],
+    &[data-type="time"] {
       color: var(--placeholder-color);
     }
   }
