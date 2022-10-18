@@ -10,7 +10,7 @@
   --padding-y: calc(
     (var(--height) - var(--font-size) * var(--line-height)) / 2
   );
-  --text-color: var(--#{$prefix}app-color);
+  --text-color: var(--#{$prefix}color-text);
   --placeholder-color: #999;
 }
 
@@ -37,27 +37,27 @@
     padding: var(--padding-y) var(--padding-x);
     line-height: var(--line-height);
   }
-  &[data-type="select"],
-  &[data-datalist="true"] {
-    &::-webkit-calendar-picker-indicator {
-      opacity: 0;
-    }
-    --select-icon-size: 12px;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='grey'><polygon points='0,0 100,0 50,50'/></svg>")
-      no-repeat;
-    background-size: var(--select-icon-size);
-    background-position: calc(100% - var(--padding-x))
-      calc(50% + var(--select-icon-size) / 3);
-    background-repeat: no-repeat;
-    background-color: var(--background);
-  }
-  &[data-type="range"] {
-    min-width: var(--min-width);
-    width: var(--width);
-  }
+  // &[data-type="select"],
+  // &[data-datalist="true"] {
+  //   &::-webkit-calendar-picker-indicator {
+  //     opacity: 0;
+  //   }
+  //   --select-icon-size: 12px;
+  //   -webkit-appearance: none;
+  //   -moz-appearance: none;
+  //   appearance: none;
+  //   background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='grey'><polygon points='0,0 100,0 50,50'/></svg>")
+  //     no-repeat;
+  //   background-size: var(--select-icon-size);
+  //   background-position: calc(100% - var(--padding-x))
+  //     calc(50% + var(--select-icon-size) / 3);
+  //   background-repeat: no-repeat;
+  //   background-color: var(--background);
+  // }
+  // &[data-type="range"] {
+  //   min-width: var(--min-width);
+  //   width: var(--width);
+  // }
   border-width: 1px;
   border-style: solid;
   border-color: var(--#{$prefix}color-light-darker);

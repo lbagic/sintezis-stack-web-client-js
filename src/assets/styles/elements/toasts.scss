@@ -1,12 +1,10 @@
 // toast container
 .#{$prefix}toast-wrapper {
-  --toast-z-index: var(--#{$prefix}app-toast-z-index);
-
   position: fixed;
   display: flex;
   width: 250px;
   max-width: calc(100% - 16px);
-  z-index: var(--toast-z-index);
+  z-index: var(--#{$prefix}z-index-toast);
 
   &[data-position~="top"] {
     top: 1rem;

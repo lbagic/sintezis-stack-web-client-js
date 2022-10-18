@@ -1,5 +1,5 @@
-@function generate-color-palette($palette, $variants) {
-  $output: ();
+@function generate-color-palette($palette, $variants, $additional) {
+  $output: $additional;
   @each $base-name, $base-value in $palette {
     $color-map: (
       "base": $base-value,

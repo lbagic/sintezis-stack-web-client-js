@@ -46,7 +46,7 @@ const getCssVar = (name) =>
   getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 const prefix = getCssVar("--prefix");
 const colorNames = Object.keys(css.colors);
-const baseZIndex = Number(getCssVar(`--${prefix}app-modal-z-index`));
+const baseZIndex = Number(getCssVar(`--${prefix}z-index-modal`));
 
 const refs = {
   modal: ref(),

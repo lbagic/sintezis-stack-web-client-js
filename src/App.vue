@@ -11,8 +11,8 @@ import BaseToast from "./components/base/BaseToast.vue";
 @import "@/assets/styles/index.scss";
 
 body {
-  background: var(--#{$prefix}app-background);
-  color: var(--#{$prefix}app-color);
+  background: var(--#{$prefix}color-background);
+  color: var(--#{$prefix}color-text);
 }
 #app {
   height: 100%;
