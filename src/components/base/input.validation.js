@@ -27,7 +27,7 @@ const htmlErrors = {
 
 const htmlErrorKeys = Object.keys(htmlErrors);
 
-function runHtmlValidation({ inputRef, attrs }) {
+function htmlInputValidation({ inputRef, attrs }) {
   const validity = inputRef.validity;
   const isValid = htmlErrorKeys.every((key) => !validity[key]);
   const state = { isValid, errorMessage: null };
@@ -40,7 +40,7 @@ function runHtmlValidation({ inputRef, attrs }) {
   return state;
 }
 
-function runCustomValidation({ value, props }) {
+function customInputValidation({ value, props }) {
   const validator = props.validator;
   const state = { isValid: true, errorMessage: null };
   if (!validator || typeof validator !== "function") return state;
@@ -51,9 +51,9 @@ function runCustomValidation({ value, props }) {
   return state;
 }
 
-export function runInputValidation({ model, value, props, inputRef, attrs }) {
-  const html = runHtmlValidation({ inputRef, attrs });
-  const custom = runCustomValidation({ value, props });
+export function inputValidation({ model, value, props, inputRef, attrs }) {
+  const html = htmlInputValidation({ inputRef, attrs });
+  const custom = customInputValidation({ value, props });
   const isValid = html.isValid && custom.isValid;
   const errorMessage = html.errorMessage || custom.errorMessage;
   if (props.useHtmlValidation) {
@@ -61,8 +61,8 @@ export function runInputValidation({ model, value, props, inputRef, attrs }) {
     else inputRef.setCustomValidity("");
   }
 
-  model.isValid = isValid;
-  model.errorMessage = errorMessage;
+  model.valid = isValid;
+  model.error = errorMessage;
 
   return { isValid, errorMessage };
 }

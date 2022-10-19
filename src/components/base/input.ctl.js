@@ -1,46 +1,127 @@
 import { computed, reactive } from "vue";
-import { runInputValidation } from "./input.validation";
-
-// TODO - rework with tags instead of custom component types
+import { inputValidation } from "./input.validation";
 
 const settings = {
   useErrorMessage: true,
   useErrorBorder: true,
   useRequiredAsterisk: true,
   useHtmlValidation: false,
-  labelPlacement: "block start",
+  labelPlacement: "top",
 };
 
-/** @typedef { 'default-input' | 'textarea-input' | 'select-input' } ComponentTypes */
-/** @typedef { 'inline start' | 'inline end' | 'block start' | 'block end' } LabelPlacement */
-/** @typedef { { component: ComponentTypes, labelPlacement?: LabelPlacement  } } ComponentConfig */
+/**
+ * @typedef {{
+ *  component: 'input' | 'textarea' | 'select'
+ *  supportOptions?: boolean,
+ *  labelPlacement: 'top' | 'right' | 'bottom' | 'left'
+ *  bind: { type?: string }
+ * }} ComponentConfig
+ * */
 
-/** @type { Record<any, ComponentConfig> } */
-const config = {
-  text: { component: "default-input" },
-  email: { component: "default-input" },
-  password: { component: "default-input" },
-  search: { component: "default-input" },
-  tel: { component: "default-input" },
-  url: { component: "default-input" },
-  color: { component: "default-input" },
-  file: { component: "default-input" },
-  number: { component: "default-input" },
-  range: { component: "default-input" },
-  checkbox: { component: "default-input", labelPlacement: "inline end" },
-  radio: { component: "default-input", labelPlacement: "inline end" },
-  textarea: { component: "textarea-input" },
-  select: { component: "select-input" },
-  "datetime-local": { component: "default-input" },
-  date: { component: "default-input" },
-  time: { component: "default-input" },
-  month: { component: "default-input" },
+/** @type { Record<string, ComponentConfig & { shadow?: ComponentConfig }> }*/
+const components = {
+  text: {
+    component: "input",
+    supportOptions: true,
+    bind: { type: "text" },
+  },
+  email: {
+    component: "input",
+    bind: { type: "email" },
+  },
+  password: {
+    component: "input",
+    bind: { type: "password" },
+  },
+  search: {
+    component: "input",
+    bind: { type: "search" },
+  },
+  tel: {
+    component: "input",
+    bind: { type: "tel" },
+  },
+  url: {
+    component: "input",
+    bind: { type: "url" },
+  },
+  color: {
+    component: "input",
+    bind: { type: "color" },
+  },
+  number: {
+    component: "input",
+    bind: { type: "number" },
+  },
+  range: {
+    component: "input",
+    bind: { type: "range" },
+  },
+  checkbox: {
+    component: "input",
+    bind: { type: "checkbox" },
+    labelPlacement: "right",
+  },
+  radio: {
+    component: "input",
+    bind: { type: "radio" },
+    labelPlacement: "right",
+  },
+  textarea: {
+    component: "textarea",
+    bind: {},
+  },
+  select: {
+    component: "select",
+    supportOptions: true,
+    bind: {},
+  },
+  file: {
+    component: "input",
+    bind: { type: "file" },
+    // shadow: {
+    //   component: "input",
+    //   bind: { type: "file" },
+    // },
+  },
+  "datetime-local": {
+    component: "input",
+    bind: { type: "datetime-local" },
+    // shadow: {
+    //   component: "input",
+    //   bind: { type: "datetime-local" },
+    // },
+  },
+  date: {
+    component: "input",
+    bind: { type: "date" },
+    // shadow: {
+    //   component: "input",
+    //   bind: { type: "date" },
+    // },
+  },
+  time: {
+    component: "input",
+    bind: { type: "time" },
+    // shadow: {
+    //   component: "input",
+    //   bind: { type: "time" },
+    // },
+  },
+  month: {
+    component: "input",
+    bind: { type: "month" },
+    // shadow: {
+    //   component: "input",
+    //   bind: { type: "month" },
+    // },
+  },
 };
 
 export const _inputCtl = {
   settings,
-  config,
-  runInputValidation,
+  components,
+  inputValidation,
 };
 
 /**
@@ -52,12 +133,11 @@ export const _inputCtl = {
  *   data: T;
  *   validation: Record<keyof T, boolean>;
  *   errors: Partial<Record<keyof T, string | null>>;
- *   model: Record<keyof T, { value: any, isValid: boolean, errorMessage: string | null, isDirty: boolean }>
+ *   model: Record<keyof T, { value: any, valid: boolean, error: string | null, dirty: boolean }>
  *   isValid: boolean;
  * }}
  *   Return description.
  */
-
 export function useFormData(properties) {
   const data = reactive(properties);
   const validation = reactive(
@@ -84,22 +164,22 @@ export function useFormData(properties) {
           set value(value) {
             data[key] = value;
           },
-          get isValid() {
+          get valid() {
             return validation[key];
           },
-          set isValid(value) {
+          set valid(value) {
             validation[key] = value;
           },
-          get errorMessage() {
+          get error() {
             return errors[key];
           },
-          set errorMessage(value) {
+          set error(value) {
             errors[key] = value;
           },
-          get isDirty() {
+          get dirty() {
             return dirty[key];
           },
-          set isDirty(value = true) {
+          set dirty(value = true) {
             dirty[key] = value;
           },
         },
@@ -109,7 +189,7 @@ export function useFormData(properties) {
   return reactive({ isValid, data, validation, errors, model });
 }
 
-export const useFormDataConfig = (config) => {
+export const useFormFactory = (config) => {
   const data = Object.fromEntries(
     Object.entries(config).map(([key, { value }]) => [key, value])
   );
