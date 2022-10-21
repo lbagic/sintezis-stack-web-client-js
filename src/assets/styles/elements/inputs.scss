@@ -64,8 +64,14 @@
 .#{$prefix}input-search::-webkit-search-cancel-button {
   appearance: none;
 }
-
-.#{$prefix}input--picker-dropdown {
+.#{$prefix}input-file[data-dragover="true"] {
+  border-style: dashed;
+  border-color: var(--#{$prefix}color-success);
+}
+// .#{$prefix}input[data-hide-caret="true"] {
+//   caret-color: transparent;
+// }
+.#{$prefix}input[data-picker-dropdown="true"] {
   &::-webkit-calendar-picker-indicator {
     opacity: 0;
   }
@@ -89,10 +95,11 @@
 .#{$prefix}input-shadow {
   opacity: 0 !important;
   position: absolute;
-  top: 0;
+  top: calc(0 - var(--padding-y));
   left: 0;
+  @extend %#{$prefix}input-height;
   width: 100%;
-  height: 100%;
+  // height: 100%;
   cursor: pointer;
   &::-webkit-calendar-picker-indicator {
     // background: transparent;

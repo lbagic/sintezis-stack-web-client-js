@@ -1,6 +1,8 @@
 <script>
 import { useCssVar } from "@vueuse/core";
+import "flatpickr/dist/flatpickr.css";
 import { mergeProps, onMounted, useAttrs, watch } from "vue";
+import FlatPickr from "vue-flatpickr-component";
 import { useFormData, _inputCtl } from "./input.ctl";
 
 export default { inheritAttrs: false };
@@ -40,7 +42,7 @@ const labelPlacement =
 const isDataModel = $ref(props.modelValue?._formDataModel);
 const model = isDataModel
   ? props.modelValue
-  : useFormData({ key: props.modelValue }).model.key;
+  : useFormData({ data: props.modelValue }).model.data;
 let inputOptionModel = $ref("");
 
 const options = $computed(() =>
@@ -79,6 +81,8 @@ const hasRequiredAsteriskShown = props.useRequiredAsterisk && isRequired;
 const hasSelectPlaceholder = $computed(
   () => attrs.placeholder && props.type === "select" && !isSelected
 );
+let hasDragover = $ref(false);
+let shadowFocus = $ref(false);
 
 function updateInputOptions(value) {
   if (value === "") return;
@@ -108,42 +112,75 @@ function onInvalid(event) {
   model.dirty = true;
 }
 
-function onBlur() {
-  model.dirty = true;
-}
-
 const attributes = $computed(() => {
   const baseAttrs = { class: setClass() };
 
+  // DEFAULT ATTRIBUTES
   const defaultAttrs = {
     ref: "inputRef",
     class: {
       [setClass(`-${props.type}`)]: true,
       [setClass("--error")]: hasErrorShown,
       [setClass("--error-border")]: hasErrorBorderShown,
-      [setClass("--picker-dropdown")]: hasOptions,
-      [setClass("--placeholder")]: hasSelectPlaceholder,
     },
-    onInvalid,
-    onBlur,
+    onInvalid: config.shadow?.checkInvalid
+      ? (e) => e.preventDefault()
+      : onInvalid,
+    onBlur: () => (model.dirty = true),
   };
   if (hasInputOptions) defaultAttrs.list = `input-datalist-${uid}`;
   if (hasNoRadioValue) defaultAttrs.value = true;
   if (hasSelectPlaceholder) defaultAttrs["data-select-placeholder"] = true;
+  if (hasDragover) defaultAttrs["data-dragover"] = true;
+  if (hasOptions) defaultAttrs["data-picker-dropdown"] = true;
+  if (shadowFocus) defaultAttrs["data-show-focus"] = true;
 
-  if (config.shadow) defaultAttrs.readonly = true;
+  const mergedDefault = mergeProps(baseAttrs, defaultAttrs, config.bind, attrs);
+  const parsedDefault =
+    config?.modifyAttributes?.(mergedDefault) ?? mergedDefault;
 
+  // SHADOW ATTRIBUTES
   const shadowAttrs = {
     ref: "shadowRef",
     class: setClass("-shadow"),
-    tabindex: "-1",
+    onDragenter: () => (hasDragover = true),
+    onDragleave: () => (hasDragover = false),
+    onDrop: () => (hasDragover = false),
+    onInvalid: config.shadow?.checkInvalid
+      ? onInvalid
+      : (e) => e.preventDefault(),
+    onFocus: () => {
+      shadowFocus = true;
+    },
+    onBlur: () => {
+      shadowFocus = false;
+      model.dirty = true;
+    },
+    onKeydown: (e) => {
+      if (
+        ["Meta", "Escape", "Enter", "Alt", "Control", "Tab"].includes(e.key) ||
+        e.ctrlKey ||
+        e.metaKey
+      )
+        return;
+      e.preventDefault();
+    },
   };
+  const shadowEvents = config.shadow?.events;
+  if (shadowEvents) {
+    if (shadowEvents.onChange)
+      shadowAttrs.onChange = (e) => shadowEvents.onChange(e, { model });
+  }
+
+  const mergedShadow =
+    config.shadow &&
+    mergeProps(baseAttrs, shadowAttrs, config.shadow.bind, attrs);
+  const parsedShadow =
+    (config.shadow && config?.modifyAttributes?.(mergedShadow)) || mergedShadow;
 
   return {
-    default: mergeProps(baseAttrs, defaultAttrs, config.bind, attrs),
-    shadow:
-      config.shadow &&
-      mergeProps(baseAttrs, shadowAttrs, config.shadow.bind, attrs),
+    default: parsedDefault,
+    shadow: parsedShadow,
   };
 });
 const labelAttributes = $computed(() => ({
@@ -163,8 +200,9 @@ watch(
 watch(
   () => model.value,
   (value) => {
+    console.log("here");
     if (hasInputOptions) updateInputOptions(value);
-    if (!props.type === "file") inputRef.value = value;
+    if (props.type !== "file") inputRef.value = value;
     validate(value);
     if (!isDataModel) emit("update:modelValue", value);
   }
@@ -192,6 +230,16 @@ onMounted(() => {
     </span>
     <!-- INPUTS -->
     <div style="position: relative; display: inline">
+      <!-- input / shadow -->
+      <input
+        v-if="config.shadow && config.shadow.component === 'input'"
+        v-bind="attributes.shadow"
+      />
+      <FlatPickr
+        v-if="config.shadow && config.shadow.component === 'flatpickr'"
+        v-bind="attributes.shadow"
+        v-model="model.value"
+      />
       <!-- input / default -->
       <input
         v-if="config.component === 'input' && !hasInputOptions"
@@ -241,10 +289,10 @@ onMounted(() => {
         v-model="model.value"
       >
       </textarea>
-      <!-- input / shadow -->
-      <input
-        v-if="config.shadow && config.shadow.component === 'input'"
-        v-bind="attributes.shadow"
+      <!-- input / flatpickr -->
+      <FlatPickr
+        v-if="config.component === 'flatpickr'"
+        v-bind="attributes.default"
         v-model="model.value"
       />
     </div>

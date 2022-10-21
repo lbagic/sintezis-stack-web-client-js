@@ -2,10 +2,14 @@
   --outline-width: 1px;
   --outline-style: solid;
   --outline-color: var(--#{$prefix}color-light-darkest);
+  &[data-show-focus="true"],
   &:focus,
   &:focus-visible {
     outline: var(--outline-width) var(--outline-style) var(--outline-color);
     outline-offset: 1px;
+  }
+  &:focus,
+  &:focus-visible {
     transform: translateZ(0);
   }
   &:focus:not(:focus-visible) {

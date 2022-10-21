@@ -23,7 +23,6 @@ function change() {
     <form @submit.prevent>
       <button @click="change">click</button>
       <pre>{{ formData.data }}</pre>
-      <pre>{{ formData.isValid }}</pre>
       <BaseInput
         v-for="t in types"
         :key="t"

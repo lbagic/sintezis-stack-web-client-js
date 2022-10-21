@@ -11,12 +11,28 @@ const settings = {
 
 /**
  * @typedef {{
- *  component: 'input' | 'textarea' | 'select'
+ *  component: 'input' | 'textarea' | 'select' | 'flatpickr'
  *  supportOptions?: boolean,
  *  labelPlacement: 'top' | 'right' | 'bottom' | 'left'
  *  bind: { type?: string }
+ *  modifyAttributes?: <T>(attrs: T) => T
+ *  events: Record<string, (e: any, ctx: any) => void>
+ *  checkInvalid: boolean,
  * }} ComponentConfig
  * */
+
+// const baseFlatpickrConfig =
+//   (baseConfig = {}) =>
+//   (attrs) => {
+//     const userConfig = attrs.config ? { ...attrs.config } : {};
+//     if (attrs.min) userConfig.minDate = attrs.min;
+//     if (attrs.max) userConfig.maxDate = attrs.max;
+//     userConfig.allowInput = true;
+//     return {
+//       ...attrs,
+//       config: { ...baseConfig, ...userConfig },
+//     };
+//   };
 
 /** @type { Record<string, ComponentConfig & { shadow?: ComponentConfig }> }*/
 const components = {
@@ -76,46 +92,54 @@ const components = {
     supportOptions: true,
     bind: {},
   },
-  file: {
-    component: "input",
-    bind: { type: "file" },
-    // shadow: {
-    //   component: "input",
-    //   bind: { type: "file" },
-    // },
-  },
-  "datetime-local": {
-    component: "input",
-    bind: { type: "datetime-local" },
-    // shadow: {
-    //   component: "input",
-    //   bind: { type: "datetime-local" },
-    // },
-  },
-  date: {
-    component: "input",
-    bind: { type: "date" },
-    // shadow: {
-    //   component: "input",
-    //   bind: { type: "date" },
-    // },
-  },
-  time: {
-    component: "input",
-    bind: { type: "time" },
-    // shadow: {
-    //   component: "input",
-    //   bind: { type: "time" },
-    // },
-  },
-  month: {
-    component: "input",
-    bind: { type: "month" },
-    // shadow: {
-    //   component: "input",
-    //   bind: { type: "month" },
-    // },
-  },
+  // file: {
+  //   component: "input",
+  //   bind: { type: "text", tabindex: -1 },
+  //   shadow: {
+  //     component: "input",
+  //     bind: {
+  //       type: "file",
+  //     },
+  //     events: {
+  //       onChange: (e, { model }) => (model.value = [...e.target.files]),
+  //     },
+  //     checkInvalid: true,
+  //   },
+  // },
+  // date: {
+  //   component: "input",
+  //   bind: { type: "text", tabindex: -1 },
+  //   shadow: {
+  //     component: "flatpickr",
+  //     bind: {},
+  //     modifyAttributes: baseFlatpickrConfig(),
+  //   },
+  // },
+  // time: {
+  //   component: "flatpickr",
+  //   bind: {},
+  //   modifyAttributes: baseFlatpickrConfig({
+  //     enableTime: true,
+  //     noCalendar: true,
+  //     dateFormat: "H:i",
+  //     time_24hr: true,
+  //   }),
+  // },
+  // "datetime-local": {
+  //   component: "flatpickr",
+  //   bind: {},
+  //   modifyAttributes: baseFlatpickrConfig({
+  //     enableTime: true,
+  //     dateFormat: "Y-m-d H:i",
+  //     time_24hr: true,
+  //   }),
+  // },
+  // month: {
+  //   // requires using flatpickr plugin
+  //   component: "flatpickr",
+  //   bind: {},
+  //   modifyAttributes: baseFlatpickrConfig(),
+  // },
 };
 
 export const _inputCtl = {
