@@ -1,23 +1,44 @@
 import { computed, reactive } from "vue";
 import { inputValidation } from "./input.validation";
+// import flatPickr from "vue-flatpickr-component";
 
 const settings = {
   useErrorMessage: true,
   useErrorBorder: true,
   useRequiredAsterisk: true,
   useHtmlValidation: false,
-  labelPlacement: "top",
+  labelPosition: "top",
 };
 
 /**
+ * @typedef { 'top' | 'right' | 'bottom' | 'left' } labelPosition
+ * @typedef { 'input' | 'textarea' | 'select' | typeof flatPickr } ComponentType
+ * @typedef { 'onInput' | 'onChange' | 'onBlur' | 'onFocus' } EventNames
+ * @typedef { { target: HTMLInputElement } } InputEvent
  * @typedef {{
- *  component: 'input' | 'textarea' | 'select' | 'flatpickr'
- *  supportOptions?: boolean,
- *  labelPlacement: 'top' | 'right' | 'bottom' | 'left'
- *  bind: { type?: string }
- *  modifyAttributes?: <T>(attrs: T) => T
- *  events: Record<string, (e: any, ctx: any) => void>
- *  checkInvalid: boolean,
+ *  attrs: any
+ *  attributes: any
+ *  config: ComponentConfig
+ *  inputRef: HTMLInputElement
+ *  model: { value: any, valid: boolean, error: null | string, dirty: boolean }
+ *  options: Record<string, any>
+ *  optionsFlipped: Record<string, any>
+ *  props: { strictOptions: boolean }
+ *  isRequired: boolean,
+ * }} InputContext
+ *
+ *
+ * @typedef {{
+ *  attrs: { type?: string }
+ *  attrsFactory?: <T>(ctx: InputContext) => T
+ *  component: ComponentType
+ *  eventsFactory?: (ctx: InputContext) => Record<EventNames, (e: InputEvent) => void>
+ *  labelPosition: labelPosition
+ *  onInit?: (ctx: InputContext) => any
+ *  supportOptions: boolean
+ *  parseInputValue: (e: InputEvent) => any
+ *  onInternalUpdate: (e: InputEvent, ctx: InputContext) => any
+ *  onExternalUpdate: (ctx: InputContext) => any
  * }} ComponentConfig
  * */
 
@@ -33,73 +54,103 @@ const settings = {
 //       config: { ...baseConfig, ...userConfig },
 //     };
 //   };
-
-/** @type { Record<string, ComponentConfig & { shadow?: ComponentConfig }> }*/
+// text, search, url, tel, email, number
+// month, week, date, time, datetime-local
+// range
+// color
+/** @type { Record<string, ComponentConfig> }*/
 const components = {
   text: {
-    component: "input",
     supportOptions: true,
-    bind: { type: "text" },
+    component: "input",
+    attrs: { type: "text" },
   },
   email: {
+    supportOptions: true,
     component: "input",
-    bind: { type: "email" },
+    attrs: { type: "email", name: "email" },
   },
   password: {
     component: "input",
-    bind: { type: "password" },
+    attrs: { type: "password", name: "password" },
   },
   search: {
+    supportOptions: true,
     component: "input",
-    bind: { type: "search" },
+    attrs: { type: "search", inputmode: "search" },
   },
   tel: {
+    supportOptions: true,
     component: "input",
-    bind: { type: "tel" },
+    attrs: { type: "tel", inputmode: "tel" },
   },
   url: {
+    supportOptions: true,
     component: "input",
-    bind: { type: "url" },
+    attrs: { type: "url", inputmode: "url" },
   },
   color: {
+    supportOptions: true,
     component: "input",
-    bind: { type: "color" },
+    attrs: { type: "color" },
   },
   number: {
+    supportOptions: true,
     component: "input",
-    bind: { type: "number" },
+    attrs: { type: "number", inputmode: "numeric" },
+    parseInputValue: (e) => e.target.valueAsNumber,
   },
   range: {
+    supportOptions: true,
     component: "input",
-    bind: { type: "range" },
+    attrs: { type: "range" },
+    parseInputValue: (e) => e.target.valueAsNumber,
   },
   checkbox: {
     component: "input",
-    bind: { type: "checkbox" },
-    labelPlacement: "right",
+    attrs: { type: "checkbox" },
+    labelPosition: "right",
+    onInternalUpdate: (e, ctx) => {
+      const checked = e.target.checked;
+      const v = ctx.attributes.value;
+      const m = ctx.model;
+      if (Array.isArray(m.value)) {
+        if (checked) !m.value.includes(v) && m.value.push(v);
+        else m.value = m.value.filter((el) => el !== v);
+      } else m.value = checked ? v : typeof v === "boolean" ? false : "";
+    },
+    onExternalUpdate: ({ inputRef, model, attributes }) =>
+      (inputRef.checked = Array.isArray(model.value)
+        ? model.value.includes(inputRef.value)
+        : attributes.value === model.value),
   },
   radio: {
     component: "input",
-    bind: { type: "radio" },
-    labelPlacement: "right",
+    attrs: { type: "radio" },
+    labelPosition: "right",
+    onInternalUpdate: (e, ctx) => {
+      const checked = e.target.checked;
+      const v = ctx.attributes.value;
+      const m = ctx.model;
+      m.value = checked ? v : typeof v === "boolean" ? false : "";
+    },
+    onExternalUpdate: ({ inputRef, attributes, model }) =>
+      (inputRef.checked = attributes.value === model.value),
   },
   textarea: {
     component: "textarea",
-    bind: {},
+    attrs: {},
   },
   select: {
     component: "select",
-    supportOptions: true,
-    bind: {},
+    attrs: {},
   },
   // file: {
   //   component: "input",
-  //   bind: { type: "text", tabindex: -1 },
+  //   attrs: { type: "text", tabindex: -1 },
   //   shadow: {
   //     component: "input",
-  //     bind: {
-  //       type: "file",
-  //     },
+  //     attrs: { type: "file" },
   //     events: {
   //       onChange: (e, { model }) => (model.value = [...e.target.files]),
   //     },
@@ -107,17 +158,19 @@ const components = {
   //   },
   // },
   // date: {
+  //   supportOptions: true,
   //   component: "input",
-  //   bind: { type: "text", tabindex: -1 },
+  //   attrs: { type: "text", tabindex: -1 },
   //   shadow: {
   //     component: "flatpickr",
-  //     bind: {},
+  //     attrs: {},
   //     modifyAttributes: baseFlatpickrConfig(),
   //   },
   // },
   // time: {
+  //   supportOptions: true,
   //   component: "flatpickr",
-  //   bind: {},
+  //   attrs: {},
   //   modifyAttributes: baseFlatpickrConfig({
   //     enableTime: true,
   //     noCalendar: true,
@@ -126,8 +179,9 @@ const components = {
   //   }),
   // },
   // "datetime-local": {
+  //   supportOptions: true,
   //   component: "flatpickr",
-  //   bind: {},
+  //   attrs: {},
   //   modifyAttributes: baseFlatpickrConfig({
   //     enableTime: true,
   //     dateFormat: "Y-m-d H:i",
@@ -135,17 +189,25 @@ const components = {
   //   }),
   // },
   // month: {
+  //   supportOptions: true,
   //   // requires using flatpickr plugin
   //   component: "flatpickr",
-  //   bind: {},
+  //   attrs: {},
   //   modifyAttributes: baseFlatpickrConfig(),
   // },
+  // week?
 };
+
+const parseOptions = (options) =>
+  Array.isArray(options)
+    ? Object.fromEntries(options.map((key) => [key, key]))
+    : options;
 
 export const _inputCtl = {
   settings,
   components,
-  inputValidation,
+  validation: inputValidation,
+  parseOptions,
 };
 
 /**
@@ -181,7 +243,6 @@ export function useFormData(properties) {
       return [
         key,
         {
-          _formDataModel: true,
           get value() {
             return data[key];
           },
@@ -210,6 +271,29 @@ export function useFormData(properties) {
       ];
     })
   );
+  // const model = Object.fromEntries(
+  //   Object.keys(properties).map((key) => {
+  //     const value = $computed({
+  //       get() {
+  //         return {
+  //           _formDataModel: true,
+  //           value: data[key],
+  //           valid: validation[key],
+  //           error: errors[key],
+  //           dirty: dirty[key],
+  //         };
+  //       },
+  //       set(ctx) {
+  //         console.log("here", ctx);
+  //         data[key] = ctx.value;
+  //         validation[key] = ctx.valid;
+  //         errors[key] = ctx.error;
+  //         dirty[key] = ctx.dirty;
+  //       },
+  //     });
+  //     return [key, value];
+  //   })
+  // );
   return reactive({ isValid, data, validation, errors, model });
 }
 

@@ -1,3 +1,7 @@
+.#{$prefix}input-wrapper {
+  display: inline;
+  position: relative;
+}
 .#{$prefix}input {
   --font-size: 16px;
   --text-color: var(--#{$prefix}color-text);
@@ -57,12 +61,40 @@
 }
 // .#{$prefix}input-checkbox {}
 // .#{$prefix}input-radio {}
-
-.#{$prefix}input-select[data-select-placeholder="true"] {
-  color: var(--placeholder-color);
-}
 .#{$prefix}input-search::-webkit-search-cancel-button {
   appearance: none;
+}
+.#{$prefix}input-number {
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0;
+  }
+}
+
+.#{$prefix}input {
+  &[data-error-border="true"] {
+    border-color: var(--#{$prefix}color-danger);
+  }
+  &[data-placeholder-color="true"] {
+    color: var(--placeholder-color);
+  }
+  &[data-dropdown-picker="true"] {
+    &::-webkit-calendar-picker-indicator {
+      opacity: 0;
+    }
+    --select-icon-size: calc(var(--font-size) / 1.5);
+    appearance: none;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='grey'><polygon points='0,0 100,0 50,50'/></svg>")
+      no-repeat;
+    background-size: var(--select-icon-size);
+    background-position: calc(100% - var(--padding-x))
+      calc(50% + var(--select-icon-size) / 3);
+    background-repeat: no-repeat;
+    background-color: var(--background);
+  }
 }
 .#{$prefix}input-file[data-dragover="true"] {
   border-style: dashed;
@@ -71,25 +103,6 @@
 // .#{$prefix}input[data-hide-caret="true"] {
 //   caret-color: transparent;
 // }
-.#{$prefix}input[data-picker-dropdown="true"] {
-  &::-webkit-calendar-picker-indicator {
-    opacity: 0;
-  }
-  --select-icon-size: calc(var(--font-size) / 1.5);
-  appearance: none;
-  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='grey'><polygon points='0,0 100,0 50,50'/></svg>")
-    no-repeat;
-  background-size: var(--select-icon-size);
-  background-position: calc(100% - var(--padding-x))
-    calc(50% + var(--select-icon-size) / 3);
-  background-repeat: no-repeat;
-  background-color: var(--background);
-}
-
-// .#{$prefix}input--error {}
-.#{$prefix}input--error-border {
-  border-color: var(--#{$prefix}color-danger);
-}
 
 // Shadow component styles
 .#{$prefix}input-shadow {
@@ -120,26 +133,26 @@
   --margin: 0.25rem;
 
   // input label required styles
-  &[data-show-asterisk="true"]::after {
+  &[data-label-asterisk="true"]::after {
     content: "*";
     color: var(--#{$prefix}color-danger);
   }
 
   // input label placement
-  &[data-label-placement="top"],
-  &[data-label-placement="bottom"] {
+  &[data-label-position="top"],
+  &[data-label-position="bottom"] {
     display: block;
   }
-  &[data-label-placement="top"] {
+  &[data-label-position="top"] {
     margin-bottom: var(--margin);
   }
-  &[data-label-placement="bottom"] {
+  &[data-label-position="bottom"] {
     margin-top: var(--margin);
   }
-  &[data-label-placement="left"] {
+  &[data-label-position="left"] {
     margin-right: var(--margin);
   }
-  &[data-label-placement="right"] {
+  &[data-label-position="right"] {
     margin-left: var(--margin);
   }
 }

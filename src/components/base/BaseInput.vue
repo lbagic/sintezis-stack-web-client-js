@@ -1,316 +1,278 @@
 <script>
-import { useCssVar } from "@vueuse/core";
-import "flatpickr/dist/flatpickr.css";
-import { mergeProps, onMounted, useAttrs, watch } from "vue";
-import FlatPickr from "vue-flatpickr-component";
-import { useFormData, _inputCtl } from "./input.ctl";
-
+// slider styles
+// checkbox/radio styles
+// convert attr styles to class styles
 export default { inheritAttrs: false };
+import { useCssVar } from "@vueuse/core";
+import {
+  h,
+  mergeProps,
+  onMounted,
+  reactive,
+  ref,
+  Transition,
+  useAttrs,
+  watch,
+} from "vue";
+import { _inputCtl } from "./input.ctl";
 
-const { components, settings, inputValidation } = _inputCtl;
+const { components, settings, validation, parseOptions } = _inputCtl;
+const prefix = useCssVar("--prefix").value;
+const setClass = (className) => prefix + className;
 let _uid = 1;
+const calcFormData = (model) => {
+  if (typeof model !== "object") return false;
+  const has = (k) => Object.hasOwn(model, k);
+  return has("value") && has("valid") && has("error") && has("dirty");
+};
+const calcRequired = (required) => required === "" || required === true;
 </script>
 
 <script setup>
 const props = defineProps({
   modelValue: undefined,
+  value: undefined,
   type: { type: String, default: "text" },
+  options: undefined,
+  strictOptions: { type: Boolean, default: true },
   hint: String,
   label: String,
-  labelPlacement: String,
+  labelPosition: String,
   validator: Function,
-  options: undefined,
   useErrorBorder: { type: Boolean, default: settings.useErrorBorder },
   useErrorMessage: { type: Boolean, default: settings.useErrorMessage },
   useHtmlValidation: { type: Boolean, default: settings.useHtmlValidation },
   useRequiredAsterisk: { type: Boolean, default: settings.useRequiredAsterisk },
 });
-const config = components[props.type];
-if (!config) throw new Error(`Input type "${props.type}" not supported.`);
 
 const uid = _uid++;
-const inputRef = $ref(null);
-// const shadowRef = $ref(null);
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits(["update:modelValue", "input"]);
 const attrs = useAttrs();
-const prefix = useCssVar("--prefix");
-const setClass = (className) =>
-  prefix.value + "input" + (className ? className : "");
-const labelPlacement =
-  props.labelPlacement || config.labelPlacement || settings.labelPlacement;
-
-const isDataModel = $ref(props.modelValue?._formDataModel);
-const model = isDataModel
-  ? props.modelValue
-  : useFormData({ data: props.modelValue }).model.data;
-let inputOptionModel = $ref("");
-
-const options = $computed(() =>
-  Array.isArray(props.options)
-    ? Object.fromEntries(props.options.map((key) => [key, key]))
-    : props.options
+const _inputRef = ref(null);
+/** @type { HTMLInputElement } */
+const inputRef = $computed(() => _inputRef.value);
+/** @type { Record<string, any> } */
+const config = $computed(() => components[props.type]);
+if (!config) throw new Error(`Input type "${props.type}" not supported.`);
+const type = $computed(() => config.attrs.type ?? props.type);
+const hasInputOptions = $computed(() => config.supportOptions && props.options);
+const hasSelectOptions = $computed(() => type === "select" && props.options);
+const hasOptions = $computed(() => hasInputOptions || hasSelectOptions);
+const hasDropdownPicker = $computed(() => hasOptions && type !== "range");
+const isToggle = $computed(() => type === "radio" || type === "checkbox");
+const options = $computed(() => hasOptions && parseOptions(props.options));
+const optionEntries = $computed(() => Object.entries(options));
+const optionValues = $computed(() => Object.values(options));
+const optionsFlipped = $computed(() =>
+  Object.fromEntries(optionEntries.map(([k, v]) => [v, k]))
 );
-const flipOptions = $computed(() =>
-  Object.fromEntries(Object.entries(options).map(([k, v]) => [v, k]))
-);
-
-const isRequired = attrs.required === "" || attrs.required === true;
+const datalistId = `input-datalist-${uid}`;
+const isRequired = $computed(() => calcRequired(attrs.required));
 const isSelected = $computed(
-  () =>
-    options &&
-    Object.values(options).includes(model.value) &&
-    model.value !== ""
+  () => hasOptions && optionValues.includes(model.value) && model.value !== ""
 );
 
-const hasLabel = !!props.label;
-const hasLabelBefore = hasLabel && ["top", "left"].includes(labelPlacement);
-const hasLabelAfter = hasLabel && ["bottom", "right"].includes(labelPlacement);
-const hasOptions = $computed(() => options && config.supportOptions);
-const hasInputOptions = $computed(() => hasOptions && props.type !== "select");
-const hasNoRadioValue = props.type === "radio" && !attrs.value;
-const hasHint = !!props.hint;
-const hasErrorShown = $computed(() => model.dirty && !model.valid);
-const hasErrorMessageShow = $computed(
-  () => props.useErrorMessage && hasErrorShown && !!model.error
-);
-const hasErrorBorderShown = $computed(
-  () => props.useErrorBorder && hasErrorShown
-);
-const hasInfo = $computed(() => hasHint || hasErrorMessageShow);
-const hasRequiredAsteriskShown = props.useRequiredAsterisk && isRequired;
-const hasSelectPlaceholder = $computed(
-  () => attrs.placeholder && props.type === "select" && !isSelected
-);
-let hasDragover = $ref(false);
-let shadowFocus = $ref(false);
-
-function updateInputOptions(value) {
-  if (value === "") return;
-  const option = flipOptions[value];
-  if (inputOptionModel !== option) inputOptionModel = option;
-}
-
-function validate(value) {
-  inputValidation({ model, value, props, inputRef, attrs });
-}
-
-function onInvalid(event) {
-  if (!props.useHtmlValidation) {
-    event.preventDefault();
-    let firstInvalidElement = event.target;
-    const formElement = inputRef.closest("form");
-    if (formElement)
-      firstInvalidElement = [...formElement.elements].find(
-        (element) => element.validity.valid === false
-      );
-
-    firstInvalidElement.parentNode.scrollIntoView({ behavior: "smooth" });
-    firstInvalidElement.focus();
-  }
-
-  validate(model.value);
-  model.dirty = true;
-}
-
-const attributes = $computed(() => {
-  const baseAttrs = { class: setClass() };
-
-  // DEFAULT ATTRIBUTES
-  const defaultAttrs = {
-    ref: "inputRef",
-    class: {
-      [setClass(`-${props.type}`)]: true,
-      [setClass("--error")]: hasErrorShown,
-      [setClass("--error-border")]: hasErrorBorderShown,
-    },
-    onInvalid: config.shadow?.checkInvalid
-      ? (e) => e.preventDefault()
-      : onInvalid,
-    onBlur: () => (model.dirty = true),
-  };
-  if (hasInputOptions) defaultAttrs.list = `input-datalist-${uid}`;
-  if (hasNoRadioValue) defaultAttrs.value = true;
-  if (hasSelectPlaceholder) defaultAttrs["data-select-placeholder"] = true;
-  if (hasDragover) defaultAttrs["data-dragover"] = true;
-  if (hasOptions) defaultAttrs["data-picker-dropdown"] = true;
-  if (shadowFocus) defaultAttrs["data-show-focus"] = true;
-
-  const mergedDefault = mergeProps(baseAttrs, defaultAttrs, config.bind, attrs);
-  const parsedDefault =
-    config?.modifyAttributes?.(mergedDefault) ?? mergedDefault;
-
-  // SHADOW ATTRIBUTES
-  const shadowAttrs = {
-    ref: "shadowRef",
-    class: setClass("-shadow"),
-    onDragenter: () => (hasDragover = true),
-    onDragleave: () => (hasDragover = false),
-    onDrop: () => (hasDragover = false),
-    onInvalid: config.shadow?.checkInvalid
-      ? onInvalid
-      : (e) => e.preventDefault(),
-    onFocus: () => {
-      shadowFocus = true;
-    },
-    onBlur: () => {
-      shadowFocus = false;
-      model.dirty = true;
-    },
-    onKeydown: (e) => {
-      if (
-        ["Meta", "Escape", "Enter", "Alt", "Control", "Tab"].includes(e.key) ||
-        e.ctrlKey ||
-        e.metaKey
-      )
-        return;
-      e.preventDefault();
-    },
-  };
-  const shadowEvents = config.shadow?.events;
-  if (shadowEvents) {
-    if (shadowEvents.onChange)
-      shadowAttrs.onChange = (e) => shadowEvents.onChange(e, { model });
-  }
-
-  const mergedShadow =
-    config.shadow &&
-    mergeProps(baseAttrs, shadowAttrs, config.shadow.bind, attrs);
-  const parsedShadow =
-    (config.shadow && config?.modifyAttributes?.(mergedShadow)) || mergedShadow;
-
-  return {
-    default: parsedDefault,
-    shadow: parsedShadow,
-  };
+const isFormData = calcFormData(props.modelValue);
+const model = reactive({
+  value: isFormData ? props.modelValue.value : props.modelValue,
+  error: isFormData ? props.modelValue.error : null,
+  dirty: isFormData ? props.modelValue.dirty : false,
 });
-const labelAttributes = $computed(() => ({
-  class: setClass("-label"),
-  "data-label-placement": labelPlacement,
-  "data-show-asterisk": hasRequiredAsteriskShown,
+
+/** @type { typeof model } */
+let externalModel = $computed({
+  get() {
+    return isFormData
+      ? props.modelValue
+      : { ...model, value: props.modelValue ?? props.value };
+  },
+  set(payload) {
+    if (isFormData) Object.assign(props.modelValue, payload);
+    else emit("update:modelValue", payload.value);
+  },
+});
+
+const ctx = $computed(() => ({
+  attrs,
+  attributes,
+  inputRef,
+  model,
+  options,
+  props,
+  config,
+  isRequired,
 }));
 
-watch(
-  () => props.modelValue,
-  (value) => {
-    if (value === model.value) return;
-    model.value = value;
-    if (hasInputOptions) updateInputOptions(value);
-  }
+const validate = () => validation(ctx);
+const parseDatalist = (value, options, fallBackValue = "") => {
+  const option = options[value];
+  return option !== undefined
+    ? option
+    : props.strictOptions
+    ? fallBackValue
+    : value;
+};
+
+const onInput = (e) => {
+  const value = config.parseInputValue
+    ? config.parseInputValue(e)
+    : e.target.value;
+  if (hasOptions) model.value = parseDatalist(value, options);
+  else if (config.onInternalUpdate) config.onInternalUpdate(e, ctx);
+  else model.value = value;
+  emit("input", model.value);
+};
+const onBlur = () => (model.dirty = true);
+
+const onInternalUpdate = () => (externalModel = model);
+const onExternalUpdate = () => {
+  if (
+    model.value === externalModel.value &&
+    model.error === externalModel.error &&
+    model.valid === externalModel.valid &&
+    model.dirty === externalModel.dirty
+  )
+    return;
+  Object.assign(model, externalModel);
+  if (hasOptions)
+    inputRef.value = parseDatalist(model.value, optionsFlipped, inputRef.value);
+  else if (config.onExternalUpdate) config.onExternalUpdate(ctx);
+  else inputRef.value = model.value;
+};
+
+watch(() => model, onInternalUpdate, { deep: true });
+onMounted(() => {
+  watch(() => [props.modelValue, props.value], onExternalUpdate, {
+    immediate: true,
+    deep: true,
+  });
+  watch(() => model.value, validate, { immediate: true });
+});
+
+// Component state
+const showError = $computed(() => model.dirty && (!model.valid || model.error));
+const showErrorMessage = $computed(
+  () => props.useErrorMessage && showError && !!model.error
 );
-watch(
-  () => model.value,
-  (value) => {
-    console.log("here");
-    if (hasInputOptions) updateInputOptions(value);
-    if (props.type !== "file") inputRef.value = value;
-    validate(value);
-    if (!isDataModel) emit("update:modelValue", value);
-  }
+const showErrorBorder = $computed(() => props.useErrorBorder && showError);
+const showRequiredAsterisk = $computed(
+  () => props.useRequiredAsterisk && isRequired
 );
-if (hasInputOptions)
-  watch(
-    () => inputOptionModel,
-    (raw) => {
-      const value = options[raw] ?? "";
-      if (!isDataModel) emit("update:modelValue", value);
-      else model.value = value;
-    }
+const showErrorSpacing = $computed(() => !isToggle && type !== "range");
+
+// Component attributes
+const attributes = $computed(() => {
+  const baseAttrs = {
+    ref: _inputRef,
+    onInput,
+    // onChange,
+    onBlur,
+    class: [setClass("input"), setClass(`input-${type}`)],
+  };
+  if (showErrorBorder) baseAttrs["data-error-border"] = true;
+  if (hasInputOptions) baseAttrs.list = datalistId;
+  if (hasDropdownPicker) baseAttrs["data-dropdown-picker"] = true;
+  if (isToggle) baseAttrs.value = props.value ?? true;
+
+  if (type === "select") {
+    if (attrs.placeholder && !isSelected)
+      baseAttrs["data-placeholder-color"] = true;
+  }
+
+  return mergeProps(baseAttrs, config.attrs, attrs);
+});
+
+// Label control
+const labelPosition =
+  props.labelPosition || config.labelPosition || settings.labelPosition;
+const hasLabelBefore =
+  props.label && (labelPosition === "top" || labelPosition === "left");
+const hasLabelAfter =
+  props.label && (labelPosition === "right" || labelPosition === "bottom");
+
+const labelAttributes = $computed(() => ({
+  class: setClass("input-label"),
+  "data-label-position": labelPosition,
+  "data-label-asterisk": showRequiredAsterisk,
+}));
+
+// Info control
+const showHint = !!props.hint;
+const showInfo = $computed(() => showErrorMessage || showHint);
+
+const infoWrapperAttrs = { name: setClass("input-info-spacing-transition") };
+const infoSpacingAttrs = { class: setClass("input-info-spacing") };
+const hintAttrs = { class: setClass("input-info-hint") };
+const errorWrapperAttrs = { name: setClass("input-info-error-transition") };
+const errorAttrs = { class: setClass("input-info-error") };
+
+const inputWrapperAttrs = { class: setClass("input-wrapper") };
+
+const render = () => {
+  const rootChildren = [];
+  const inputWrapperChildren = [];
+  const inputChildren = [];
+
+  const rootNode = h(props.label ? "label" : "div", rootChildren);
+  const inputWrapperNode = h("div", inputWrapperAttrs, inputWrapperChildren);
+  const inputNode = h(config.component, attributes, inputChildren);
+  const labelNode = props.label && h("span", labelAttributes, props.label);
+
+  inputWrapperChildren.push(inputNode);
+  if (hasLabelBefore) rootChildren.push(labelNode);
+  rootChildren.push(inputWrapperNode);
+  if (hasLabelAfter) rootChildren.push(labelNode);
+
+  // info spacing
+  if (showErrorSpacing)
+    rootChildren.push(
+      h(Transition, infoWrapperAttrs, () =>
+        showInfo ? h("div", infoSpacingAttrs) : undefined
+      )
+    );
+
+  // info hint
+  if (props.hint) rootChildren.push(h("p", hintAttrs, props.hint));
+
+  // info error
+  rootChildren.push(
+    h(Transition, errorWrapperAttrs, () =>
+      showHint || showErrorMessage ? h("p", errorAttrs, model.error) : undefined
+    )
   );
 
-onMounted(() => {
-  validate(model.value);
-});
+  if (hasSelectOptions) {
+    const optionChildren = [];
+    if (attributes.placeholder)
+      optionChildren.push(
+        h(
+          "option",
+          { selected: !isSelected, disabled: true, hidden: true, value: "" },
+          attributes.placeholder
+        )
+      );
+    if (!isRequired && isSelected) optionChildren.push(h("option"));
+    optionChildren.push(
+      ...optionEntries.map(([key]) => h("option", { key, value: key }, key))
+    );
+    inputChildren.push(...optionChildren);
+  }
+
+  if (hasInputOptions) {
+    const datalistChildren = [];
+    const datalistNode = h("datalist", { id: datalistId }, datalistChildren);
+    datalistChildren.push(
+      ...optionEntries.map(([key]) => h("option", { key, value: key }))
+    );
+    inputWrapperChildren.push(datalistNode);
+  }
+
+  return rootNode;
+};
 </script>
 
 <template>
-  <component :is="props.label ? 'label' : 'div'" :class="setClass('-root')">
-    <!-- LABEL / top & left -->
-    <span v-if="hasLabelBefore" v-bind="labelAttributes">
-      {{ props.label }}
-    </span>
-    <!-- INPUTS -->
-    <div style="position: relative; display: inline">
-      <!-- input / shadow -->
-      <input
-        v-if="config.shadow && config.shadow.component === 'input'"
-        v-bind="attributes.shadow"
-      />
-      <FlatPickr
-        v-if="config.shadow && config.shadow.component === 'flatpickr'"
-        v-bind="attributes.shadow"
-        v-model="model.value"
-      />
-      <!-- input / default -->
-      <input
-        v-if="config.component === 'input' && !hasInputOptions"
-        v-bind="attributes.default"
-        v-model="model.value"
-      />
-      <!-- input / options -->
-      <input
-        v-if="config.component === 'input' && hasInputOptions"
-        v-bind="attributes.default"
-        v-model="inputOptionModel"
-      />
-      <datalist
-        v-if="options && config.supportOptions && props.type !== 'select'"
-        :id="`input-datalist-${uid}`"
-      >
-        <option
-          v-for="(value, key) in options"
-          :value="key"
-          :key="key"
-        ></option>
-      </datalist>
-      <!-- input / select -->
-      <select
-        v-if="config.component === 'select'"
-        v-bind="attributes.default"
-        v-model="model.value"
-      >
-        <option
-          v-if="attrs.placeholder"
-          :selected="!isSelected"
-          disabled
-          hidden
-          value=""
-        >
-          {{ attrs.placeholder }}
-        </option>
-        <option v-if="!isRequired && isSelected"></option>
-        <option v-for="(value, key) in options" :value="value" :key="key">
-          {{ key }}
-        </option>
-      </select>
-      <!-- input / textarea -->
-      <textarea
-        v-if="config.component === 'textarea'"
-        v-bind="attributes.default"
-        v-model="model.value"
-      >
-      </textarea>
-      <!-- input / flatpickr -->
-      <FlatPickr
-        v-if="config.component === 'flatpickr'"
-        v-bind="attributes.default"
-        v-model="model.value"
-      />
-    </div>
-    <!-- LABEL / bottom & right -->
-    <span v-if="hasLabelAfter" v-bind="labelAttributes">
-      {{ props.label }}
-    </span>
-    <!-- INFO / hint & error -->
-    <Transition :name="setClass('-info-spacing-transition')">
-      <div :class="setClass('-info-spacing')" v-if="hasInfo"></div>
-    </Transition>
-    <p :class="setClass('-info-hint')" v-if="hasHint">{{ hint }}</p>
-    <Transition :name="setClass('-info-error-transition')">
-      <p :class="setClass('-info-error')" v-if="hasErrorMessageShow">
-        {{ model.error }}
-      </p>
-    </Transition>
-  </component>
+  <render />
 </template>
 
 <style scoped lang="scss"></style>
