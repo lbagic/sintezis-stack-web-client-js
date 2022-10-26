@@ -162,7 +162,7 @@
   &-hint,
   &-error {
     --line-height: 1.25;
-    --font-size: 13px;
+    --font-size: 12px;
     --max-height: calc(var(--line-height) * var(--font-size));
     line-height: var(--line-height);
     font-size: var(--font-size);
@@ -178,7 +178,7 @@
     height: 3px;
   }
   &-spacing-transition {
-    @include transition(all 0.2s ease) {
+    @include transition(all 0.3s ease) {
       height: 0px;
     }
   }

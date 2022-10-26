@@ -60,7 +60,7 @@ const errorKeys = Object.keys(errorMap);
 function createValidity(ctx) {
   const validity = {};
   errorKeys.forEach((k) => {
-    validity[k] = !!ctx.inputRef.validity?.[k] || errorMap[k].validate(ctx);
+    validity[k] = !!ctx.inputRef?.validity?.[k] || errorMap[k].validate(ctx);
   });
   return {
     ...validity,
