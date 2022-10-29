@@ -1,7 +1,6 @@
 import { computed, reactive } from "vue";
 import { inputValidation } from "./input.validation";
-import flatPickr from "vue-flatpickr-component";
-// import { format as dateFnsFormat, parse as dateFnsParse } from "date-fns/esm";
+import DateInput from "./DateInput.vue";
 
 const settings = {
   useErrorMessage: true,
@@ -10,73 +9,6 @@ const settings = {
   useHtmlValidation: false,
   labelPosition: "top",
 };
-
-/**
- * @typedef {{
- *  allowInput: boolean;
- *  allowInvalidPreload: boolean;
- *  altFormat: string;
- *  altInput: boolean;
- *  altInputClass: string;
- *  animate: boolean;
- *  appendTo: HTMLElement;
- *  ariaDateFormat: string;
- *  autoFillDefaultTime: boolean;
- *  clickOpens: boolean;
- *  closeOnSelect: boolean;
- *  conjunction: string;
- *  dateFormat: string;
- *  defaultDate: DateOption | DateOption[];
- *  defaultHour: number;
- *  defaultMinute: number;
- *  defaultSeconds: number;
- *  disable: DateLimit<DateOption>[];
- *  disableMobile: boolean;
- *  enable: DateLimit<DateOption>[];
- *  enableSeconds: boolean;
- *  enableTime: boolean;
- *  errorHandler: (e: Error) => void;
- *  formatDate: (date: Date, format: string, locale: Locale) => string;
- *  getWeek: (date: Date) => string | number;
- *  hourIncrement: number;
- *  ignoredFocusElements: HTMLElement[];
- *  inline: boolean;
- *  locale: LocaleKey | Partial<CustomLocale>;
- *  maxDate: DateOption;
- *  maxTime: DateOption;
- *  minDate: DateOption;
- *  minTime: DateOption;
- *  minuteIncrement: number;
- *  mode: "single" | "multiple" | "range" | "time";
- *  monthSelectorType: "dropdown" | "static";
- *  nextArrow: string;
- *  noCalendar: boolean;
- *  now?: DateOption;
- *  onChange: Hook | Hook[];
- *  onClose: Hook | Hook[];
- *  onDayCreate: Hook | Hook[];
- *  onDestroy: Hook | Hook[];
- *  onKeyDown: Hook | Hook[];
- *  onMonthChange: Hook | Hook[];
- *  onOpen: Hook | Hook[];
- *  onParseConfig: Hook | Hook[];
- *  onReady: Hook | Hook[];
- *  onValueUpdate: Hook | Hook[];
- *  onYearChange: Hook | Hook[];
- *  onPreCalendarPosition: Hook | Hook[];
- *  parseDate: (date: string, format: string) => Date;
- *  plugins: Plugin[];
- *  position: "auto" | "above" | "below" | "auto left" | "auto center" | "auto right" | "above left" | "above center" | "above right" | "below left" | "below center" | "below right" | ((self: Instance, customElement: HTMLElement | undefined) => void);
- *  positionElement: Element;
- *  prevArrow: string;
- *  shorthandCurrentMonth: boolean;
- *  static: boolean;
- *  showMonths?: number;
- *  time_24hr: boolean;
- *  weekNumbers: boolean;
- *  wrap: boolean;
- * }} FPOpts
- * */
 
 /**
  * @typedef { 'top' | 'right' | 'bottom' | 'left' } labelPosition
@@ -101,70 +33,41 @@ const settings = {
  *  attrsFactory?: <T>(ctx: InputContext) => T
  *  component: ComponentType
  *  eventsFactory?: (ctx: InputContext) => Record<EventNames, (e: InputEvent) => void>
+ *  ids: { uid: string, datalist: string, input: string, hidden: string }
  *  labelPosition: labelPosition
- *  onInit?: (ctx: InputContext) => any
- *  supportOptions: boolean
- *  parseInputValue: (e: InputEvent, ctx: InputContext) => any
- *  onInternalUpdate: (ctx: InputContext) => any
  *  onExternalUpdate: (ctx: InputContext) => any
+ *  onInit?: (ctx: InputContext) => any
+ *  onInternalUpdate: (ctx: InputContext) => any
+ *  parseInputValue: (e: InputEvent, ctx: InputContext) => any
+ *  supportOptions: boolean
  * }} ComponentConfig
  * */
-
-// const _d = new Date();
-// const formatDateFactory = (format) => (date) => {
-//   const formatted = dateFnsFormat(date, format);
-//   console.log({ date, format, formatted });
-//   return formatted;
-// };
-// const parseDateFactory = (format) => (datestr) => {
-//   const parsed = dateFnsParse(datestr, format, _d);
-//   console.log({ format, datestr, parsed });
-//   return parsed;
-// };
 
 /** @type { (ctx: InputContext, options: FPOpts) => Record<string, any> } */
 const createFlatpickrConfig = ({ attrs }, componentConfig = {}) => {
   const config = {
     position: "auto center",
+    disableMobile: true,
   };
-  const userConfig = attrs.config;
+  const userConfig = attrs?.config ?? {};
   if (attrs.min) config.minDate = attrs.min;
   if (attrs.max) config.maxDate = attrs.max;
-  // dateFormat: "YYYY-MM-DD",
-  // formatDate: (date, format, locale) => {
-  //   // locale can also be used
-  //   return moment(date).format(format);
-  // }
-  // altInput: true,
-  // altFormat: "DD-MM-YYYY",
-  // parseDate: (datestr, format) => {
-  //   return moment(datestr, format, true).toDate();
-  // },
-
-  // if (props.dateFormat) {
-  //   config.dateFormat = props.dateFormat;
-  //   config.formatDate = formatDateFactory(props.dateFormat);
-  // }
-  // if (props.dateDisplayFormat) {
-  //   config.altInput = true;
-  //   config.altFormat = props.dateDisplayFormat;
-  //   config.parseDate = parseDateFactory(props.dateDisplayFormat);
-  // }
+  if (userConfig?.altFormat) config.altInput = true;
 
   Object.assign(config, componentConfig, userConfig);
   return config;
 };
 
-/** @type { Record<string, ComponentConfig> }*/
+/** @type { Record<string, ComponentConfig & { hidden: ComponentConfig }> }*/
 const components = {
   text: {
-    supportOptions: true,
     component: "input",
+    supportOptions: true,
     attrs: { type: "text" },
   },
   email: {
-    supportOptions: true,
     component: "input",
+    supportOptions: true,
     attrs: { type: "email", name: "email" },
   },
   password: {
@@ -172,34 +75,35 @@ const components = {
     attrs: { type: "password", name: "password" },
   },
   search: {
-    supportOptions: true,
     component: "input",
+    supportOptions: true,
     attrs: { type: "search", inputmode: "search" },
   },
   tel: {
-    supportOptions: true,
     component: "input",
+    supportOptions: true,
     attrs: { type: "tel", inputmode: "tel" },
   },
   url: {
-    supportOptions: true,
     component: "input",
+    supportOptions: true,
     attrs: { type: "url", inputmode: "url" },
   },
   color: {
-    supportOptions: true,
     component: "input",
+    supportOptions: true,
     attrs: { type: "color" },
   },
   number: {
-    supportOptions: true,
     component: "input",
+    supportOptions: true,
     attrs: { type: "number", inputmode: "numeric" },
-    parseInputValue: (e) => e.target.valueAsNumber,
+    parseInputValue: (e) =>
+      isNaN(e.target.valueAsNumber) ? "" : e.target.valueAsNumber,
   },
   range: {
-    supportOptions: true,
     component: "input",
+    supportOptions: true,
     attrs: { type: "range" },
     parseInputValue: (e) => e.target.valueAsNumber,
   },
@@ -251,67 +155,43 @@ const components = {
     attrs: {},
   },
   date: {
-    component: flatPickr,
-    attrs: {
-      config: { position: "auto center" },
-    },
-    // attrsFactory: (ctx) => ({ modelValue: ctx.model.value }),
+    component: DateInput,
     attrsFactory: (ctx) => ({
       config: createFlatpickrConfig(ctx),
       modelValue: ctx.model.value,
     }),
   },
-  // date: {
-  //   supportOptions: true,
-  //   component: "input",
-  //   attrs: { type: "text", tabindex: -1 },
-  //   shadow: {
-  //     component: "flatpickr",
-  //     attrs: {},
-  //     modifyAttributes: createFlatpickrOptions(),
-  //   },
-  // },
-  // time: {
-  //   supportOptions: true,
-  //   component: "flatpickr",
-  //   attrs: {},
-  //   modifyAttributes: createFlatpickrOptions({
-  //     enableTime: true,
-  //     noCalendar: true,
-  //     dateFormat: "H:i",
-  //     time_24hr: true,
-  //   }),
-  // },
-  // "datetime-local": {
-  //   supportOptions: true,
-  //   component: "flatpickr",
-  //   attrs: {},
-  //   modifyAttributes: createFlatpickrOptions({
-  //     enableTime: true,
-  //     dateFormat: "Y-m-d H:i",
-  //     time_24hr: true,
-  //   }),
-  // },
-  // month: {
-  //   supportOptions: true,
-  //   // requires using flatpickr plugin
-  //   component: "flatpickr",
-  //   attrs: {},
-  //   modifyAttributes: createFlatpickrOptions(),
-  // },
-  // week?
-  // file: {
-  //   component: "input",
-  //   attrs: { type: "text", tabindex: -1 },
-  //   shadow: {
-  //     component: "input",
-  //     attrs: { type: "file" },
-  //     events: {
-  //       onChange: (e, { model }) => (model.value = [...e.target.files]),
-  //     },
-  //     checkInvalid: true,
-  //   },
-  // },
+  time: {
+    component: DateInput,
+    attrsFactory: (ctx) => ({
+      config: createFlatpickrConfig(ctx, {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: "H:i",
+        time_24hr: true,
+      }),
+    }),
+  },
+  "datetime-local": {
+    component: DateInput,
+    attrsFactory: (ctx) => ({
+      config: createFlatpickrConfig(ctx, {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        time_24hr: true,
+      }),
+    }),
+  },
+  file: {
+    component: "input",
+    attrs: {
+      ["data-pointer-events-disabled"]: true,
+    },
+    hidden: {
+      component: "input",
+      attrs: { type: "file" },
+    },
+  },
 };
 
 const parseOptions = (options) =>
@@ -387,29 +267,6 @@ export function useFormData(properties) {
       ];
     })
   );
-  // const model = Object.fromEntries(
-  //   Object.keys(properties).map((key) => {
-  //     const value = $computed({
-  //       get() {
-  //         return {
-  //           _formDataModel: true,
-  //           value: data[key],
-  //           valid: validation[key],
-  //           error: errors[key],
-  //           dirty: dirty[key],
-  //         };
-  //       },
-  //       set(ctx) {
-  //         console.log("here", ctx);
-  //         data[key] = ctx.value;
-  //         validation[key] = ctx.valid;
-  //         errors[key] = ctx.error;
-  //         dirty[key] = ctx.dirty;
-  //       },
-  //     });
-  //     return [key, value];
-  //   })
-  // );
   return reactive({ isValid, data, validation, errors, model });
 }
 

@@ -1,13 +1,18 @@
 <script>
-// slider styles
-// checkbox/radio styles
-// convert attr styles to class styles
-export default { inheritAttrs: false };
+// TODO - implement file input
+// TODO - slider/checkbox/radio styles
+// TODO - map width to root & wrap elements or prop root-style wrapper-style
+// TODO - test performance, maybe some eager computeds?
+// TODO - remove input wrapper
+// TODO - consider unbundling label and error to different components/slots?
+// TODO - BaseInputLabel, BaseInputError
+
 import { useCssVar } from "@vueuse/core";
 import "flatpickr/dist/flatpickr.css";
-import { h, mergeProps, onMounted, reactive, ref, useAttrs, watch } from "vue";
+import { h, mergeProps, onMounted, reactive, useAttrs, watch } from "vue";
 import { _inputCtl } from "./input.ctl";
-import flatPickr from "vue-flatpickr-component";
+
+export default { inheritAttrs: false };
 
 const { components, settings, validation, parseOptions } = _inputCtl;
 const prefix = useCssVar("--prefix").value;
@@ -36,20 +41,22 @@ const props = defineProps({
   useErrorMessage: { type: Boolean, default: settings.useErrorMessage },
   useHtmlValidation: { type: Boolean, default: settings.useHtmlValidation },
   useRequiredAsterisk: { type: Boolean, default: settings.useRequiredAsterisk },
-  dateFormat: String,
-  dateDisplayFormat: String,
 });
 
 const uid = _uid++;
 const emit = defineEmits(["update:modelValue", "input"]);
 const attrs = useAttrs();
-const _inputRef = ref(null);
 /** @type { HTMLInputElement } */
-const inputRef = $computed(() => _inputRef.value);
+const inputRef = $ref(null);
+/** @type { HTMLDivElement } */
+const rootRef = $ref(null);
+/** @type { HTMLFormElement } */
+let formRef = undefined;
 /** @type { import("./input.ctl").ComponentConfig } */
 const config = $computed(() => components[props.type]);
 if (!config) throw new Error(`Input type "${props.type}" not supported.`);
-const type = $computed(() => config.attrs.type ?? props.type);
+
+const type = $computed(() => config.attrs?.type ?? props.type);
 const hasInputOptions = $computed(() => config.supportOptions && props.options);
 const hasSelectOptions = $computed(() => type === "select" && props.options);
 const hasOptions = $computed(() => hasInputOptions || hasSelectOptions);
@@ -60,7 +67,12 @@ const optionValues = $computed(() => Object.values(options));
 const optionsFlipped = $computed(() =>
   Object.fromEntries(optionEntries.map(([k, v]) => [v, k]))
 );
-const datalistId = `input-datalist-${uid}`;
+const ids = {
+  uid,
+  datalist: `input-datalist-${uid}`,
+  input: `input-${type}-${uid}`,
+  hidden: `hidden-input-${type}-${uid}`,
+};
 const isRequired = $computed(() => calcRequired(attrs.required));
 const isSelected = $computed(
   () => hasOptions && optionValues.includes(model.value) && model.value !== ""
@@ -88,6 +100,7 @@ let externalModel = $computed({
 });
 
 const ctx = $computed(() => ({
+  ids,
   attrs,
   inputRef,
   model,
@@ -120,19 +133,30 @@ function onInput(e) {
 function onBlur() {
   model.dirty = true;
 }
+function onInvalid(event) {
+  if (!props.useHtmlValidation) {
+    event.preventDefault();
+    const invalidEl = formRef
+      ? [...formRef.elements].find((el) => el.getAttribute("data-error-active"))
+      : event.target;
+    invalidEl.focus({ preventScroll: true });
+    invalidEl.parentNode.parentNode.scrollIntoView({ behavior: "smooth" });
+  }
+  validate();
+  model.dirty = true;
+}
 
 function onInternalUpdate() {
   config.onInternalUpdate?.(ctx);
   externalModel = model;
 }
-function onExternalUpdate() {
-  if (
+function onExternalUpdate(forceUpdate) {
+  const nothingChanged =
     model.value === externalModel.value &&
     model.error === externalModel.error &&
     model.valid === externalModel.valid &&
-    model.dirty === externalModel.dirty
-  )
-    return;
+    model.dirty === externalModel.dirty;
+  if (nothingChanged && !forceUpdate) return;
   Object.assign(model, externalModel);
   if (hasOptions)
     inputRef.value = parseOption(model.value, optionsFlipped, inputRef.value);
@@ -142,11 +166,13 @@ function onExternalUpdate() {
 
 watch(() => model, onInternalUpdate, { deep: true });
 onMounted(() => {
+  onExternalUpdate(true);
   watch(() => [props.modelValue, props.value], onExternalUpdate, {
     immediate: true,
     deep: true,
   });
   watch(() => model.value, validate, { immediate: true });
+  if (!model.value) onInput({ target: inputRef });
 });
 
 // Component state
@@ -162,36 +188,26 @@ const showRequiredAsterisk = $computed(
   () => props.useRequiredAsterisk && isRequired
 );
 
-const flatPickrAttrs = reactive({ config: {} });
-
 // Component attributes
 const attributes = $computed(() => {
   const baseAttrs = {
-    ref: _inputRef,
     onBlur,
     onInput,
+    onInvalid,
     class: [setClass("input"), setClass(`input-${type}`)],
   };
-  if (showErrorBorder) baseAttrs["data-error-border"] = true;
-  if (hasInputOptions) baseAttrs.list = datalistId;
-  if (hasDropdownPicker) baseAttrs["data-dropdown-picker"] = true;
+  // inputRef.style.width;
+  if (!model.valid) baseAttrs["data-error-active"] = true;
+  if (showErrorBorder) baseAttrs["data-error-border-active"] = true;
+  if (hasInputOptions) baseAttrs.list = ids.datalist;
+  if (hasDropdownPicker) baseAttrs["data-dropdown-picker-active"] = true;
 
-  // refactor to factory attrs
   if (type === "select") {
     if (attrs.placeholder && !isSelected)
-      baseAttrs["data-placeholder-color"] = true;
+      baseAttrs["data-placeholder-color-active"] = true;
   }
   const factoryAttrs = config.attrsFactory?.(ctx);
-  if (config.component === flatPickr)
-    Object.assign(flatPickrAttrs.config, factoryAttrs?.config);
-
-  return mergeProps(
-    baseAttrs,
-    config.attrs,
-    factoryAttrs,
-    attrs,
-    flatPickrAttrs
-  );
+  return mergeProps(baseAttrs, config.attrs, attrs, factoryAttrs);
 });
 
 // Label control
@@ -203,108 +219,42 @@ const hasLabelBefore =
 const hasLabelAfter =
   showLabel && (labelPosition === "right" || labelPosition === "bottom");
 
-const labelAttributes = $computed(
-  () => ({
-    class: setClass("input-label"),
-    "data-label-position": labelPosition,
-    "data-label-asterisk": showRequiredAsterisk,
-  }),
-  { onTrigger: console.warn }
-);
+const labelAttributes = $computed(() => ({
+  class: setClass("input-label"),
+  "data-label-position": labelPosition,
+  "data-label-asterisk": showRequiredAsterisk,
+}));
 const labelNode = () => showLabel && h("span", labelAttributes, props.label);
+
+// Root control
+const rootAttributes = $computed(() => {
+  const base = {
+    class: setClass("input-root"),
+  };
+  if (config.hidden) base.for = ids.hidden;
+  return base;
+});
+
+// Hidden control
+const hiddenAttrs = $computed(() => {
+  const base = {
+    class: setClass("alt-input-hidden"),
+    id: ids.hidden,
+    tabindex: -1,
+  };
+  return mergeProps(base, config.hidden.attrs);
+});
 
 // Info control
 const showHint = $computed(() => !!props.hint);
 const showInfo = $computed(() => showErrorMessage || showHint);
-
-// const render = () => {
-//   const rootChildren = [];
-//   const inputWrapperChildren = [];
-//   const inputChildren = [];
-
-//   const inputWrapperNode = h(
-//     "div",
-//     { class: setClass("input-wrapper") },
-//     { default: () => inputWrapperChildren }
-//   );
-//   const inputNode = h(config.component, attributes, {
-//     default: () => inputChildren,
-//   });
-//   const labelNode = showLabel && h("span", labelAttributes, props.label);
-
-//   inputWrapperChildren.push(inputNode);
-//   if (hasLabelBefore) rootChildren.push(labelNode);
-//   rootChildren.push(inputWrapperNode);
-//   if (hasLabelAfter) rootChildren.push(labelNode);
-
-//   // info spacing
-//   if (hasInfoSpacing)
-//     rootChildren.push(
-//       h(Transition, { name: setClass("input-info-spacing-transition") }, () =>
-//         showInfo
-//           ? h("div", { class: setClass("input-info-spacing") })
-//           : undefined
-//       )
-//     );
-
-//   // info hint
-//   if (showHint)
-//     rootChildren.push(
-//       h("p", { class: setClass("input-info-hint") }, props.hint)
-//     );
-
-//   // info error
-//   rootChildren.push(
-//     h(Transition, { name: setClass("input-info-error-transition") }, () =>
-//       showHint || showErrorMessage
-//         ? h("p", { class: setClass("input-info-error") }, model.error)
-//         : undefined
-//     )
-//   );
-
-//   if (hasSelectOptions) {
-//     const optionChildren = [];
-//     if (attributes.placeholder)
-//       optionChildren.push(
-//         h(
-//           "option",
-//           { selected: !isSelected, disabled: true, hidden: true, value: "" },
-//           attributes.placeholder
-//         )
-//       );
-//     if (!isRequired && isSelected) optionChildren.push(h("option"));
-//     optionChildren.push(
-//       ...optionEntries.map(([key]) => h("option", { key, value: key }, key))
-//     );
-//     inputChildren.push(...optionChildren);
-//   }
-
-//   if (hasInputOptions) {
-//     const datalistChildren = [];
-//     const datalistNode = h("datalist", { id: datalistId }, datalistChildren);
-//     datalistChildren.push(
-//       ...optionEntries.map(([key]) => h("option", { key, value: key }))
-//     );
-//     inputWrapperChildren.push(datalistNode);
-//   }
-
-//   const rootNode = h(showLabel ? "label" : "div", rootChildren);
-//   return rootNode;
-// };
 </script>
 
 <template>
-  <!-- <render /> -->
-  <component :is="showLabel ? 'label' : 'div'">
+  <label v-bind="rootAttributes" ref="rootRef">
     <labelNode v-if="hasLabelBefore" />
     <div :class="setClass('input-wrapper')">
-      <!-- <flatPickr
-        v-if="config.component === flatPickr"
-        v-bind="attributes"
-        v-model="model.value"
-        @on-change="log"
-      /> -->
-      <component :is="config.component" v-bind="attributes">
+      <component :is="config.component" v-bind="attributes" ref="inputRef">
         <template v-if="hasSelectOptions">
           <option
             v-if="attrs.placeholder"
@@ -321,9 +271,14 @@ const showInfo = $computed(() => showErrorMessage || showHint);
           </option>
         </template>
       </component>
-      <datalist v-if="hasInputOptions" :id="datalistId">
+      <datalist v-if="hasInputOptions" :id="ids.datalist">
         <option v-for="[key] in optionEntries" :key="key" :value="key"></option>
       </datalist>
+      <component
+        v-if="config.hidden"
+        :is="config.hidden.component"
+        v-bind="hiddenAttrs"
+      />
     </div>
     <labelNode v-if="hasLabelAfter" />
 
@@ -344,7 +299,7 @@ const showInfo = $computed(() => showErrorMessage || showHint);
         {{ model.error }}
       </p>
     </Transition>
-  </component>
+  </label>
 </template>
 
 <style scoped lang="scss"></style>
