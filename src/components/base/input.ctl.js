@@ -21,7 +21,6 @@ const settings = {
  *  inputRef: HTMLInputElement
  *  model: { value: any, valid: boolean, error: null | string, dirty: boolean }
  *  options: Record<string, any>
- *  optionsFlipped: Record<string, any>
  *  props: { strictOptions: boolean }
  *  isRequired: boolean,
  *  setClass: (className: string) => string
@@ -33,7 +32,6 @@ const settings = {
  *  attrsFactory?: <T>(ctx: InputContext) => T
  *  component: ComponentType
  *  eventsFactory?: (ctx: InputContext) => Record<EventNames, (e: InputEvent) => void>
- *  ids: { uid: string, datalist: string, input: string, hidden: string }
  *  labelPosition: labelPosition
  *  onExternalUpdate: (ctx: InputContext) => any
  *  onInit?: (ctx: InputContext) => any
@@ -151,6 +149,7 @@ const components = {
     attrs: {},
   },
   select: {
+    supportOptions: true,
     component: "select",
     attrs: {},
   },
@@ -194,16 +193,10 @@ const components = {
   },
 };
 
-const parseOptions = (options) =>
-  Array.isArray(options)
-    ? Object.fromEntries(options.map((key) => [key, key]))
-    : options;
-
 export const _inputCtl = {
   settings,
   components,
-  validation: inputValidation,
-  parseOptions,
+  validate: inputValidation,
 };
 
 /**

@@ -1,8 +1,5 @@
 .#{$prefix}input-root {
-}
-.#{$prefix}input-wrapper {
-  display: inline;
-  position: relative;
+  display: inline-block;
 }
 .#{$prefix}input {
   --font-size: 16px;
@@ -148,16 +145,16 @@
   }
 
   // input label placement
-  &[data-label-position="top"],
-  &[data-label-position="bottom"] {
-    display: block;
-    margin-left: 4px;
-  }
   &[data-label-position="top"] {
     margin-bottom: var(--margin);
   }
   &[data-label-position="bottom"] {
     margin-top: var(--margin);
+  }
+
+  &[data-label-position="left"],
+  &[data-label-position="right"] {
+    display: inline;
   }
   &[data-label-position="left"] {
     margin-right: var(--margin);
@@ -169,11 +166,11 @@
 
 // Input info styles
 .#{$prefix}input-info {
+  --line-height: 1.25;
+  --font-size: 12px;
+  --max-height: calc(var(--line-height) * var(--font-size));
   &-hint,
   &-error {
-    --line-height: 1.25;
-    --font-size: 12px;
-    --max-height: calc(var(--line-height) * var(--font-size));
     line-height: var(--line-height);
     font-size: var(--font-size);
     margin-left: 4px;
