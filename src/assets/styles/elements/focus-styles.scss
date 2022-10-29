@@ -12,9 +12,6 @@
   &:focus,
   &:focus-visible {
     @extend %focus-styles;
-  }
-  &:focus,
-  &:focus-visible {
     transform: translateZ(0);
   }
   &:focus:not(:focus-visible) {
