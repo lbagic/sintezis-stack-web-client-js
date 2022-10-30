@@ -4,7 +4,6 @@ TODO:
 - input - slider/checkbox/radio styles
 - input - test performance, maybe some eager computeds?
 - input - refactor htmlValidation, custom validation, options validation
-- css/container - grid small/large modifiers
 - storybook integration
 - GRPC/REST integration
 - components - a11y
@@ -463,17 +462,17 @@ Web Stack roadmap containing current status and stages of custom elements.
 
 ## BaseInput roadmap
 
-| Feature                         | Status     |
-| ------------------------------- | ---------- |
-| validation                      | ✅         |
-| label support                   | ✅         |
-| error & help text support       | ✅         |
-| support basic v-model           | ✅         |
-| support list of options         | ✅         |
-| placeholders                    | ✅ partial |
-| icon support                    |            |
-| `date`, `time`, `month` support | native     |
-| `date range` support            |            |
-| `textarea`, `select` support    | native     |
-| `checkbox`, `radio` support     | native     |
-| `file input` support            | native     |
+| Feature                         | Status |
+| ------------------------------- | ------ |
+| validation                      | ✅     |
+| label support                   | ✅     |
+| error & help text support       | ✅     |
+| support basic v-model           | ✅     |
+| support list of options         | ✅     |
+| placeholders                    | ✅     |
+| icon support                    |        |
+| `date`, `time`, `month` support | ✅     |
+| `date range` support            | ✅     |
+| `textarea`, `select` support    | ✅     |
+| `checkbox`, `radio` support     | ✅     |
+| `file input` support            | ✅     |

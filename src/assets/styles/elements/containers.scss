@@ -16,27 +16,33 @@
   }
 }
 
-// TODO small large modifiers
+%#{$prefix}flexbox-gap-sizes {
+  --gap: 12px;
+  &.small {
+    --gap: 8px;
+  }
+  &.large {
+    --gap: 32px;
+  }
+}
+
 .#{$prefix}grid {
-  --gtc: initial;
-  --gtr: initial;
-  --gap: 0.5rem;
+  @extend %#{$prefix}flexbox-gap-sizes;
   display: grid;
   align-content: flex-start;
   gap: var(--gap);
-  grid-template-columns: var(--gtc);
-  grid-template-rows: var(--gtr);
 }
+
 .#{$prefix}grid-fill {
   --width: 200px;
-  --gap: 0.5rem;
+  @extend %#{$prefix}flexbox-gap-sizes;
   display: grid;
   align-content: flex-start;
   grid-template-columns: repeat(auto-fill, minmax(var(--width), 1fr));
   gap: var(--gap);
 }
 .#{$prefix}flex {
-  --gap: 0.5rem;
+  @extend %#{$prefix}flexbox-gap-sizes;
   display: flex;
   align-items: center;
   & > * + * {
@@ -44,7 +50,7 @@
   }
 }
 .#{$prefix}flex-wrap {
-  --gap: 0.5rem;
+  @extend %#{$prefix}flexbox-gap-sizes;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
