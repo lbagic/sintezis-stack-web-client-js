@@ -2,39 +2,42 @@
   display: inline-block;
 }
 .#{$prefix}input {
-  --font-size: 16px;
-  --text-color: var(--#{$prefix}color-text);
-  --placeholder-color: #999;
-  --background: #f8f8f8;
-  --padding-x: 8px;
-  --padding-y: calc(
-    (var(--height) - var(--font-size) * var(--line-height)) / 2
+  --input-height: 36px;
+  --input-width: 100%;
+  --input-min-width: 100px;
+  --input-font-size: 16px;
+  --input-line-height: 1.5;
+  --input-text-color: var(--#{$prefix}color-text);
+  --input-placeholder-color: #999;
+  --input-background-color: #f8f8f8;
+  --input-border-color: var(--#{$prefix}color-light-darker);
+  --input-padding-x: 8px;
+  --input-padding-y: calc(
+    (var(--input-height) - var(--input-font-size) * var(--input-line-height)) /
+      2
   );
-  --line-height: 1.5;
-  --min-width: 100px;
-  --width: 100%;
-  --height: 36px;
-  --border-color: var(--#{$prefix}color-light-darker);
+
+  color: var(--input-text-color);
   &::placeholder {
-    color: var(--placeholder-color);
+    color: var(--input-placeholder-color);
   }
 }
 %#{$prefix}input-width {
-  min-width: var(--min-width);
-  width: var(--width);
+  min-width: var(--input-min-width);
+  width: var(--input-width);
 }
 %#{$prefix}input-height {
-  height: var(--height);
+  height: var(--input-height);
 }
 %#{$prefix}input-input-field {
-  line-height: var(--line-height);
-  padding: var(--padding-y) var(--padding-x);
+  line-height: var(--input-line-height);
+  padding: var(--input-padding-y) var(--input-padding-x);
   border-width: 1px;
   border-style: solid;
-  border-color: var(--border-color);
+  border-color: var(--input-border-color);
   // border-radius: 9px;
   // box-shadow: 0 0 5px #0005;
-  background-color: var(--background);
+  background-color: var(--input-background-color);
 }
 
 .#{$prefix}input-text,
@@ -72,7 +75,7 @@
 .#{$prefix}input-radio,
 .#{$prefix}input-checkbox {
   --toggle-size: 16px;
-  --toggle-background-color: var(--background);
+  --toggle-background-color: var(--input-background-color);
   --toggle-border-color: var(--#{$prefix}color-grey-lighter);
   --toggle-tick-color: var(--#{$prefix}color-primary);
 
@@ -120,21 +123,21 @@
     border-color: var(--#{$prefix}color-danger);
   }
   &[data-placeholder-color="true"] {
-    color: var(--placeholder-color);
+    color: var(--input-placeholder-color);
   }
   &[data-dropdown-picker="true"] {
     &::-webkit-calendar-picker-indicator {
       opacity: 0;
     }
-    --select-icon-size: calc(var(--font-size) / 1.5);
+    --select-icon-size: calc(var(--input-font-size) / 1.5);
     appearance: none;
     background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='grey'><polygon points='0,0 100,0 50,50'/></svg>")
       no-repeat;
     background-size: var(--select-icon-size);
-    background-position: calc(100% - var(--padding-x))
+    background-position: calc(100% - var(--input-padding-x))
       calc(50% + var(--select-icon-size) / 3);
     background-repeat: no-repeat;
-    background-color: var(--background);
+    background-color: var(--input-background-color);
   }
   &[data-dropzone-active="true"] {
     border-style: dashed;
@@ -156,43 +159,41 @@
 
 // Input label styles
 .#{$prefix}input-label {
-  --margin: 0.25rem;
+  --label-margin: 0.25rem;
 
   // input label required styles
   &[data-label-asterisk="true"]::after {
     content: "*";
     color: var(--#{$prefix}color-danger);
   }
-
   // input label placement
-  &[data-label-position="top"] {
-    margin-bottom: var(--margin);
-  }
-  &[data-label-position="bottom"] {
-    margin-top: var(--margin);
-  }
-
   &[data-label-position="left"],
   &[data-label-position="right"] {
     display: inline;
   }
   &[data-label-position="left"] {
-    margin-right: var(--margin);
+    margin-right: var(--label-margin);
   }
   &[data-label-position="right"] {
-    margin-left: var(--margin);
+    margin-left: var(--label-margin);
+  }
+  &[data-label-position="top"] {
+    margin-bottom: var(--label-margin);
+  }
+  &[data-label-position="bottom"] {
+    margin-top: var(--label-margin);
   }
 }
 
 // Input info styles
 .#{$prefix}input-info {
-  --line-height: 1.25;
-  --font-size: 12px;
-  --max-height: calc(var(--line-height) * var(--font-size));
+  --info-line-height: 1.25;
+  --info-font-size: 12px;
+  --info-max-height: calc(var(--info-line-height) * var(--info-font-size));
   &-hint,
   &-error {
-    line-height: var(--line-height);
-    font-size: var(--font-size);
+    line-height: var(--info-line-height);
+    font-size: var(--info-font-size);
     margin-left: 4px;
   }
   &-hint {
@@ -201,7 +202,6 @@
   &-error {
     color: var(--#{$prefix}color-danger);
   }
-
   &-spacing {
     height: 3px;
   }
@@ -210,7 +210,6 @@
       height: 0px;
     }
   }
-
   &-error-transition {
     &-enter-active,
     &-leave-active {
@@ -224,7 +223,7 @@
     }
     &-leave-from,
     &-enter-to {
-      max-height: var(--max-height);
+      max-height: var(--info-max-height);
     }
   }
 }
