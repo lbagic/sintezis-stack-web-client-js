@@ -59,27 +59,6 @@ const createFlatpickrConfig = ({ attrs }, componentConfig = {}) => {
 
 /** @type { Record<string, ComponentConfig & { alt: ComponentConfig }> }*/
 const components = {
-  file: {
-    component: "input",
-    supportDropzone: true,
-    parseInputValue(e, ctx) {
-      const fileList = e.target?.files ?? e.dataTransfer?.files;
-      const isArray = ctx.attrs.multiple === "" || ctx.attrs.multiple === true;
-      if (!fileList) return isArray ? [] : "";
-      const allowedTypes = ctx.attrs.accept?.split(",")?.map((el) => el.trim());
-      const files = !allowedTypes
-        ? [...fileList]
-        : [...fileList].filter(({ type }) => allowedTypes.includes(type));
-      const names = files.map((file) => file.name);
-      ctx.inputRef.value = names.join(", ");
-      return isArray ? files : files[0];
-    },
-    onExternalUpdate() {},
-    alt: {
-      component: "input",
-      attrs: { type: "file" },
-    },
-  },
   text: {
     component: "input",
     supportOptions: true,
@@ -174,6 +153,27 @@ const components = {
     supportOptions: true,
     component: "select",
     attrs: {},
+  },
+  file: {
+    component: "input",
+    supportDropzone: true,
+    parseInputValue(e, ctx) {
+      const fileList = e.target?.files ?? e.dataTransfer?.files;
+      const isArray = ctx.attrs.multiple === "" || ctx.attrs.multiple === true;
+      if (!fileList) return isArray ? [] : "";
+      const allowedTypes = ctx.attrs.accept?.split(",")?.map((el) => el.trim());
+      const files = !allowedTypes
+        ? [...fileList]
+        : [...fileList].filter(({ type }) => allowedTypes.includes(type));
+      const names = files.map((file) => file.name);
+      ctx.inputRef.value = names.join(", ");
+      return isArray ? files : files[0];
+    },
+    onExternalUpdate() {},
+    alt: {
+      component: "input",
+      attrs: { type: "file" },
+    },
   },
   date: {
     component: DateInput,

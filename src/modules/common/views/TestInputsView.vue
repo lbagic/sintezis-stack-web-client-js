@@ -30,7 +30,6 @@ function change() {
 
 <template>
   <button @click="change" class="snt-button light small expand">Change</button>
-  <pre>{{}}</pre>
   <div
     class="snt-container"
     style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem"
@@ -40,7 +39,6 @@ function change() {
       <p>FormData v-models</p>
       <BaseInput
         v-for="t in types"
-        accept="image/png, image/jpeg"
         :key="t"
         :label="t"
         :options="options"
