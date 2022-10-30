@@ -99,7 +99,6 @@ export function inputValidation(ctx) {
   const custom = customInputValidation(ctx);
   const valid = html.valid && custom.valid;
   const error = html.error || custom.error;
-  // TODO: refactor useHtmlValidation part
   if (ctx.props.useHtmlValidation) {
     if (!valid && error) ctx.inputRef.setCustomValidity(error);
     else ctx.inputRef.setCustomValidity("");

@@ -1,7 +1,4 @@
 <script>
-// TODO - slider/checkbox/radio styles
-// TODO - test performance, maybe some eager computeds?
-
 import { useCssVar } from "@vueuse/core";
 import "flatpickr/dist/flatpickr.css";
 import { mergeProps, onMounted, reactive, useAttrs, watch } from "vue";
