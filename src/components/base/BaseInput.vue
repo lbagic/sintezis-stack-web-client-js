@@ -1,11 +1,6 @@
 <script>
-// TODO - implement file input
 // TODO - slider/checkbox/radio styles
-// TODO - map width to root & wrap elements or prop root-style wrapper-style
 // TODO - test performance, maybe some eager computeds?
-// TODO - remove input wrapper
-// TODO - consider unbundling label and error to different components/slots?
-// TODO - BaseInputLabel, BaseInputError
 
 import { useCssVar } from "@vueuse/core";
 import "flatpickr/dist/flatpickr.css";
@@ -47,6 +42,13 @@ function resolveFormDataType(model) {
   const has = (k) => Object.hasOwn(model, k);
   return has("value") && has("valid") && has("error") && has("dirty");
 }
+function focusFirstInvalidElement(form) {
+  if (!form) return;
+  const elements = [...form.elements];
+  const element = elements.find((el) => el.getAttribute("data-error-active"));
+  element.focus({ preventScroll: true });
+  element.parentNode.scrollIntoView({ behavior: "smooth" });
+}
 </script>
 
 <script setup>
@@ -67,10 +69,12 @@ const props = defineProps({
   useRequiredAsterisk: { type: Boolean, default: settings.useRequiredAsterisk },
 });
 
+const id = (props.id ? props.id : _uid++) + "";
+const inputId = props.id ?? id + "-input";
+const datalistId = inputId + "-datalist";
 let formRef = undefined;
 const rootRef = $ref(null);
 const inputRef = $ref(null);
-const id = (props.id ? props.id : _uid++) + "";
 const attrs = useAttrs();
 const emit = defineEmits(["update:modelValue", "input"]);
 const cfg = $computed(() => components[props.type]);
@@ -97,9 +101,10 @@ let externalModel = $computed({
   },
 });
 
-const options = $computed(
-  () => cfg.supportOptions && resolveOptions(props.options)
-);
+const hasOptions = $computed(() => cfg.supportOptions && props.options);
+const options = $computed(() => hasOptions && resolveOptions(props.options));
+const hasSelectOptions = $computed(() => hasOptions && type === "select");
+const hasInputOptions = $computed(() => hasOptions && type !== "select");
 const isRequired = $computed(
   () => attrs.required === "" || attrs.required === true
 );
@@ -108,6 +113,12 @@ const isSelected = $computed(
 );
 const isError = $computed(() => !model.valid || model.error);
 const showError = $computed(() => isError && model.dirty);
+const hasDropdownPicker = $computed(() => hasOptions && type !== "range");
+const hasSelectPlaceholder = $computed(
+  () => type === "select" && attrs.placeholder && !isSelected
+);
+let isDropzoneActive = $ref(false);
+let isAltFocused = $ref(false);
 
 const ctx = $computed(() => ({
   attrs,
@@ -120,30 +131,47 @@ const ctx = $computed(() => ({
   setClass,
 }));
 
-function onInput(e) {
-  const value = cfg.parseInputValue
-    ? cfg.parseInputValue(e, ctx)
-    : e.target.value;
-  model.value = options
-    ? selectOption(value, options.object, props.strictOptions)
-    : value;
+function onInput(event) {
+  let value = cfg.parseInputValue
+    ? cfg.parseInputValue(event, ctx)
+    : event.target.value;
+  if (hasOptions)
+    value = selectOption(value, options.object, props.strictOptions);
+  model.value = value;
   emit("input", model.value);
 }
-function onBlur() {
+function onFocus(e, mode) {
+  if (mode === "alt") isAltFocused = true;
+}
+function onBlur(e, mode) {
   model.dirty = true;
+  if (mode === "alt") isAltFocused = false;
 }
 function onInvalid(event) {
-  if (!props.useHtmlValidation) {
-    event.preventDefault();
-    const invalidEl = formRef
-      ? [...formRef.elements].find((el) => el.getAttribute("data-error-active"))
-      : event.target;
-    invalidEl.focus({ preventScroll: true });
-    invalidEl.parentNode.parentNode.scrollIntoView({ behavior: "smooth" });
-  }
+  if (!props.useHtmlValidation) event.preventDefault();
+  focusFirstInvalidElement(formRef);
   validate(ctx);
   model.dirty = true;
 }
+
+function onDragStart(e) {
+  e.preventDefault();
+  isDropzoneActive = true;
+}
+function onDragFinish() {
+  isDropzoneActive = false;
+}
+const onDragEvents = {
+  onDragover: onDragStart,
+  onDragenter: onDragStart,
+  onDragend: onDragFinish,
+  onDragleave: onDragFinish,
+  onDrop(e) {
+    e.preventDefault();
+    onDragFinish();
+    model.value = cfg.parseInputValue(e, ctx);
+  },
+};
 
 function onInternalUpdate() {
   cfg.onInternalUpdate?.(ctx);
@@ -158,14 +186,14 @@ function onExternalUpdate(forceUpdate) {
   if (nothingChanged && !forceUpdate) return;
 
   Object.assign(model, externalModel);
-  if (options)
+  if (options) {
     inputRef.value = selectOption(
       model.value,
       options.flipped,
       props.strictOptions,
       inputRef.value
     );
-  else if (cfg.onExternalUpdate) cfg.onExternalUpdate(ctx);
+  } else if (cfg.onExternalUpdate) cfg.onExternalUpdate(ctx);
   else inputRef.value = model.value ?? "";
 }
 
@@ -185,28 +213,60 @@ onMounted(() => {
   if (!model.value) onInput({ target: inputRef });
 });
 
-// Component attributes
-const attributes = $computed(() => {
-  const baseAttrs = {
-    onBlur,
-    onInput,
-    onInvalid,
+// Root control
+const rootAttrs = $computed(() => {
+  const base = {
+    class: setClass("input-root"),
+    for: inputId,
   };
+  if (cfg.supportDropzone) Object.assign(base, onDragEvents);
+  return base;
+});
 
-  // error attrs
-  if (isError) baseAttrs["data-error-active"] = true;
-  if (showError && props.useErrorBorder)
-    baseAttrs["data-error-border-active"] = true;
+// Main input control
+const mainAttrs = $computed(() => {
+  const base = {};
 
-  // option attrs
-  if (options && type !== "select") baseAttrs.list = id + "-datalist";
-  if (options && type !== "range")
-    baseAttrs["data-dropdown-picker-active"] = true;
-  if (type === "select" && attrs.placeholder && !isSelected)
-    baseAttrs["data-placeholder-color-active"] = true;
+  if (cfg.alt) {
+    base.readonly = true;
+    base["data-no-pointer-events"] = true;
+    base.tabindex = -1;
+  } else {
+    base.id = inputId;
+    base.onInput = onInput;
+    base.onInvalid = onInvalid;
+    base.onBlur = onBlur;
+  }
+
+  if (isAltFocused) base["data-show-focus"] = true;
+  if (isDropzoneActive) base["data-dropzone-active"] = true;
+
+  if (isError) base["data-error-active"] = true;
+  if (showError && props.useErrorBorder) base["data-error-border"] = true;
+
+  if (hasInputOptions) base.list = datalistId;
+  if (hasDropdownPicker) base["data-dropdown-picker"] = true;
+  if (hasSelectPlaceholder) base["data-placeholder-color"] = true;
 
   const factoryAttrs = cfg.attrsFactory?.(ctx);
-  return mergeProps(baseAttrs, cfg.attrs, attrs, factoryAttrs);
+  return mergeProps(base, cfg.attrs, attrs, factoryAttrs);
+});
+
+// Alt input control
+const altAttrs = $computed(() => {
+  if (!cfg.alt) return;
+
+  const base = {
+    onInput,
+    onInvalid,
+    onFocus: (e) => onFocus(e, "alt"),
+    onBlur: (e) => onBlur(e, "alt"),
+    class: setClass("alt-input"),
+    id: inputId,
+  };
+
+  const factoryAttrs = cfg.alt.factoryAttrs?.(ctx);
+  return mergeProps(base, cfg.alt.attrs, attrs, factoryAttrs);
 });
 
 // Label control
@@ -217,51 +277,31 @@ const labelAfter =
   props.label && (labelPos === "bottom" || labelPos === "right");
 const labelAttrs = $computed(() => ({
   position: labelPos,
+  for: inputId,
   requiredAsterisk: props.useRequiredAsterisk && isRequired,
 }));
 
 // Error control
-const errorAttrs = $computed(() => ({
+const infoAttrs = $computed(() => ({
   infoSpacing: type !== "radio" && type !== "checkbox" && type !== "range",
   hint: props.hint,
   showError: props.useErrorMessage && showError && !!model.error,
   error: model.error,
 }));
-
-// Root control
-const rootAttributes = $computed(() => {
-  const base = {
-    class: setClass("input-root"),
-  };
-  if (cfg.hidden) base.for = id + "-hidden";
-  return base;
-});
-
-// Hidden control
-const hiddenAttrs = $computed(() => {
-  const base = {
-    class: setClass("alt-input-hidden"),
-    id: id + "-hidden",
-    tabindex: -1,
-  };
-  return mergeProps(base, cfg.hidden.attrs);
-});
-
-// Info control
 </script>
 
 <template>
-  <label v-bind="rootAttributes" ref="rootRef">
+  <label v-bind="rootAttrs" ref="rootRef">
     <BaseInputLabel v-if="labelBefore" v-bind="labelAttrs">
       {{ props.label }}
     </BaseInputLabel>
     <component
       :is="cfg.component"
-      v-bind="attributes"
+      v-bind="mainAttrs"
       :class="[setClass('input'), setClass(`input-${type}`)]"
       ref="inputRef"
     >
-      <template v-if="options && type === 'select'">
+      <template v-if="hasSelectOptions">
         <option
           v-if="attrs.placeholder"
           :selected="!isSelected"
@@ -277,14 +317,10 @@ const hiddenAttrs = $computed(() => {
         </option>
       </template>
     </component>
-    <datalist v-if="options && type !== 'select'" :id="id + '-datalist'">
+    <datalist v-if="hasInputOptions" :id="datalistId">
       <option v-for="key in options.keys" :key="key" :value="key"></option>
     </datalist>
-    <component
-      v-if="cfg.hidden"
-      :is="cfg.hidden.component"
-      v-bind="hiddenAttrs"
-    />
+    <component v-if="cfg.alt" :is="cfg.alt.component" v-bind="altAttrs" />
 
     <BaseInputLabel v-if="labelAfter" v-bind="labelAttrs">
       {{ props.label }}
@@ -292,7 +328,7 @@ const hiddenAttrs = $computed(() => {
 
     <BaseInputInfo
       v-if="props.hint || props.useErrorMessage"
-      v-bind="errorAttrs"
+      v-bind="infoAttrs"
     />
   </label>
 </template>

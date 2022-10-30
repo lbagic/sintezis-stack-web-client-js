@@ -3,51 +3,68 @@ import { reactive } from "vue";
 import { useFormData, _inputCtl } from "../../../components/base/input.ctl";
 import BaseInput from "../../../components/base/BaseInput.vue";
 
-const types = Object.keys(_inputCtl.components);
+const allowed = [];
+const allTypes = Object.keys(_inputCtl.components);
+const types = $computed(() =>
+  allowed.length ? allTypes.filter((t) => allowed.includes(t)) : allTypes
+);
 const models = Object.fromEntries(types.map((key) => [key, ""]));
-const formData = useFormData({ ...models });
-const vModelData = reactive({ ...models });
-const options = { one: "aaa", two: "bbb", three: 3, onezone: 11 };
+const fmodel = useFormData({ ...models });
+const vmodel = reactive({ ...models });
+const options = {
+  a: "luka.bagi@gmail.com",
+  one: "aaa",
+  two: "bbb",
+  3: "three",
+  4: 44,
+  onezone: 11,
+};
 
 function change() {
-  formData.data.text = 11;
-  vModelData.text = 11;
+  types.forEach((t) => {
+    fmodel.data[t] = 11;
+    vmodel[t] = 11;
+  });
 }
 </script>
 
 <template>
+  <button @click="change" class="snt-button light small expand">Change</button>
+  <pre>{{}}</pre>
   <div
     class="snt-container"
-    style="display: grid; grid-template-columns: 1fr 1fr"
+    style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem"
   >
-    <form @submit.prevent>
-      <button @click="change">click</button>
-      <pre>{{ formData.data }}</pre>
+    <form @submit.prevent class="snt-grid">
+      <pre>{{ fmodel.data }}</pre>
+      <p>FormData v-models</p>
       <BaseInput
         v-for="t in types"
+        accept="image/png, image/jpeg"
         :key="t"
-        :type="t"
         :label="t"
-        v-model="formData.model[t]"
-        :placeholder="t"
         :options="options"
+        :placeholder="`enter ${t}`"
+        :type="t"
         required
+        v-model="fmodel.model[t]"
       />
-      <button>submit</button>
+      <button class="snt-button small primary expand">submit</button>
     </form>
-    <form @submit.prevent>
-      <button @click="change">click</button>
-      <pre>{{ vModelData }}</pre>
+    <form @submit.prevent class="snt-grid">
+      <pre>{{ vmodel }}</pre>
+      <p>Default v-models</p>
       <BaseInput
         v-for="t in types"
         :key="t"
-        :type="t"
         :label="t"
-        v-model="vModelData[t]"
         :options="options"
+        :placeholder="`enter ${t}`"
+        :type="t"
         required
+        v-model="vmodel[t]"
       />
-      <button>submit</button>
+      <button class="snt-button small primary expand">submit</button>
     </form>
   </div>
 </template>
