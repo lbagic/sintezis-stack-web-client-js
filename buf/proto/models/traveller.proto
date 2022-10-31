@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package elude.proto;
+
+option go_package = "./;gen";
+
+import "validate/validate.proto";
+import "proto/models/user.proto";
+import "proto/models/title.proto";
+
+// Traveler message is returned for Traveller rpc calls and as a part of multiple other messages. Contains all the info about
+// a specific traveller.
+message Traveller {
+    int32 id = 1; // Traveller id.
+    string first_name = 2 [(validate.rules).string = {pattern: "^[a-zA-Z '.-]*$", min_len: 1}]; // Traveller first name.
+    string last_name = 3 [(validate.rules).string = {pattern: "^[a-zA-Z '.-]*$", min_len: 1}]; // Traveller last name.
+    string date_of_birth = 4 [(validate.rules).string = {min_len: 1}]; // Traveller date of birth.
+    string email = 6; // Traveller email.
+    int32 user_id = 7 [(validate.rules).int32 = {gte: 1}]; // Traveller user id.
+    int32 title_id = 8 [(validate.rules).int32 = {gte: 1}]; // Traveller title id.
+    Title title = 9; // Traveller title data.
+    User user = 10; // Traveller user data.
+    string traveler_type = 11; // Traveller type (CNN/ADT/INF). Not used in DB.
+}

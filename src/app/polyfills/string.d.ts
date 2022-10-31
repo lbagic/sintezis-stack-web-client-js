@@ -1,5 +1,3 @@
-export {}
-
 declare global {
   interface String {
     /**
@@ -46,5 +44,7 @@ declare global {
      * Converts string to "hello_world".
      */
     toSnakeCase(): string;
-   }
+  }
 }
+
+export {}

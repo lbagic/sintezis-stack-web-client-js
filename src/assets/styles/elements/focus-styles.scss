@@ -1,11 +1,18 @@
-:is(a, button, input, textarea, select, summary, [tabindex]) {
+%focus-styles {
   --outline-width: 1px;
   --outline-style: solid;
   --outline-color: var(--#{$prefix}color-light-darkest);
+
+  outline: var(--outline-width) var(--outline-style) var(--outline-color);
+  outline-offset: 1px;
+}
+
+:is(a, button, input, textarea, select, summary, [tabindex]) {
+  &[data-show-focus="true"],
   &:focus,
   &:focus-visible {
-    outline: var(--outline-width) var(--outline-style) var(--outline-color);
-    outline-offset: 1px;
+    @extend %focus-styles;
+    transform: translateZ(0);
   }
   &:focus:not(:focus-visible) {
     outline: none;

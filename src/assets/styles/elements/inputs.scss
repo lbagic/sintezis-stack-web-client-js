@@ -1,104 +1,180 @@
-// base input styles
+.#{$prefix}input-root {
+  display: inline-block;
+}
 .#{$prefix}input {
-  --min-width: 100px;
-  --width: 100%;
-  --height: 42px;
-  --background: #f8f8f8;
-  --font-size: 16px;
-  --line-height: 1.5;
-  --padding-x: 8px;
-  --padding-y: calc((var(--height) - var(--font-size) * 1.5) / 2);
-  --text-color: var(--#{$prefix}app-color);
-  --placeholder-color: #999;
+  --input-height: 36px;
+  --input-width: 100%;
+  --input-min-width: 100px;
+  --input-font-size: 16px;
+  --input-line-height: 1.5;
+  --input-text-color: var(--#{$prefix}color-text);
+  --input-placeholder-color: #999;
+  --input-background-color: #f8f8f8;
+  --input-border-color: var(--#{$prefix}color-light-darker);
+  --input-padding-x: 8px;
+  --input-padding-y: calc(
+    (var(--input-height) - var(--input-font-size) * var(--input-line-height)) /
+      2
+  );
+
+  color: var(--input-text-color);
+  &::placeholder {
+    color: var(--input-placeholder-color);
+  }
+}
+%#{$prefix}input-width {
+  min-width: var(--input-min-width);
+  width: var(--input-width);
+}
+%#{$prefix}input-height {
+  height: var(--input-height);
+}
+%#{$prefix}input-input-field {
+  line-height: var(--input-line-height);
+  padding: var(--input-padding-y) var(--input-padding-x);
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--input-border-color);
+  // border-radius: 9px;
+  // box-shadow: 0 0 5px #0005;
+  background-color: var(--input-background-color);
 }
 
-.#{$prefix}input {
-  color: var(--text-color);
-  &::placeholder,
-  &[data-type="select"][data-has-value="false"][data-has-placeholder="true"] {
-    color: var(--placeholder-color);
-  }
-  &:not([data-type="checkbox"]):not([data-type="radio"]):not([data-type="range"]) {
-    min-height: var(--height);
-    height: var(--height);
-    min-width: var(--min-width);
-    width: var(--width);
-    background-color: var(--background);
-    padding: var(--padding-y) var(--padding-x);
-    line-height: var(--line-height);
-  }
-  &[data-type="select"] {
-    --select-icon-size: 12px;
+.#{$prefix}input-text,
+.#{$prefix}input-select,
+.#{$prefix}input-email,
+.#{$prefix}input-password,
+.#{$prefix}input-search,
+.#{$prefix}input-tel,
+.#{$prefix}input-url,
+.#{$prefix}input-color,
+.#{$prefix}input-file,
+.#{$prefix}input-number,
+.#{$prefix}input-textarea,
+.#{$prefix}input-datetime-local,
+.#{$prefix}input-date,
+.#{$prefix}input-time,
+.#{$prefix}input-month {
+  @extend %#{$prefix}input-width,
+    %#{$prefix}input-height,
+    %#{$prefix}input-input-field;
+}
+.#{$prefix}input-range {
+  @extend %#{$prefix}input-width;
+  // additional styles at inputs-range.scss
+}
+// .#{$prefix}input-radio,
+// .#{$prefix}input-checkbox {
+//   // additional styles at inputs-toggle.scss
+// }
+
+.#{$prefix}input-search::-webkit-search-cancel-button {
+  appearance: none;
+}
+.#{$prefix}input-number {
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
     -webkit-appearance: none;
     -moz-appearance: none;
+    appearance: none;
+    margin: 0;
+  }
+}
+
+// Specific state styles
+.#{$prefix}input {
+  &[data-error-border="true"] {
+    border-color: var(--#{$prefix}color-danger);
+  }
+  &[data-placeholder-color="true"] {
+    color: var(--input-placeholder-color);
+  }
+  &[data-dropdown-picker="true"] {
+    &::-webkit-calendar-picker-indicator {
+      opacity: 0;
+    }
+    --select-icon-size: calc(var(--input-font-size) / 1.5);
     appearance: none;
     background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='grey'><polygon points='0,0 100,0 50,50'/></svg>")
       no-repeat;
     background-size: var(--select-icon-size);
-    background-position: calc(100% - var(--padding-x))
+    background-position: calc(100% - var(--input-padding-x))
       calc(50% + var(--select-icon-size) / 3);
     background-repeat: no-repeat;
-    background-color: var(--background);
+    background-color: var(--input-background-color);
   }
-  &[data-type="range"] {
-    min-width: var(--min-width);
-    width: var(--width);
+  &[data-dropzone-active="true"] {
+    border-style: dashed;
+    border-color: var(--#{$prefix}color-success);
   }
-  border-width: 1px;
-  border-style: solid;
-  border-color: var(--#{$prefix}color-light-darker);
+  &[data-no-pointer-events="true"] {
+    pointer-events: none;
+  }
 }
 
-// input label styles
+// Alt input styles
+.#{$prefix}alt-input {
+  width: 0px;
+  height: 0px;
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+// Input label styles
 .#{$prefix}input-label {
-  --margin: 0.25rem;
+  --label-margin: 0.25rem;
 
   // input label required styles
-  &[data-required-asterisk="true"]::after {
+  &[data-label-asterisk="true"]::after {
     content: "*";
     color: var(--#{$prefix}color-danger);
   }
-
   // input label placement
-  &[data-label-placement~="block"] {
-    display: block;
-    &[data-label-placement~="start"] {
-      margin-block-end: var(--margin);
-    }
-    &[data-label-placement~="end"] {
-      margin-block-start: var(--margin);
-    }
+  &[data-label-position="left"],
+  &[data-label-position="right"] {
+    display: inline;
   }
-  &[data-label-placement~="inline"] {
-    &[data-label-placement~="start"] {
-      margin-inline-end: var(--margin);
-    }
-    &[data-label-placement~="end"] {
-      margin-inline-start: var(--margin);
-    }
+  &[data-label-position="left"] {
+    margin-right: var(--label-margin);
+  }
+  &[data-label-position="right"] {
+    margin-left: var(--label-margin);
+  }
+  &[data-label-position="top"] {
+    margin-bottom: var(--label-margin);
+  }
+  &[data-label-position="bottom"] {
+    margin-top: var(--label-margin);
   }
 }
 
-// input hint and error styles
-.#{$prefix}input-help {
-  --line-height: 1.25;
-  --font-size: 13px;
-  --max-height: calc(var(--line-height) * var(--font-size));
-  line-height: var(--line-height);
-  font-size: var(--font-size);
-
-  // input hint styles
-  &[data-hint] {
+// Input info styles
+.#{$prefix}input-info {
+  --info-line-height: 1.25;
+  --info-font-size: 12px;
+  --info-max-height: calc(var(--info-line-height) * var(--info-font-size));
+  &-hint,
+  &-error {
+    line-height: var(--info-line-height);
+    font-size: var(--info-font-size);
+    margin-left: 4px;
+  }
+  &-hint {
     color: var(--#{$prefix}color-grey);
   }
-
-  // input error styles
-  &[data-error] {
+  &-error {
     color: var(--#{$prefix}color-danger);
   }
-
-  // input error transition
-  &-transition {
+  &-spacing {
+    height: 3px;
+  }
+  &-spacing-transition {
+    @include transition(all 0.3s ease) {
+      height: 0px;
+    }
+  }
+  &-error-transition {
     &-enter-active,
     &-leave-active {
       transition: all 0.3s var(--#{$prefix}bezier-1);
@@ -111,21 +187,12 @@
     }
     &-leave-from,
     &-enter-to {
-      max-height: var(--max-height);
-    }
-  }
-
-  // input help spacing between form
-  &-spacing {
-    transition: height 0.2s ease;
-    height: 0px;
-    &[data-show="true"] {
-      height: 3px;
+      max-height: var(--info-max-height);
     }
   }
 }
 
-// input error borders
-.#{$prefix}input[data-error-border="true"][data-valid="false"] {
-  border-color: var(--#{$prefix}color-danger);
+// Date input focus styles
+.flatpickr-input.active {
+  @extend %focus-styles;
 }

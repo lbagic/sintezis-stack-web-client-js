@@ -17,5 +17,5 @@ module.exports = {
     $: "readonly",
     $$: "readonly",
   },
-  ignorePatterns: ["src/**/*.d.ts"],
+  ignorePatterns: ["**/*.d.ts"],
 };

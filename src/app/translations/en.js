@@ -1,10 +1,10 @@
-//@ts-check
+// @ts-check
 
 /** @type { typeof import('./messages').messages } */
 export const en = {
   formErrors: {
     badInput: "Bad input value.",
-    patternMismatch: "Value is not allowed.",
+    patternMismatch: "Value is not valid.",
     rangeOverflow: "Maximum allowed value is %t.",
     rangeUnderflow: "Minimum allowed value is %t.",
     tooLong: "Maximum number of characters is %t.",

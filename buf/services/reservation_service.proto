@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package elude.proto;
+
+option go_package = "./;gen";
+
+import "proto/air_hotel_reservation_search/request.proto";
+import "proto/air_hotel_reservation_search/response.proto";
+
+service ReservationController {
+
+  rpc CreateReservation(ReservationRequest) returns (ReservationResponse) {} // CreateReservation method is used to create hotel and/or flight reservations.
+
+  rpc StreamCreateReservation(ReservationRequest) returns (stream ReservationResponse) {} // StreamCreateReservation method uses CreateReservation and returns response as a stream.
+
+  rpc CancelReservation(CancelRequest) returns (CancelResponse) {} // CancelReservation method is used to cancel an existing hotel and/or flight reservations.
+
+  rpc RetrieveReservation(RetrieveRequest) returns (RetrieveResponse) {} // RetrieveReservation method is used to retrieve an existing hotel and/or flight reservations.
+
+  rpc RevalidateItinerary(RevalidateItineraryRequest) returns (RevalidateItineraryResponse) {} // RevalidateItinerary method is used to revalidate a hotel and/or flight itinerary.
+}

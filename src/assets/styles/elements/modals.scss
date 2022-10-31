@@ -1,5 +1,5 @@
 .#{$prefix}modal-wrapper {
-  --modal-background-color: var(--#{$prefix}app-background);
+  --modal-background-color: var(--#{$prefix}color-background);
   --modal-border-color: var(--#{$prefix}color-grey-lighter);
   --modal-overlay-color: var(--#{$prefix}color-grey-opaque);
   --modal-shadow-color: var(--#{$prefix}color-grey-opaque);

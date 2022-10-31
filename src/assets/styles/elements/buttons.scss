@@ -20,15 +20,13 @@
   white-space: nowrap;
   width: fit-content;
 
+  --height: 42px;
+  --padding-y: 6px;
+  --padding-x: 18px;
   &.small {
     --height: 34px;
     --padding-y: 4px;
     --padding-x: 12px;
-  }
-  &:not(.small):not(.large) {
-    --height: 42px;
-    --padding-y: 6px;
-    --padding-x: 18px;
   }
   &.large {
     --height: 50px;
@@ -38,7 +36,15 @@
   &.expand {
     width: 100%;
   }
+}
 
+.#{$prefix}button[disabled] {
+  opacity: 0.66 !important;
+  cursor: default !important;
+  pointer-events: none !important;
+}
+
+.#{$prefix}button {
   @each $color, $value in $base-colors {
     &.#{$color} {
       --base-color: var(--#{$prefix}color-#{$color});
@@ -60,15 +66,20 @@
           border-color: var(--accent-color);
         }
         @media (hover: hover) {
-          &:focus {
+          &:focus,
+          &:focus-visible {
             background: var(--focus-color);
             border-color: var(--focus-color);
           }
-          &:hover {
+          &:focus:not(:focus-visible) {
+            background: var(--base-color);
+            border-color: var(--base-color);
+          }
+          &:hover:nth-child(n) {
             background: var(--accent-color);
             border-color: var(--accent-color);
           }
-          &:active {
+          &:active:nth-child(n) {
             background: var(--base-color);
             border-color: var(--base-color);
           }
@@ -84,21 +95,26 @@
         color: var(--base-color);
         border-color: var(--base-color);
         &:active {
-          border-color: var(--accent-color);
           color: var(--accent-color);
+          border-color: var(--accent-color);
         }
         @media (hover: hover) {
-          &:focus {
-            border-color: var(--focus-color);
+          &:focus,
+          &:focus-visible {
             color: var(--focus-color);
+            border-color: var(--focus-color);
           }
-          &:hover {
-            border-color: var(--accent-color);
-            color: var(--accent-color);
-          }
-          &:active {
-            border-color: var(--base-color);
+          &:focus:not(:focus-visible) {
             color: var(--base-color);
+            border-color: var(--base-color);
+          }
+          &:hover:nth-child(n) {
+            color: var(--accent-color);
+            border-color: var(--accent-color);
+          }
+          &:active:nth-child(n) {
+            color: var(--base-color);
+            border-color: var(--base-color);
           }
         }
       }
@@ -114,23 +130,21 @@
           color: var(--accent-color);
         }
         @media (hover: hover) {
-          &:focus {
+          &:focus,
+          &:focus-visible {
             color: var(--focus-color);
           }
-          &:hover {
+          &:focus:not(:focus-visible) {
+            color: var(--base-color);
+          }
+          &:hover:nth-child(n) {
             color: var(--accent-color);
           }
-          &:active {
+          &:active:nth-child(n) {
             color: var(--base-color);
           }
         }
       }
     }
-  }
-
-  &[disabled] {
-    opacity: 0.66 !important;
-    cursor: default !important;
-    pointer-events: none !important;
   }
 }

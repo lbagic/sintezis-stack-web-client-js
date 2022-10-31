@@ -1,0 +1,542 @@
+syntax = "proto3";
+
+package elude.proto;
+
+option go_package = "./;gen";
+
+import "validate/validate.proto";
+import "proto/commons/status.proto";
+import "proto/commons/pagination.proto";
+import "proto/commons/weather.proto";
+import "proto/commons/image_data.proto";
+import "proto/commons/auth.proto";
+import "proto/commons/session_info.proto";
+import "proto/commons/options.proto";
+import "proto/commons/filter_options.proto";
+import "proto/commons/coordinates.proto";
+import "proto/commons/enum.proto";
+import "proto/commons/flow_common.proto";
+import "proto/models/media.proto";
+import "proto/models/country.proto";
+import "proto/models/city.proto";
+import "proto/models/airline.proto";
+import "proto/models/featured_location.proto";
+import "proto/models/connected_city.proto";
+import "proto/models/region.proto";
+import "proto/air_hotel_reservation_search/request.proto";
+
+// GetCityRequest is used for GetCity rpc calls. Used to fetch a single city by ID from DB.
+message GetCityRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    Options options = 3; // Common options for request.
+    int32 id = 4  [(validate.rules).int32 = {gte: 1}]; // City id for get city in database cities table.
+}
+
+// GetCitiesRequest is used for GetCities rpc calls. Used to fetch all cities from DB.
+message GetCitiesRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    Options options = 3; // Common options for request.
+    Pagination pagination = 4 [(validate.rules).message.required = true]; // Used to paginate response data.
+    string search = 5; // Used to filter by cities name.
+    FilterOptions filter_options = 6; // Used to filter response data
+}
+
+// CreateCityRequest is used for CreateCity rpc calls. Used to add a new city to DB.
+message CreateCityRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    City city = 3 [(validate.rules).message.required = true]; // City data for create city.
+    Options options = 4; // Common options for request.
+}
+
+// UpdateCityRequest is used for UpdateCity rpc calls. Used to update an existing city in DB.
+message UpdateCityRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    City city = 3 [(validate.rules).message.required = true]; // City data for update city.
+    Options options = 4; // Common options for request.
+}
+
+// DeleteCityRequest is used for DeleteCity rpc calls. Used to soft delete an existing city in DB.
+message DeleteCityRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    int32 id = 3 [(validate.rules).int32 = {gte: 1}]; // City id for delete city in database cities table.
+    Options options = 4; // Common options for request.
+}
+
+// GetCityByIPRequest is not used. Superseded by GetCityByCoordinatesRequest.
+message GetCityByIPRequest {
+    option deprecated = true;
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    string ip = 3  [(validate.rules).string = {min_len: 1}];
+    Options options = 4; // Common options for request.
+}
+
+// GetCityByCoordinatesRequest is used in GetNearestConnectedCityByCoordinates rpc calls.
+// Clients should always use this to determine the closest connected city.
+message GetCityByCoordinatesRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    Coordinates coordinates = 3 [(validate.rules).message.required = true]; // City coordinates for get city by coordinates in database cities table.
+    Options options = 4; // Common options for request.
+}
+
+// GetMultipleCitiesRequest is used for GetMultipleCities rpc calls. Clients should use this to fetch multiple cities by IATA codes
+message GetMultipleCitiesRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    repeated string iata_codes = 3 [(validate.rules).repeated = {min_items: 1}]; // List of city iata codes for get multiple cities.
+    Options options = 4; // Common options for request.
+}
+
+// UpdateCityWithImageRequest is used in UpdateCityWithImage rpc calls. Clients should use this when they want to add a new image to a city.
+message UpdateCityWithImageRequest {
+    oneof data {
+        option (validate.required) = true;
+        UpdateCityWithImageData updateReq = 1;  // Update request for update city with image.
+        bytes chunk_data = 2; // Image data in byte chunks.
+    };
+}
+
+// UpdateCityWithImageUnaryRequest is used in UpdateCityWithImageUnary rpc calls. Needed for web clients until grpc-web starts supporting
+// client-side streaming.
+message UpdateCityWithImageUnaryRequest {
+    UpdateCityWithImageData updateReq = 1; // Update request for update city with image unary.
+    bytes image = 2; // Image data in bytes.
+}
+
+// GetCountryRequest is used for GetCountry rpc calls. Used to fetch a single country by ID from DB.
+message GetCountryRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    Options options = 3; // Common options for request.
+    int32 id = 4 [(validate.rules).int32 = {gte: 1}]; // Country id for get country in database countries table.
+}
+
+// GetCountriesRequest is used for GetCountries rpc calls. Used to fetch all countries from DB.
+message GetCountriesRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    Options options = 3; // Common options for request.
+    Pagination pagination = 4; // Used to paginate response data.
+    string search = 5; // Used to filter by countries name.
+    FilterOptions filter_options = 6; // Used to filter response data
+}
+
+// CreateCountryRequest is used for CreateCountry rpc calls. Used to add a new country to DB.
+message CreateCountryRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    Country country = 3 [(validate.rules).message.required = true]; // Country data for create country.
+    Options options = 4; // Common options for request.
+}
+
+// UpdateCountryRequest is used for UpdateCountry rpc calls. Used to update an existing country in DB.
+message UpdateCountryRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    Country country = 3 [(validate.rules).message.required = true]; // Country data for delete country.
+    Options options = 4; // Common options for request.
+}
+
+// DeleteCountryRequest is used for DeleteCountry rpc calls. Used to soft delete an existing country in DB.
+message DeleteCountryRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    int32 id = 3 [(validate.rules).int32 = {gte: 1}]; // Country id for delete country in database countries table.
+    Options options = 4; // Common options for request.
+}
+
+// GetMultipleCountriesRequest is used for GetMultipleCountries rpc calls. Clients should use this to fetch multiple countries by ISO codes
+message GetMultipleCountriesRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    repeated string iso_codes = 3 [(validate.rules).repeated = {min_items: 1}]; // List of county iso codes for get multiple countries.
+    Options options = 4; // Common options for request.
+}
+
+message GetAverageCostRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    Options options = 3; // Common options for request.
+}
+
+message GetDestinationCitiesRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    Options options = 3; // Common options for request.
+    Pagination pagination = 4; // Used to paginate response data.
+}
+
+message GetTopDestinationsRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    Options options = 3; // Common options for request.
+}
+
+message GetAffordableDestinationsRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    Options options = 3; // Common options for request.
+}
+
+// GetAirportRequest is used for GetAirport rpc calls. Used to fetch a single airport by ID from DB.
+message GetAirportRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    Options options = 3; // Common options for request.
+    int32 id = 4 [(validate.rules).int32 = {gte: 1}]; // Airport id for get airport in database airports table.
+}
+
+// GetAirportsRequest is used for GetAirports rpc calls. Used to fetch all airports from DB.
+message GetAirportsRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    Options options = 3; // Common options for request.
+    Pagination pagination = 4 [(validate.rules).message.required = true]; // Used to paginate response data.
+    string search = 5; // Used to filter by airport name.
+    FilterOptions filter_options = 6; // Used to filter response data
+}
+
+// CreateAirportRequest is used for CreateAirport rpc calls. Used to add a new airport to DB.
+message CreateAirportRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    Airport airport = 3 [(validate.rules).message.required = true]; // Airport data for create airport.
+    Options options = 4; // Common options for request.
+}
+
+// UpdateAirportRequest is used for UpdateAirport rpc calls. Used to update an existing airport in DB.
+message UpdateAirportRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    Airport airport = 3 [(validate.rules).message.required = true]; // Airport data for update airport.
+    Options options = 4; // Common options for request.
+}
+
+// DeleteAirportRequest is used for DeleteAirport rpc calls. Used to soft delete an existing airport in DB.
+message DeleteAirportRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    int32 id = 3 [(validate.rules).int32 = {gte: 1}]; // Airport id for delete airport in database airports table.
+    Options options = 4; // Common options for request.
+}
+
+// GetMultipleAirportsRequest is used for GetMultipleAirports rpc calls. Clients should use this to fetch multiple airports by IATA codes
+message GetMultipleAirportsRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    repeated string iata_codes = 3 [(validate.rules).repeated = {min_items: 1}]; // List of airport iata codes for get multiple airports.
+    Options options = 4; // Common options for request.
+}
+
+// GetAirlineRequest is used for GetAirline rpc calls. Used to fetch a single airline by ID from DB.
+message GetAirlineRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    Options options = 3; // Common options for request.
+    int32 id = 4 [(validate.rules).int32 = {gte: 1}]; // Airline id for get airline in database airlines table.
+}
+
+// GetAirlinesRequest is used for GetAirlines rpc calls. Used to fetch all airlines from DB.
+message GetAirlinesRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    Options options = 3; // Common options for request.
+    Pagination pagination = 4 [(validate.rules).message.required = true]; // Used to paginate response data.
+    string search = 5; // Used to filter by airline name.
+    FilterOptions filter_options = 6; // Used to filter response data
+}
+
+// CreateAirlineRequest is used for CreateAirline rpc calls. Used to add a new airline to DB.
+message CreateAirlineRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    Airline airline = 3 [(validate.rules).message.required = true]; // Airline data for create airline.
+    Options options = 4; // Common options for request.
+}
+
+// UpdateAirlineRequest is used for UpdateAirline rpc calls. Used to update an existing airline in DB.
+message UpdateAirlineRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    Airline airline = 3 [(validate.rules).message.required = true];  // Airline data for update airline.
+    Options options = 4; // Common options for request.
+}
+
+// DeleteAirlineRequest is used for DeleteAirline rpc calls. Used to soft delete an existing airline in DB.
+message DeleteAirlineRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    int32 id = 3 [(validate.rules).int32 = {gte: 1}]; // Airline id for delete airline in database airlines table.
+    Options options = 4; // Common options for request.
+}
+
+// GetMultipleAirlinesRequest is used for GetMultipleAirlines rpc calls. Clients should use this to fetch multiple airlines by IATA codes
+message GetMultipleAirlinesRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    repeated string iata_codes = 3 [(validate.rules).repeated = {min_items: 1}]; // List of airlines iata codes for get multiple airlines.
+    Options options = 4; // Common options for request.
+}
+
+// UpdateAirlineWithImageRequest is used in UpdateAirlineWithImage rpc calls.  Clients should use this when they want to add a new image to an airline.
+message UpdateAirlineWithImageRequest {
+    oneof data {
+        UpdateAirlineWithImageData updateReq = 1; // Update request for update airline with image.
+        bytes chunk_data = 2; // Image data in byte chunks.
+    };
+}
+
+// UpdateAirlineWithImageUnaryRequest is used in UpdateAirlineWithImageUnary rpc calls. Needed for web clients until grpc-web starts supporting
+// client-side streaming.
+message UpdateAirlineWithImageUnaryRequest {
+    UpdateAirlineWithImageData updateReq = 1; // Update request for update airline with image unary.
+    bytes image = 2; // Image data in bytes.
+}
+
+// GetFeaturedLocationsByLocationRequest is used in GetFeaturedLocationsByLocation rpc calls. Clients should use this when they want to generate
+// featured locations based on a location ID.
+message GetFeaturedLocationsByLocationRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    LocationIdentifier location = 3; // LocationIdentifier data for get featured location by location.
+    Options options = 4; // Common options for request.
+    bool override_connected_city = 5; // If true ignores connected city value in database.
+}
+
+// GetFeaturedLocationsByCoordinatesRequest is used in GetFeaturedLocationsByCoordinates rpc calls. Clients should use this when they want to generate
+// featured locations based on coordinates.
+message GetFeaturedLocationsByCoordinatesRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    Coordinates coordinates = 3 [(validate.rules).message.required = true]; // Coordinates for get featured locations by coordinates.
+    Options options = 4; // Common options for request.
+    bool override_connected_city = 5; // If true ignores connected city value in database.
+}
+
+// GetFeaturedLocationRequest currently not used.
+message GetFeaturedLocationRequest {
+    option deprecated = true;
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    Options options = 3; // Common options for request.
+    int32 id = 4 [(validate.rules).int32 = {gte: 1}];
+}
+
+// GetFeaturedLocationsRequest currently not used.
+message GetFeaturedLocationsRequest {
+    option deprecated = true;
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    Options options = 3; // Common options for request.
+    Pagination pagination = 4 [(validate.rules).message.required = true]; // Used to paginate response data.
+    string search = 5; // Used to filter by featured locations name.
+}
+
+// CreateFeaturedLocationRequest currently not used.
+message CreateFeaturedLocationRequest {
+    option deprecated = true;
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    FeaturedLocation featured_location = 3 [(validate.rules).message.required = true];
+    Options options = 4; // Common options for request.
+}
+
+// UpdateFeaturedLocationRequest currently not used.
+message UpdateFeaturedLocationRequest {
+    option deprecated = true;
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    FeaturedLocation featured_location = 3 [(validate.rules).message.required = true];
+    Options options = 4; // Common options for request.
+}
+
+// DeleteFeaturedLocationRequest currently not used.
+message DeleteFeaturedLocationRequest {
+    option deprecated = true;
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    int32 id = 3 [(validate.rules).int32 = {gte: 1}];
+    Options options = 4; // Common options for request.
+}
+
+// GetConnectedCityRequest currently not used.
+message GetConnectedCityRequest {
+    option deprecated = true;
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    Options options = 3; // Common options for request.
+    int32 id = 4 [(validate.rules).int32 = {gte: 1}];
+}
+
+// GetConnectedCitiesRequest currently not used.
+message GetConnectedCitiesRequest {
+    option deprecated = true;
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    Options options = 3; // Common options for request.
+    Pagination pagination = 4; // Used to paginate response data.
+    string search = 5; // Used to filter by connected city name.
+}
+
+// CreateConnectedCityRequest currently not used.
+message CreateConnectedCityRequest {
+    option deprecated = true;
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    ConnectedCity connected_city = 3 [(validate.rules).message.required = true];
+    Options options = 4; // Common options for request.
+}
+
+// UpdateConnectedCityRequest currently not used.
+message UpdateConnectedCityRequest {
+    option deprecated = true;
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    ConnectedCity connected_city = 3 [(validate.rules).message.required = true];
+    Options options = 4; // Common options for request.
+}
+
+// DeleteConnectedCityRequest currently not used.
+message DeleteConnectedCityRequest {
+    option deprecated = true;
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    int32 id = 3 [(validate.rules).int32 = {gte: 1}];
+    Options options = 4; // Common options for request.
+}
+
+// GetConnectedCitiesForDepartureCityRequest currently not used.
+message GetConnectedCitiesForDepartureCityRequest {
+    option deprecated = true;
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    Options options = 3; // Common options for request.
+    Pagination pagination = 4; // Used to paginate response data.
+    int32 departure_city_id = 5 [(validate.rules).int32 = {gte: 1}];
+}
+
+// GetWeatherByCoordinatesRequest is used in GetWeatherByCoordinates rpc calls. Clients should use this when they want to fetch only
+// current weather for given coordinates.
+message GetWeatherByCoordinatesRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    Coordinates coordinates = 3 [(validate.rules).message.required = true]; // Coordinates for get weather by coordinates.
+    Options options = 4; // Common options for request.
+}
+
+// GetRegionRequest is used for GetRegion rpc calls. Used to fetch a single region by ID from DB.
+message GetRegionRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    Options options = 3; // Common options for request.
+    int32 id = 4 [(validate.rules).int32 = {gte: 1}]; // Region in for get region in database regions table.
+}
+
+// GetRegionsRequest is used for GetRegions rpc calls. Used to fetch all regions from DB.
+message GetRegionsRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    Options options = 3; // Common options for request.
+    Pagination pagination = 4; // Used to paginate response data.
+    string search = 5; // Used to filter by regions name.
+    FilterOptions filter_options = 6; // Used to filter response data
+}
+
+// CreateRegionRequest is used for CreateRegion rpc calls. Used to add a new region to DB.
+message CreateRegionRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    Region region = 3 [(validate.rules).message.required = true]; // Region data for create region.
+    Options options = 4; // Common options for request.
+}
+
+// UpdateRegionRequest is used for UpdateRegion rpc calls. Used to update an existing region in DB.
+message UpdateRegionRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    Region region = 3 [(validate.rules).message.required = true]; // Region data for update region.
+    Options options = 4; // Common options for request.
+}
+
+// DeleteRegionRequest is used for DeleteRegion rpc calls. Used to soft delete an existing region in DB.
+message DeleteRegionRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    int32 id = 3 [(validate.rules).int32 = {gte: 1}]; // Region id for delete region in database regions table.
+    Options options = 4; // Common options for request.
+}
+
+// GetLocationsRequest is used for GetLocations rpc calls. Used to fetch locations based on the request.
+message GetLocationsRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    Options options = 3; // Common options for request.
+    string search = 4; // Used to filter by location name.
+    SearchTypeEnum search_type = 5; // Different types of searches.
+    Pagination pagination = 6; // Used to paginate response data.
+}
+
+// GetLocationByCoordinatesRequest is used in GetNearestLocationByCoordinates rpc calls.
+// Clients should always use this to determine the closest departure location.
+message GetLocationByCoordinatesRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    Coordinates coordinates = 3 [(validate.rules).message.required = true]; // Coordinates for get locations by coordinates.
+    Options options = 4; // Common options for request.
+}
+
+// GetLocationRequest is currently used only for GetNearestLocation rpc calls. Used to fetch the closest departure location
+// based on the city ID provided.
+message GetLocationRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    Options options = 3; // Common options for request.
+    int32 id = 4  [(validate.rules).int32 = {gte: 1}]; // City id for get locations in database cities table.
+}
+
+// GetLocationsByIdentifiersRequest is used for GetLocationsByIdentifiers rpc calls. Used to fetch all of the actual database
+// entities based on the location ids and location types
+message GetLocationsByIdentifiersRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    Options options = 3; // Common options for request.
+    repeated LocationIdentifier location_identifiers = 4 [(validate.rules).repeated.min_items = 1]; // Location identifier data for get locations by identifiers.
+}
+
+// GetSearchLocationsRequest is used for GetSearchLocations rpc calls. Used to fetch locations for search.
+message GetSearchLocationsRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    Options options = 3; // Common options for request.
+    ItineraryRequest request = 4; // Used to filter by cities name.
+    repeated int32 cache_city_ids = 5; // Used to filter response data
+    repeated int32 cache_location_ids = 6; // Used to filter response data
+}
+
+// GetPreferencesRequest is used for GetPreferences rpc calls. Used to fetch all preferences in database
+message GetPreferencesRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    Options options = 3; // Common options for request.
+}
+
+// UpdateUserPreferencesRequest is used for UpdateUserPreferences rpc calls. Used to update user preferences
+message UpdateUserPreferencesRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    Options options = 3; // Common options for request.
+    repeated int32 preference_ids = 4;  // List of preferences ids for update user preferences in database.
+}
+
+// GetRecommendedCitiesRequest is used for GetRecommendedCities rpc calls. Used to get recommended cities by user preferences.
+message GetRecommendedCitiesRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    Options options = 3; // Common options for request.
+}

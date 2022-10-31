@@ -1,91 +1,230 @@
 import { computed, reactive } from "vue";
-import { i18nPlugin } from "../../app/plugins/i18n";
-import { messages } from "../../app/translations/messages";
+import { inputValidation } from "./input.validation";
+import DateInput from "./DateInput.vue";
 
 const settings = {
   useErrorMessage: true,
   useErrorBorder: true,
   useRequiredAsterisk: true,
   useHtmlValidation: false,
+  labelPosition: "top",
 };
 
-const { t } = i18nPlugin.global;
+/**
+ * @typedef { 'top' | 'right' | 'bottom' | 'left' } labelPosition
+ * @typedef { 'input' | 'textarea' | 'select' | typeof flatPickr } ComponentType
+ * @typedef { 'onInput' | 'onChange' | 'onBlur' | 'onFocus' } EventNames
+ * @typedef { { target: HTMLInputElement } } InputEvent
+ * @typedef {{
+ *  attrs: Record<string, any>
+ *  config: ComponentConfig
+ *  inputRef: HTMLInputElement
+ *  model: { value: any, valid: boolean, error: null | string, dirty: boolean }
+ *  options: Record<string, any>
+ *  props: { strictOptions: boolean }
+ *  isRequired: boolean,
+ *  setClass: (className: string) => string
+ * }} InputContext
+ *
+ *
+ * @typedef {{
+ *  attrs: { type?: string }
+ *  attrsFactory?: <T>(ctx: InputContext) => T
+ *  component: ComponentType
+ *  eventsFactory?: (ctx: InputContext) => Record<EventNames, (e: InputEvent) => void>
+ *  labelPosition: labelPosition
+ *  onExternalUpdate: (ctx: InputContext) => any
+ *  onInit?: (ctx: InputContext) => any
+ *  onInternalUpdate: (ctx: InputContext) => any
+ *  parseInputValue: (e: InputEvent, ctx: InputContext) => any
+ *  supportOptions: boolean
+ *  supportDropzone: boolean
+ * }} ComponentConfig
+ * */
 
-const htmlErrors = {
-  badInput: { value: t(messages.formErrors.badInput) },
-  patternMismatch: { value: t(messages.formErrors.patternMismatch) },
-  rangeOverflow: {
-    value: t(messages.formErrors.rangeOverflow),
-    parser: (text, { attrs }) => text.replace("%t", attrs.max),
-  },
-  rangeUnderflow: {
-    value: t(messages.formErrors.rangeUnderflow),
-    parser: (text, { attrs }) => text.replace("%t", attrs.min),
-  },
-  tooLong: {
-    value: t(messages.formErrors.tooLong),
-    parser: (text, { attrs }) => text.replace("%t", attrs.maxlength),
-  },
-  tooShort: {
-    value: t(messages.formErrors.tooShort),
-    parser: (text, { attrs }) => text.replace("%t", attrs.minlength),
-  },
-  stepMismatch: { value: t(messages.formErrors.stepMismatch) },
-  typeMismatch: { value: t(messages.formErrors.typeMismatch) },
-  valueMissing: { value: t(messages.formErrors.valueMissing) },
+/** @type { (ctx: InputContext, options: FPOpts) => Record<string, any> } */
+const createFlatpickrConfig = ({ attrs }, componentConfig = {}) => {
+  const config = {
+    position: "auto center",
+    disableMobile: true,
+  };
+  const userConfig = attrs?.config ?? {};
+  if (attrs.min) config.minDate = attrs.min;
+  if (attrs.max) config.maxDate = attrs.max;
+  if (userConfig?.altFormat) config.altInput = true;
+
+  Object.assign(config, componentConfig, userConfig);
+  return config;
 };
 
-const componentConfig = {
-  text: { component: "default-input" },
-  email: { component: "default-input" },
-  password: { component: "default-input" },
-  search: { component: "default-input" },
-  tel: { component: "default-input" },
-  url: { component: "default-input" },
-  color: { component: "default-input" },
-  file: { component: "default-input" },
-  number: { component: "number-input" },
-  range: { component: "number-input" },
-  checkbox: { component: "toggle-input", labelPlacement: "inline end" },
-  radio: { component: "toggle-input", labelPlacement: "inline end" },
-  textarea: { component: "textarea-input" },
-  select: {
-    component: "select-input",
-    parseInputValue: (value) => {
-      const int = parseInt(value);
-      return isNaN(int) ? value : int;
+/** @type { Record<string, ComponentConfig & { alt: ComponentConfig }> }*/
+const components = {
+  text: {
+    component: "input",
+    supportOptions: true,
+    attrs: { type: "text" },
+  },
+  email: {
+    component: "input",
+    supportOptions: true,
+    attrs: { type: "email", name: "email" },
+  },
+  password: {
+    component: "input",
+    attrs: { type: "password", name: "password" },
+  },
+  search: {
+    component: "input",
+    supportOptions: true,
+    attrs: { type: "search", inputmode: "search" },
+  },
+  tel: {
+    component: "input",
+    supportOptions: true,
+    attrs: { type: "tel", inputmode: "tel" },
+  },
+  url: {
+    component: "input",
+    supportOptions: true,
+    attrs: { type: "url", inputmode: "url" },
+  },
+  color: {
+    component: "input",
+    supportOptions: true,
+    attrs: { type: "color" },
+  },
+  number: {
+    component: "input",
+    supportOptions: true,
+    attrs: { type: "number", inputmode: "numeric" },
+    parseInputValue: (e) =>
+      isNaN(e.target.valueAsNumber) ? "" : e.target.valueAsNumber,
+  },
+  range: {
+    component: "input",
+    supportOptions: true,
+    attrs: { type: "range" },
+    parseInputValue: (e) => e.target.valueAsNumber,
+  },
+  checkbox: {
+    component: "input",
+    attrs: { type: "checkbox" },
+    labelPosition: "right",
+    parseInputValue(e, { props, model }) {
+      const checked = e.target.checked;
+      const value = props.value ?? true;
+      if (Array.isArray(model.value)) {
+        const includes = model.value.includes(value);
+        return checked && !includes
+          ? [...model.value, value]
+          : !checked && includes
+          ? model.value.filter((el) => el !== value)
+          : model.value;
+      }
+      return checked ? value : typeof value === "boolean" ? false : "";
+    },
+    onInternalUpdate({ inputRef, props, model }) {
+      const value = props.value ?? true;
+      const isChecked = Array.isArray(model.value)
+        ? model.value.includes(value)
+        : model.value === value;
+      inputRef.checked = isChecked;
     },
   },
-  "datetime-local": { component: "default-input" },
-  date: { component: "default-input" },
-  time: { component: "default-input" },
-  month: { component: "default-input" },
+  radio: {
+    component: "input",
+    attrs: { type: "radio" },
+    labelPosition: "right",
+    parseInputValue(e, { props }) {
+      const checked = e.target.checked;
+      const value = props.value ?? true;
+      return checked ? value : typeof value === "boolean" ? false : "";
+    },
+    onInternalUpdate({ inputRef, props, model }) {
+      const value = props.value ?? true;
+      inputRef.checked = model.value === value;
+    },
+  },
+  textarea: {
+    component: "textarea",
+    attrs: {},
+  },
+  select: {
+    supportOptions: true,
+    component: "select",
+    attrs: {},
+  },
+  file: {
+    component: "input",
+    supportDropzone: true,
+    parseInputValue(e, ctx) {
+      const fileList = e.target?.files ?? e.dataTransfer?.files;
+      const isArray = ctx.attrs.multiple === "" || ctx.attrs.multiple === true;
+      if (!fileList) return isArray ? [] : "";
+      const allowedTypes = ctx.attrs.accept?.split(",")?.map((el) => el.trim());
+      const files = !allowedTypes
+        ? [...fileList]
+        : [...fileList].filter(({ type }) => allowedTypes.includes(type));
+      const names = files.map((file) => file.name);
+      ctx.inputRef.value = names.join(", ");
+      return isArray ? files : files[0];
+    },
+    onExternalUpdate() {},
+    alt: {
+      component: "input",
+      attrs: { type: "file" },
+    },
+  },
+  date: {
+    component: DateInput,
+    attrsFactory: (ctx) => ({
+      config: createFlatpickrConfig(ctx),
+      modelValue: ctx.model.value,
+    }),
+  },
+  time: {
+    component: DateInput,
+    attrsFactory: (ctx) => ({
+      config: createFlatpickrConfig(ctx, {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: "H:i",
+        time_24hr: true,
+      }),
+    }),
+  },
+  "datetime-local": {
+    component: DateInput,
+    attrsFactory: (ctx) => ({
+      config: createFlatpickrConfig(ctx, {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        time_24hr: true,
+      }),
+    }),
+  },
 };
-
-const htmlErrorKeys = Object.keys(htmlErrors);
 
 export const _inputCtl = {
   settings,
-  htmlErrors,
-  htmlErrorKeys,
-  componentConfig,
+  components,
+  validate: inputValidation,
 };
 
 /**
  * Generates reactive form data.
  *
  * @template T
- * @param {T} properties Decsripton.
+ * @param { T } properties Decsripton.
  * @returns {{
  *   data: T;
  *   validation: Record<keyof T, boolean>;
  *   errors: Partial<Record<keyof T, string | null>>;
- *   model: Record<keyof T, {value: any, isValid: boolean, errorMessage: string | null, isDirty: boolean}>
+ *   model: Record<keyof T, { value: any, valid: boolean, error: string | null, dirty: boolean }>
  *   isValid: boolean;
  * }}
  *   Return description.
  */
-
 export function useFormData(properties) {
   const data = reactive(properties);
   const validation = reactive(
@@ -105,29 +244,28 @@ export function useFormData(properties) {
       return [
         key,
         {
-          _formDataModel: true,
           get value() {
             return data[key];
           },
           set value(value) {
             data[key] = value;
           },
-          get isValid() {
+          get valid() {
             return validation[key];
           },
-          set isValid(value) {
+          set valid(value) {
             validation[key] = value;
           },
-          get errorMessage() {
+          get error() {
             return errors[key];
           },
-          set errorMessage(value) {
+          set error(value) {
             errors[key] = value;
           },
-          get isDirty() {
+          get dirty() {
             return dirty[key];
           },
-          set isDirty(value = true) {
+          set dirty(value = true) {
             dirty[key] = value;
           },
         },
@@ -137,7 +275,7 @@ export function useFormData(properties) {
   return reactive({ isValid, data, validation, errors, model });
 }
 
-export const useFormDataConfig = (config) => {
+export const useFormFactory = (config) => {
   const data = Object.fromEntries(
     Object.entries(config).map(([key, { value }]) => [key, value])
   );

@@ -1,9 +1,12 @@
-import { ROLES } from "../constants/ROLES"
-export {}
+import { ROLES } from "../enums/ROLES"
+
+type UserRoleId = typeof ROLES.values[number]
 
 declare module 'vue-router' {
   interface RouteMeta {
     title: string,
-    authorizedRoles: typeof ROLES[keyof typeof ROLES][]
+    authorize: (currentRole?: UserRoleId) => boolean
   }
 }
+
+export {}

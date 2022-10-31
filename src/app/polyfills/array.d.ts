@@ -1,8 +1,6 @@
-export {}
-
 type Item = Record<string, unknown>;
 type Identifier<T, Value = string | number | boolean> = keyof {
-    [P in keyof T as T[P] extends Value ? P : never]: T[P];
+  [P in keyof T as T[P] extends Value ? P : never]: T[P];
 };
 
 declare global {
@@ -21,3 +19,5 @@ declare global {
     findMany<U extends T>(items: Partial<U>[]): U[];
   }
 }
+
+export {}

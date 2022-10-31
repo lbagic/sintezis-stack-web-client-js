@@ -1,0 +1,82 @@
+syntax = "proto3";
+
+package elude.proto;
+
+option go_package = "./;gen";
+
+import "validate/validate.proto";
+import "proto/models/city.proto";
+import "proto/models/title.proto";
+import "proto/models/country.proto";
+import "proto/models/auth_provider.proto";
+import "proto/models/media.proto";
+import "proto/models/payment_provider.proto";
+import "proto/models/role.proto";
+import "proto/models/location.proto";
+import "proto/commons/timestamp.proto";
+import "proto/commons/enum.proto";
+import "proto/models/preference.proto";
+
+// User message is returned for User CRUD rpc calls and in most account rpc calls. Contains all of the data for a user.
+message User {
+    int32 id = 1; // User id.
+    string first_name = 2 [(validate.rules).string = {pattern: "^[a-zA-Z '.-]*$", ignore_empty: true}]; // User first name.
+    string last_name = 3 [(validate.rules).string = {pattern: "^[a-zA-Z '.-]*$", ignore_empty: true}]; // User last name.
+    string date_of_birth = 4; // User date of birth.
+    string phone = 5; // User phone number.
+    string email = 6 [(validate.rules).string = {email: true, min_len: 1}]; // User email.
+    string password = 7; // User password. Not mapped from DB. Hashed.
+    string address = 8; // User address.
+    bool is_admin = 9; // If true user is admin.
+    string onboarding_data = 10; // User onboarding data. Currently not used.
+    int32 city_id = 11; // User city id.
+    int32 title_id = 12; // User title id.
+    int32 phone_country_id = 13; // User phone country id.
+    int32 profile_picture_id = 14; // User profile picture id. Currently not used.
+    int32 auth_provider_id = 15 [(validate.rules).int32 = {gte: 1}]; // User auth provider id.
+    City city = 16; // User city data.
+    Title title = 17; // User title data.
+    Country phone_country = 18; // User country data.
+    AuthProvider auth_provider = 19; // User auth provider data.
+    Media profile_picture = 20; // User profile picture data. Currently not used.
+    Timestamp verified_at = 21; // User verified timestamp.
+    string verification_token = 22; // User verification token. Used for user validation.
+    string recovery_token = 23; // User recovery token. Used for forgot password.
+    string traveler_type = 24; // User traveller type. Not used in DB.
+    repeated UserSocial socials = 25; // List of user socials registers data.
+    repeated PaymentMethod payment_methods = 26; // List of users payment methods data.
+    repeated Role roles = 27; // List of user roles data.
+    Timestamp created_at = 28; // User created at timestamp.
+    Airport preferred_airport = 29; // User preferred airport data.
+    int32 airport_id = 30; // User airport id.
+    Location preferred_airport_location = 31; // User preferred airport location data. Not used in DB.
+    AuthProviderEnum provider = 32; // User auth provider.
+    Timestamp verification_sent_at = 33; // User verification sent timestamp.
+    repeated Preference preferences = 34; // List of users preferences data.
+}
+
+// UserSocial message is returned as part of the User message.
+message UserSocial {
+    int32 id = 1; // User social id.
+    int32 auth_provider_id = 2 [(validate.rules).int32 = {gte: 1}]; // User social auth provider id.
+    AuthProvider auth_provider = 3; // User social auth provider data.
+    int32 user_id = 4 [(validate.rules).int32 = {gte: 1}]; // User id.
+    User user = 5; // User data.
+    string unique_identifier = 6; // User social unique identifier.
+    string fallback_field = 7; // User social fallback field.
+    AuthProviderEnum provider = 8; // User social auth provider.
+}
+
+// PaymentMethod message is returned for Payment Method CRUD rpc calls.
+message PaymentMethod {
+    int32 id = 1; // Payment method id.
+    string last_four = 2 [(validate.rules).string = {pattern: "^[0-9]*$",min_len: 1}]; // Last four digits of payment method card.
+    string customer_id = 3 [(validate.rules).string = {pattern: "^[a-zA-Z0-9 _]*$",min_len: 1}]; // Payment provider customer id.
+    int32 is_default = 4; // If true payment method is default.
+    string brand = 5 [(validate.rules).string = {pattern: "^[a-zA-Z ]*$",min_len: 1}]; // Payment method brand (e.g. Visa).
+    string name = 6 [(validate.rules).string = {pattern: "^[a-zA-Z '.-]*$", min_len: 1}]; // Payment method card name.
+    int32 user_id = 7 [(validate.rules).int32 = {gte: 1}]; // Payment method user id.
+    int32 payment_provider_id = 8 [(validate.rules).int32 = {gte: 1}]; // Payment provider id.
+    User user = 9; // Payment method user data.
+    PaymentProvider payment_provider = 10; // Payment provider data.
+}

@@ -1,4 +1,4 @@
-import { useAuthStore } from "../../modules/auth/store";
+import { useAuthStore } from "../../modules/auth/authStore";
 import { createApi } from "./base-api/BaseApi";
 
 export const Api = {

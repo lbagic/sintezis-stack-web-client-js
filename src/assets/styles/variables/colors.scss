@@ -1,3 +1,4 @@
+// colors with variants
 $base-colors: (
   "primary": #0d6efd,
   "secondary": #ffc107,
@@ -8,6 +9,12 @@ $base-colors: (
   "light": #f8f9fa,
   "grey": #888,
   "dark": #212529,
+);
+
+// colors without variants
+$additiona-colors: (
+  "text": #212121,
+  "background": #fff,
 );
 
 $base-color-variants: (
@@ -45,4 +52,8 @@ $base-color-variants: (
   ),
 );
 
-$colors: generate-color-palette($base-colors, $base-color-variants);
+$colors: generate-color-palette(
+  $base-colors,
+  $base-color-variants,
+  $additiona-colors
+);
