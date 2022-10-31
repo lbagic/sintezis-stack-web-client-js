@@ -8,8 +8,8 @@
   --input-font-size: 16px;
   --input-line-height: 1.5;
   --input-text-color: var(--#{$prefix}color-text);
-  --input-placeholder-color: #999;
-  --input-background-color: #f8f8f8;
+  --input-placeholder-color: var(--#{$prefix}color-grey);
+  --input-background-color: var(--#{$prefix}color-light);
   --input-border-color: var(--#{$prefix}color-light-darker);
   --input-padding-x: 8px;
   --input-padding-y: calc(
@@ -123,6 +123,7 @@
 
 // Input label styles
 .#{$prefix}input-label {
+  display: inline-block;
   --label-margin: 0.25rem;
 
   // input label required styles

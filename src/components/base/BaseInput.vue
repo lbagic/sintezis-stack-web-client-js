@@ -288,7 +288,11 @@ const infoAttrs = $computed(() => ({
 </script>
 
 <template>
-  <label v-bind="rootAttrs" ref="rootRef">
+  <component
+    :is="type === 'file' ? 'label' : 'div'"
+    v-bind="rootAttrs"
+    ref="rootRef"
+  >
     <BaseInputLabel v-if="labelBefore" v-bind="labelAttrs">
       {{ props.label }}
     </BaseInputLabel>
@@ -327,7 +331,7 @@ const infoAttrs = $computed(() => ({
       v-if="props.hint || props.useErrorMessage"
       v-bind="infoAttrs"
     />
-  </label>
+  </component>
 </template>
 
 <style scoped lang="scss"></style>
