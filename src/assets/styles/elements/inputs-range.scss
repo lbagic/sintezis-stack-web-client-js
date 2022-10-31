@@ -12,7 +12,7 @@
 // --input-padding-y
 
 // Baseline/reset
-.#{$prefix}input-range {
+%#{$prefix}input-range {
   appearance: none;
   background: transparent;
   cursor: grab;
@@ -59,7 +59,7 @@
   background: var(--range-thumb-background);
 }
 
-.#{$prefix}input-range {
+%#{$prefix}input-range {
   &::-webkit-slider-runnable-track {
     @include input-range-track;
   }

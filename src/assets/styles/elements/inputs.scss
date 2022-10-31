@@ -22,21 +22,19 @@
     color: var(--input-placeholder-color);
   }
 }
-%#{$prefix}input-width {
+%#{$prefix}input--width {
   min-width: var(--input-min-width);
   width: var(--input-width);
 }
-%#{$prefix}input-height {
+%#{$prefix}input--height {
   height: var(--input-height);
 }
-%#{$prefix}input-input-field {
+%#{$prefix}input--field {
   line-height: var(--input-line-height);
   padding: var(--input-padding-y) var(--input-padding-x);
   border-width: 1px;
   border-style: solid;
   border-color: var(--input-border-color);
-  // border-radius: 9px;
-  // box-shadow: 0 0 5px #0005;
   background-color: var(--input-background-color);
 }
 
@@ -55,18 +53,20 @@
 .#{$prefix}input-date,
 .#{$prefix}input-time,
 .#{$prefix}input-month {
-  @extend %#{$prefix}input-width,
-    %#{$prefix}input-height,
-    %#{$prefix}input-input-field;
+  @extend %#{$prefix}input--width,
+    %#{$prefix}input--height,
+    %#{$prefix}input--field;
 }
 .#{$prefix}input-range {
-  @extend %#{$prefix}input-width;
-  // additional styles at inputs-range.scss
+  @extend %#{$prefix}input--width;
+  @extend %#{$prefix}input-range;
 }
-// .#{$prefix}input-radio,
-// .#{$prefix}input-checkbox {
-//   // additional styles at inputs-toggle.scss
-// }
+.#{$prefix}input-radio {
+  @extend %#{$prefix}input-radio;
+}
+.#{$prefix}input-checkbox {
+  @extend %#{$prefix}input-checkbox;
+}
 
 .#{$prefix}input-search::-webkit-search-cancel-button {
   appearance: none;
