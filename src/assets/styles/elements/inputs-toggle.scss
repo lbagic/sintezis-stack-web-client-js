@@ -1,0 +1,54 @@
+// Input css vars:
+// --input-height
+// --input-width
+// --input-min-width
+// --input-font-size
+// --input-line-height
+// --input-text-color
+// --input-placeholder-color
+// --input-background-color
+// --input-border-color
+// --input-padding-x
+// --input-padding-y
+
+.#{$prefix}input-radio {
+  --toggle-icon: circle(50% at 50% 50%);
+  --toogle-border-radius: 100%;
+  --toggle-transform-origin: center;
+}
+.#{$prefix}input-checkbox {
+  --toggle-icon: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+  --toogle-border-radius: 2px;
+  --toggle-transform-origin: bottom left;
+}
+.#{$prefix}input-radio,
+.#{$prefix}input-checkbox {
+  --toggle-size: 16px;
+  --toggle-background-color: var(--input-background-color);
+  --toggle-border-color: var(--#{$prefix}color-grey-lighter);
+  --toggle-tick-color: var(--#{$prefix}color-primary);
+
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--toggle-size);
+  height: var(--toggle-size);
+  background-color: var(--toggle-background-color);
+  border: 1.5px solid var(--toggle-border-color);
+  border-radius: var(--toogle-border-radius);
+
+  &::before {
+    content: "";
+    width: 0.65em;
+    height: 0.65em;
+    clip-path: var(--toggle-icon);
+    transform: scale(0);
+    transform-origin: var(--toggle-transform-origin);
+    transition: 0.1s transform ease-in-out;
+    box-shadow: inset 1em 1em var(--toggle-tick-color);
+  }
+  &:checked::before {
+    transform: scale(1);
+  }
+}
