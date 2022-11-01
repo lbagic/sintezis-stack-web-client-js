@@ -204,11 +204,6 @@ onMounted(() => {
     () => onExternalUpdate(),
     { immediate: true, deep: true }
   );
-  // watch(
-  //   () => model.value,
-  //   () => validate(ctx),
-  //   { immediate: true }
-  // );
   validate(ctx);
   if (!model.value) onInput({ target: inputRef });
 });
