@@ -21,7 +21,7 @@ const settings = {
  *  inputRef: HTMLInputElement
  *  model: { value: any, valid: boolean, error: null | string, dirty: boolean }
  *  options: Record<string, any>
- *  props: { strictOptions: boolean }
+ *  props: { strictOptions: boolean, validator?: Function }
  *  isRequired: boolean,
  *  setClass: (className: string) => string
  * }} InputContext
@@ -218,61 +218,51 @@ export const _inputCtl = {
  * @param { T } properties Decsripton.
  * @returns {{
  *   data: T;
- *   validation: Record<keyof T, boolean>;
- *   errors: Partial<Record<keyof T, string | null>>;
  *   model: Record<keyof T, { value: any, valid: boolean, error: string | null, dirty: boolean }>
  *   isValid: boolean;
  * }}
- *   Return description.
  */
 export function useFormData(properties) {
-  const data = reactive(properties);
-  const validation = reactive(
-    Object.fromEntries(Object.keys(properties).map((key) => [key, false]))
-  );
-  const errors = reactive(
-    Object.fromEntries(Object.keys(properties).map((key) => [key, null]))
-  );
-  const isValid = computed(() =>
-    Object.values(validation).every((value) => value === true)
-  );
-  const dirty = reactive(
-    Object.fromEntries(Object.keys(properties).map((key) => [key, false]))
-  );
+  const keys = Object.keys(properties);
+  const ctx = reactive({
+    value: properties,
+    dirty: Object.fromEntries(keys.map((key) => [key, false])),
+    error: Object.fromEntries(keys.map((key) => [key, null])),
+    valid: Object.fromEntries(keys.map((key) => [key, false])),
+  });
+  const isValid = computed(() => keys.every((key) => ctx.valid[key] === true));
   const model = Object.fromEntries(
-    Object.keys(properties).map((key) => {
-      return [
-        key,
-        {
-          get value() {
-            return data[key];
-          },
-          set value(value) {
-            data[key] = value;
-          },
-          get valid() {
-            return validation[key];
-          },
-          set valid(value) {
-            validation[key] = value;
-          },
-          get error() {
-            return errors[key];
-          },
-          set error(value) {
-            errors[key] = value;
-          },
-          get dirty() {
-            return dirty[key];
-          },
-          set dirty(value = true) {
-            dirty[key] = value;
-          },
+    keys.map((key) => [
+      key,
+      {
+        get value() {
+          return ctx.value[key];
         },
-      ];
-    })
+        set value(value) {
+          ctx.value[key] = value;
+        },
+        get valid() {
+          return ctx.valid[key];
+        },
+        set valid(value) {
+          ctx.valid[key] = value;
+        },
+        get error() {
+          return ctx.error[key];
+        },
+        set error(value) {
+          ctx.error[key] = value;
+        },
+        get dirty() {
+          return ctx.dirty[key];
+        },
+        set dirty(value = true) {
+          ctx.dirty[key] = value;
+        },
+      },
+    ])
   );
-  return reactive({ isValid, data, validation, errors, model });
+  return reactive({ data: ctx.value, isValid, model });
 }
 
 export const useFormFactory = (config) => {
