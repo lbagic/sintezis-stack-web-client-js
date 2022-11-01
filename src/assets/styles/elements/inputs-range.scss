@@ -42,7 +42,7 @@
   background: var(--range-track-focus-background);
 }
 @mixin input-range-track-focus-revert {
-  background: var(--range-track-color);
+  background: var(--range-track-background);
 }
 @mixin input-range-thumb {
   transition: box-shadow 0.2s ease;
