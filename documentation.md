@@ -2,7 +2,6 @@ TODO:
 
 - refactor doc
 - input - test performance, maybe some eager computeds?
-- input - refactor htmlValidation, custom validation, options validation
 - storybook integration
 - GRPC/REST integration
 - components - a11y
