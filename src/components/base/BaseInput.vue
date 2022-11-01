@@ -198,10 +198,11 @@ watch(() => model, onInternalUpdate, { deep: true });
 onMounted(() => {
   formRef = rootRef.closest("form");
   onExternalUpdate(true);
-  watch(() => [props.modelValue, props.value], onExternalUpdate, {
-    immediate: true,
-    deep: true,
-  });
+  watch(
+    () => [props.modelValue, props.value],
+    () => onExternalUpdate(),
+    { immediate: true, deep: true }
+  );
   watch(
     () => model.value,
     () => validate(ctx),
