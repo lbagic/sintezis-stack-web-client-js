@@ -4,7 +4,7 @@
 export const en = {
   formErrors: {
     badInput: "Bad input value.",
-    patternMismatch: "Value is not valid.",
+    patternMismatch: "Value does not match.",
     rangeOverflow: "Maximum allowed value is %t.",
     rangeUnderflow: "Minimum allowed value is %t.",
     tooLong: "Maximum number of characters is %t.",

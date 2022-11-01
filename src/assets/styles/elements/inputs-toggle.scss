@@ -11,18 +11,18 @@
 // --input-padding-x
 // --input-padding-y
 
-.#{$prefix}input-radio {
+%#{$prefix}input-radio {
   --toggle-icon: circle(50% at 50% 50%);
   --toogle-border-radius: 100%;
   --toggle-transform-origin: center;
 }
-.#{$prefix}input-checkbox {
+%#{$prefix}input-checkbox {
   --toggle-icon: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
   --toogle-border-radius: 2px;
   --toggle-transform-origin: bottom left;
 }
-.#{$prefix}input-radio,
-.#{$prefix}input-checkbox {
+%#{$prefix}input-radio,
+%#{$prefix}input-checkbox {
   --toggle-size: 16px;
   --toggle-background-color: var(--input-background-color);
   --toggle-border-color: var(--#{$prefix}color-grey-lighter);

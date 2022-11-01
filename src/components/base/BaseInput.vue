@@ -135,6 +135,7 @@ function onInput(event) {
   if (hasOptions)
     value = selectOption(value, options.object, props.strictOptions);
   model.value = value;
+  validate(ctx);
   emit("input", model.value);
 }
 function onFocus(e, mode) {
@@ -198,15 +199,12 @@ watch(() => model, onInternalUpdate, { deep: true });
 onMounted(() => {
   formRef = rootRef.closest("form");
   onExternalUpdate(true);
-  watch(() => [props.modelValue, props.value], onExternalUpdate, {
-    immediate: true,
-    deep: true,
-  });
   watch(
-    () => model.value,
-    () => validate(ctx),
-    { immediate: true }
+    () => [props.modelValue, props.value],
+    () => onExternalUpdate(),
+    { immediate: true, deep: true }
   );
+  validate(ctx);
   if (!model.value) onInput({ target: inputRef });
 });
 
@@ -234,6 +232,9 @@ const mainAttrs = $computed(() => {
     base.onInvalid = onInvalid;
     base.onBlur = onBlur;
   }
+
+  if (hasInputOptions && props.strictOptions)
+    base.pattern = options.keys.join("|");
 
   if (isAltFocused) base["data-show-focus"] = true;
   if (isDropzoneActive) base["data-dropzone-active"] = true;
@@ -288,7 +289,11 @@ const infoAttrs = $computed(() => ({
 </script>
 
 <template>
-  <label v-bind="rootAttrs" ref="rootRef">
+  <component
+    :is="type === 'file' ? 'label' : 'div'"
+    v-bind="rootAttrs"
+    ref="rootRef"
+  >
     <BaseInputLabel v-if="labelBefore" v-bind="labelAttrs">
       {{ props.label }}
     </BaseInputLabel>
@@ -327,7 +332,7 @@ const infoAttrs = $computed(() => ({
       v-if="props.hint || props.useErrorMessage"
       v-bind="infoAttrs"
     />
-  </label>
+  </component>
 </template>
 
 <style scoped lang="scss"></style>

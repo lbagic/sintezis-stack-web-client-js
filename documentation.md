@@ -1,9 +1,7 @@
 TODO:
 
 - refactor doc
-- input - slider/checkbox/radio styles
 - input - test performance, maybe some eager computeds?
-- input - refactor htmlValidation, custom validation, options validation
 - storybook integration
 - GRPC/REST integration
 - components - a11y
