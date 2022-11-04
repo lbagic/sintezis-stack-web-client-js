@@ -2,6 +2,11 @@
 # For details, see https://docs.buf.build/configuration/v1/buf-gen-yaml
 version: v1
 plugins:
+  # Generate go validation files
+  - remote: buf.build/elude/plugins/protoc-gen-validate:v0.6.3-1
+    out: src/gen/validate
+    opt:
+      - lang=go
   # This will invoke protoc-gen-es and write output to src/gen
   - name: es
     out: src/gen
