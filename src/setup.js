@@ -1,5 +1,6 @@
+import "./app/setup";
+
 import { i18nPlugin } from "./app/plugins/i18n";
-import "./app/polyfills";
 import { router } from "./app/router.js";
 import { pinia } from "./app/store.js";
 

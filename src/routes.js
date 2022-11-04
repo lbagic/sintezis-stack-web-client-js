@@ -1,4 +1,3 @@
-// @ts-check
 import { ROLES } from "./enums/ROLES";
 import { authRoutes } from "./modules/auth/authRoutes";
 import { useAuthStore } from "./modules/auth/authStore";
