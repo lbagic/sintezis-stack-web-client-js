@@ -41,7 +41,6 @@ const grpcRequestContext = (req) => {
   return req._meta;
 };
 
-/** @returns { RequestContext } */
 /** @returns { ResponseContext } */
 const grpcResponseContext = (res) => {
   if (!res._meta) {
@@ -92,12 +91,24 @@ const restResponseContext = (res) => {
   return res._meta;
 };
 
+// [(value: AxiosRequestConfig<any>) => AxiosRequestConfig<any> | Promise<AxiosRequestConfig<any>>, (error: any) => any]
 /**
+ * @typedef { [(value: import("axios").AxiosRequestConfig<any>) => import("axios").AxiosRequestConfig<any> | Promise<import("axios").AxiosRequestConfig<any>>, (error: any) => any] } RestRequstInterceptor
+ * @typedef { [(value: AxiosResponse<any, any>) => AxiosResponse<any, any> | Promise<AxiosResponse<any, any>>, (error: any) => any] } RestResponseInterceptor
+ * @typedef {{ request: RestRequstInterceptor, response: RestResponseInterceptor }} RestInterceptor
+ * @typedef { import("@bufbuild/connect-web").Interceptor } GrpcInterceptor
  * @param {{
  *  onRequest: (req: RequestContext) => void
  *  onRequestError: (err: Error, req: RequestContext) => void
  *  onResponse: (res: ResponseContext, req: RequestContext) => void
  *  onResponseError: (err: Error, req: RequestContext) => void
+ * }}
+ * @returns {{
+ *  grpc: GrpcInterceptor
+ *  rest: {
+ *    request: RestRequstInterceptor,
+ *    response: RestResponseInterceptor
+ *  }
  * }}
  */
 export const createInterceptor = ({
