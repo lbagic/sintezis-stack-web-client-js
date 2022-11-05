@@ -3,9 +3,9 @@
 
 interface ImportMetaEnv {
   // Sintezis
-  readonly VITE_SNT_GRPC_ENDPOINT: string
-  readonly VITE_SNT_API_ENDPOINT: string
-  readonly VITE_SNT_HASH_KEY: string
+  readonly VITE_SNT_API_URL: string
+  readonly VITE_SNT_GRPC_URL: string
+  readonly VITE_SNT_HASH: string
 
   // Firebase
   readonly VITE_FIREBASE_API_KEY: string
