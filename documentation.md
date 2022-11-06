@@ -1,9 +1,9 @@
 TODO:
 
-- refactor doc
-- input - test performance, maybe some eager computeds?
+- update docs
 - storybook integration
-- GRPC/REST integration
+- GRPC/REST - stream logger
+- input - test performance, maybe some eager computeds?
 - components - a11y
 
 # WebStack Documentation

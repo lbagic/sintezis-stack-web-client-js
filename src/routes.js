@@ -2,6 +2,7 @@ import { ROLES } from "./enums/ROLES";
 import { authRoutes } from "./modules/auth/authRoutes";
 import { useAuthStore } from "./modules/auth/authStore";
 import { commonRoutes } from "./modules/common/commonRoutes";
+import { exampleRoutes } from "./modules/example/exampleRoutes";
 import { appName } from "./setup";
 
 /**
@@ -12,6 +13,7 @@ export const routes = [
   // app routes
   ...commonRoutes,
   ...authRoutes,
+  ...exampleRoutes,
 ];
 
 /** @type { Record<any, { notAuthorized: string, notFound: string }> } */
