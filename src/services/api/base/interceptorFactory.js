@@ -1,107 +1,97 @@
 /**
+ * Request/Response context types
  * @typedef {{
- *  data: any,
- *  info: {
- *    headers: Record<string, string>,
- *    method: string,
- *    name: string,
- *    query: string,
- *    stream: boolean,
- *    uid: string,
- *    url: string,
- *  }
+ *  data: any
+ *  headers: Record<string, string>
+ *  metadata: any
+ *  method: string
+ *  name: string
+ *  query: string
+ *  stream: boolean
+ *  url: string
  * }} RequestContext
- *
  * @typedef {{
- *  data: any,
- *  info: {
- *    headers: Record<string, string>,
- *  }
+ *  data: any
+ *  headers: Record<string, string>
+ *  metadata: any
  * }} ResponseContext
- * */
-
-/** @returns { RequestContext } */
-const grpcRequestContext = (req) => {
-  if (!req._meta) {
-    req._meta = {
-      data: req.message,
-      info: {
-        headers: req.header,
-        method: req.init.method,
-        name: req.method.name,
-        query: "",
-        stream: req.stream,
-        uid: `${req.init.method}-${req.url}-${JSON.stringify(
-          req.header
-        )}-${JSON.stringify(req.message)}`,
-        url: req.url,
-      },
-    };
-  }
-  return req._meta;
-};
-
-/** @returns { ResponseContext } */
-const grpcResponseContext = (res) => {
-  if (!res._meta) {
-    res._meta = {
-      data: res.message,
-      info: {
-        headers: res.header,
-      },
-    };
-  }
-  return res._meta;
-};
-
-/** @returns { RequestContext } */
-const restRequestContext = (req) => {
-  if (!req._meta) {
-    const [name, query] = req.url.split("?");
-    const url = req.baseURL + req.url;
-    const method = req.method.toUpperCase();
-    req._meta = {
-      data: req.data,
-      info: {
-        headers: req.headers.common,
-        method,
-        name: `${method} ${name}`,
-        query: `?${query}`,
-        stream: false,
-        uid: `${req.method}-${url}-${JSON.stringify(req.data)}-${JSON.stringify(
-          req.headers.common
-        )}`,
-        url,
-      },
-    };
-  }
-  return req._meta;
-};
-
-/** @returns { ResponseContext } */
-const restResponseContext = (res) => {
-  if (!res._meta) {
-    res._meta = {
-      data: res.data,
-      info: {
-        headers: res.headers,
-      },
-    };
-  }
-  return res._meta;
-};
-
-// [(value: AxiosRequestConfig<any>) => AxiosRequestConfig<any> | Promise<AxiosRequestConfig<any>>, (error: any) => any]
-/**
- * @typedef { [(value: import("axios").AxiosRequestConfig<any>) => import("axios").AxiosRequestConfig<any> | Promise<import("axios").AxiosRequestConfig<any>>, (error: any) => any] } RestRequstInterceptor
- * @typedef { [(value: AxiosResponse<any, any>) => AxiosResponse<any, any> | Promise<AxiosResponse<any, any>>, (error: any) => any] } RestResponseInterceptor
+ *
+ * Request/Response types
+ * @typedef { import("@bufbuild/connect-web").UnaryRequest<import("@bufbuild/protobuf").AnyMessage> } GrpcRequestObject
+ * @typedef { import("@bufbuild/connect-web").UnaryResponse<import("@bufbuild/protobuf").AnyMessage> | import("@bufbuild/connect-web").StreamResponse<import("@bufbuild/protobuf").AnyMessage> } GrpcResponseObject
+ * @typedef { import("axios").AxiosRequestConfig<any> } RestRequestObject
+ * @typedef { import("axios").AxiosRequestConfig<any> } RestResponseObject
+ * @typedef { (key: string, value: string) => void } SetRequestHeader
+ *
+ * Interceptor types
+ * @typedef { [(value: RestRequestObject) => RestRequestObject, (error: any) => any] } RestRequstInterceptor
+ * @typedef { [(value: RestResponseObject) => RestResponseObject, (error: any) => any] } RestResponseInterceptor
  * @typedef {{ request: RestRequstInterceptor, response: RestResponseInterceptor }} RestInterceptor
  * @typedef { import("@bufbuild/connect-web").Interceptor } GrpcInterceptor
+ * */
+
+/**
+ * @param { GrpcRequestObject } request
+ * @returns { RequestContext }
+ */
+const grpcRequestContext = (request) => ({
+  data: request.message,
+  headers: Object.fromEntries(request.header.entries()),
+  metadata: request.metadata,
+  method: request.init.method,
+  name: request.method.name,
+  query: "",
+  stream: request.stream,
+  url: request.url,
+});
+
+/**
+ * @param { GrpcResponseObject } response
+ * @returns { ResponseContext }
+ */
+const grpcResponseContext = (response) => ({
+  data: response.message,
+  headers: Object.fromEntries(response.header.entries()),
+  metadata: response.metadata,
+});
+
+/**
+ * @param { RestRequestObject } request
+ * @returns { RequestContext }
+ */
+const restRequestContext = (request) => {
+  const [name, query] = request.url.split("?");
+  const url = request.baseURL + request.url;
+  const method = request.method.toUpperCase();
+  return {
+    data: request.data,
+    headers: request.headers.common,
+    metadata: request.metadata,
+    method,
+    name: `${method} ${name}`,
+    query: `?${query}`,
+    stream: false,
+    url,
+  };
+};
+
+/**
+ * @param { RestResponseObject } response
+ * @returns { ResponseContext }
+ */
+const restResponseContext = (response) => ({
+  data: response.data,
+  headers: response.headers,
+  metadata: response.metadata,
+});
+
+/**
+ *
  * @param {{
- *  onRequest: (req: RequestContext) => void
- *  onRequestError: (err: Error, req: RequestContext) => void
- *  onResponse: (res: ResponseContext, req: RequestContext) => void
- *  onResponseError: (err: Error, req: RequestContext) => void
+ *  onRequest: (data: {requestContext: RequestContext, setHeader: SetRequestHeader }) => RequestContext | undefined
+ *  onRequestError: (data: { error: Error, requestContext: RequestContext }) => void
+ *  onResponse: (data: { requestContext: RequestContext, responseContext: ResponseContext }) => void
+ *  onResponseError: (data: { error: Error, requestContext: RequestContext }) => void
  * }}
  * @returns {{
  *  grpc: GrpcInterceptor
@@ -113,22 +103,24 @@ const restResponseContext = (res) => {
  */
 export const createInterceptor = ({
   onRequest,
-  onResponse,
   onRequestError,
+  onResponse,
   onResponseError,
 }) => ({
-  grpc: (next) => async (req) => {
-    const reqCtx = grpcRequestContext(req);
+  grpc: (next) => async (request) => {
+    const requestContext = grpcRequestContext(request);
+    const setHeader = (key, value) => request.header.set(key, value);
     try {
-      onRequest?.(reqCtx);
-    } catch (err) {
-      onRequestError?.(err, reqCtx);
-      throw err;
+      onRequest?.({ requestContext, setHeader });
+    } catch (error) {
+      onRequestError?.({ error, requestContext });
+      throw error;
     }
     try {
-      const res = await next(req);
-      const resCtx = grpcResponseContext(res);
-      onResponse?.(resCtx, reqCtx);
+      const response = await next(request);
+      const responseContext = grpcResponseContext(response);
+      onResponse?.({ requestContext, responseContext });
+      // TODO - handle stream logging
       // if (res.stream)
       //   return {
       //     ...res,
@@ -139,36 +131,38 @@ export const createInterceptor = ({
       //       return msg;
       //     },
       //   };
-      return res;
-    } catch (err) {
-      onResponseError?.(err, reqCtx);
-      throw err;
+      return response;
+    } catch (error) {
+      onRequestError?.({ error, requestContext });
+      throw error;
     }
   },
   rest: {
     request: [
-      (req) => {
-        const reqCtx = restRequestContext(req);
-        onRequest?.(reqCtx);
-        return req;
+      (request) => {
+        const requestContext = restRequestContext(request);
+        const setHeader = (key, value) => (request.headers.common[key] = value);
+        onRequest?.({ requestContext, setHeader });
+        return request;
       },
-      (err) => {
-        onRequestError?.(err);
-        return Promise.reject(err);
+      (error) => {
+        const requestContext = restRequestContext(error.config);
+        onRequestError?.({ error, requestContext });
+        return Promise.reject(error);
       },
     ],
     response: [
-      (res) => {
-        const resCtx = restResponseContext(res);
-        const req = res.config;
-        const reqCtx = restRequestContext(req);
-        onResponse?.(resCtx, reqCtx);
-        return res;
+      (response) => {
+        const request = response.config;
+        const responseContext = restResponseContext(response);
+        const requestContext = restRequestContext(request);
+        onResponse?.({ requestContext, responseContext });
+        return response;
       },
-      (err) => {
-        const reqCtx = restRequestContext(err.config);
-        onResponseError?.(err, reqCtx);
-        return Promise.reject(err);
+      (error) => {
+        const requestContext = restRequestContext(error.config);
+        onResponseError?.({ error, requestContext });
+        return Promise.reject(error);
       },
     ],
   },

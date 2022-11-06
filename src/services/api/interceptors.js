@@ -1,33 +1,34 @@
 import { createInterceptor } from "./base/interceptorFactory";
+import { useAuthStore } from "@/modules/auth/authStore";
 
 const loggingInterceptor = createInterceptor({
-  // onRequest: (req) => console.log(`%c${req.info.name}`, "font-size: 10px", req),
-  onResponse: (res, req) =>
+  onResponse: ({ requestContext, responseContext }) =>
     console.log(
-      `%c${req.info.name}`,
+      `%c${requestContext.name}`,
       "color: mediumseagreen; font-weight: bold",
-      {
-        ...res,
-        request: req,
-      }
+      { ...responseContext, request: requestContext }
     ),
-  onRequestError: (err, req) =>
-    console.warn(`%c${req.info.name}`, "font-weight: bold", {
-      ...err,
-      request: req,
+  onRequestError: ({ error, requestContext }) =>
+    console.warn(`%c${requestContext.name}`, "font-weight: bold", {
+      ...error,
+      request: requestContext,
     }),
-  onResponseError: (err, req) =>
-    console.warn(`%c${req.info.name}`, "font-weight: bold", {
-      ...err,
-      request: req,
+  onResponseError: ({ error, requestContext }) =>
+    console.warn(`%c${requestContext.name}`, "font-weight: bold", {
+      ...error,
+      request: requestContext,
     }),
 });
 
-// TODO:
-// authorization
-// unauthorized
-// notification
-const interceptors = [loggingInterceptor];
+const authInterceptor = createInterceptor({
+  onRequest({ setHeader }) {
+    const token = useAuthStore().token;
+    if (token) setHeader("Authorization", `Bearer ${token}`);
+  },
+});
+
+// TODO - logoutInterceptor
+const interceptors = [authInterceptor, loggingInterceptor];
 
 export const grpcInterceptors = interceptors.map((el) => el.grpc);
 export const restInterceptors = interceptors.map((el) => el.rest);

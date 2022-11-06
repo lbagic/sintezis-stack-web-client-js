@@ -9,7 +9,7 @@ window.fetch = async (...args) => {
     const saved = map.get(uid);
     const call = saved ?? fetch(...args);
     if (!saved) map.set(uid, call);
-    else console.log("⮑ repeated call");
+    else console.log(`Repeated call: ${req.method} ${req.url}`);
     const res = await call;
     map.delete(uid);
     return res.clone();

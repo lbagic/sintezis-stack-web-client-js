@@ -11,7 +11,7 @@ export function createRestPromiseClient(options) {
   options.adapter = fetchAdapter;
   const instance = axios.create(options);
 
-  const interceptors = options.interceptors ?? [];
+  const interceptors = options.interceptors?.reverse() ?? [];
   interceptors.forEach(({ request, response }) => {
     if (request) instance.interceptors.request.use(...request);
     if (response) instance.interceptors.response.use(...response);
