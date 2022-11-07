@@ -7,10 +7,7 @@
     "preview": "vite preview --port 4173",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
     "prepare": "husky install",
-    "docs": "vitepress dev docs",
-    "proto-clean": "rm -rf ./src/gen",
-    "proto-update": "cd ./buf; buf mod update",
-    "proto-generate": "buf generate"
+    "docs": "vitepress dev docs"
   },
   "dependencies": {
     "@bufbuild/connect-web": "^0.2.1",
