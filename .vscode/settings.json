@@ -5,10 +5,13 @@
   "editor.formatOnSave": true,
   "editor.insertSpaces": true,
   "editor.tabSize": 2,
-  "files.eol": "\n",
-  // -------------------------- PLUGINS --------------------------
   "eslint.format.enable": true,
+  "files.eol": "\n",
   // -------------------------- LANGUAGE SETTINGS --------------------------
+  // Html & CSS
+  "[html]": {
+    "editor.defaultFormatter": "vscode.html-language-features"
+  },
   // Javascript & JSON
   "[javascript]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint",
