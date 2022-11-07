@@ -1,12 +1,31 @@
 .#{$prefix}card {
+  --card-box-shadow: 0 0 8px #00000011;
+  --card-box-shadow-active: 0 0 8px #00000028;
   padding: 16px;
-  border: 1px solid;
-  border-radius: 8px;
-  box-shadow: 0 0 8px #00000011;
+  border: 0.5px solid;
+  border-radius: 2px;
+  box-shadow: var(--card-box-shadow);
   @each $color, $value in $base-colors {
     &.#{$color} {
       background: var(--#{$prefix}color-#{$color}-lightest);
       border-color: var(--#{$prefix}color-#{$color}-lighter);
+    }
+  }
+
+  @media (hover: hover) {
+    &.clickable {
+      transition: box-shadow 0.2s ease;
+      &:not([disabled]) {
+        cursor: pointer;
+      }
+      &:focus,
+      &:focus-visible,
+      &:hover {
+        box-shadow: var(--card-box-shadow-active);
+      }
+      &:focus:not(:focus-visible) {
+        box-shadow: var(--card-box-shadow);
+      }
     }
   }
 }
