@@ -1,5 +1,6 @@
 .#{$prefix}input-root {
-  display: inline-block;
+  // display: inline-block;
+  display: block;
 }
 .#{$prefix}input {
   --input-height: 36px;
