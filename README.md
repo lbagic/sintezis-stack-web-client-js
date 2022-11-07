@@ -2,6 +2,15 @@
 
 This template should help get you started developing with Vue 3 in Vite.
 
+## Setup new project
+
+```sh
+git clone ssh://git@gitlab.sintezis.co:8022/sintezis/stacks/js/web.stack.js.git PROJECT_NAME
+cd PROJECT_NAME
+git remote rename origin upstream
+git remote add origin PROJECT_URL
+```
+
 ## Customize configuration
 
 See [Vite Configuration Reference](https://vitejs.dev/config/).
