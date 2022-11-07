@@ -4,15 +4,21 @@ import {
 } from "@bufbuild/connect-web";
 
 /**
+ * @typedef { Record<string, import("@bufbuild/protobuf").ServiceType> } Services
+ * @typedef { import("@bufbuild/connect-web").GrpcWebTransportOptions } GrpcWebTransportOptions
+ * */
+
+/**
  * @template { import("@bufbuild/protobuf").ServiceType } T
  * @typedef { import("@bufbuild/connect-web").PromiseClient<T> } PromiseClient
  * */
-/**
- * @template { import("@bufbuild/protobuf").ServiceType } T
- * @typedef { import("@bufbuild/connect-web").GrpcWebTransportOptions & { service: T } } GrpcWebTransportOptions
- * */
 
-/** @type { <T>(options: GrpcWebTransportOptions<T>) => PromiseClient<T> } */
-export function createGrpcPromiseClient({ service, ...options }) {
-  return createPromiseClient(service, createGrpcWebTransport(options));
+/** @type { <T extends Services>(options: GrpcWebTransportOptions & { services: T }) => Record<keyof T, PromiseClient<T[keyof T]>> } */
+export function createGrpcPromiseClient({ services, ...options }) {
+  return Object.fromEntries(
+    Object.entries(services).map(([serviceName, service]) => [
+      serviceName,
+      createPromiseClient(service, createGrpcWebTransport(options)),
+    ])
+  );
 }
