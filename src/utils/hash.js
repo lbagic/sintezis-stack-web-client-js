@@ -1,4 +1,4 @@
-const secretKey = import.meta.env.VITE_SNT_HASH_KEY;
+const secretKey = import.meta.env.VITE_SNT_HASH;
 
 export const createHash = async (string) => {
   const secret = secretKey; // the secret key
