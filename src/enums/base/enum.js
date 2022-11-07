@@ -1,4 +1,4 @@
-import { flipObject } from "../../utils/object";
+const isNumeric = (str) => /^\d+$/.test(str);
 
 /**
  * @type { <T>(obj: T) => {
@@ -10,11 +10,19 @@ import { flipObject } from "../../utils/object";
  * }}
  * */
 export function createEnum(obj) {
+  const allKeys = Object.keys(obj);
+  const stringKeys = allKeys.filter((key) => !isNumeric(key));
+
+  const enumKeys = stringKeys.length ? stringKeys : allKeys;
+  const enumObj = Object.fromEntries(enumKeys.map((key) => [key, obj[key]]));
+  const enumFlip = Object.fromEntries(enumKeys.map((key) => [obj[key], key]));
+  const enumValues = Object.values(enumObj);
+
   return Object.freeze({
-    enum: obj,
-    flip: Object.freeze(flipObject(obj)),
-    keys: Object.freeze(Object.keys(obj)),
-    values: Object.freeze(Object.values(obj)),
-    messages: obj,
+    enum: Object.freeze(enumObj),
+    flip: Object.freeze(enumFlip),
+    keys: Object.freeze(enumKeys),
+    values: Object.freeze(enumValues),
+    messages: enumObj,
   });
 }
