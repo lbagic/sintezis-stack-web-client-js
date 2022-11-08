@@ -7,7 +7,7 @@ import { messages } from "../../app/translations/messages";
  * @typedef {{
  *  message: string
  *  parse?: (text: string, ctx: InputContext) => string
- *  validate: (ctx: InputContext) => boolean
+ *  check: (ctx: InputContext) => boolean
  * }} HtmlErrorConfig
  * */
 
@@ -15,43 +15,45 @@ import { messages } from "../../app/translations/messages";
 const errorMap = {
   badInput: {
     message: translate(messages.formErrors.badInput),
-    validate: () => false,
+    check: () => false,
   },
   patternMismatch: {
     message: translate(messages.formErrors.patternMismatch),
-    validate: () => false,
+    check: () => false,
   },
   rangeOverflow: {
     message: translate(messages.formErrors.rangeOverflow),
     parse: (text, { attrs }) => text.replace("%t", attrs.max),
-    validate: () => false,
+    check: () => false,
   },
   rangeUnderflow: {
     message: translate(messages.formErrors.rangeUnderflow),
     parse: (text, { attrs }) => text.replace("%t", attrs.min),
-    validate: () => false,
+    check: () => false,
   },
   tooLong: {
     message: translate(messages.formErrors.tooLong),
     parse: (text, { attrs }) => text.replace("%t", attrs.maxlength),
-    validate: () => false,
+    check: (ctx) =>
+      !!ctx.attrs.maxlength && ctx.model.value?.length > ctx.attrs.maxlength,
   },
   tooShort: {
     message: translate(messages.formErrors.tooShort),
     parse: (text, { attrs }) => text.replace("%t", attrs.minlength),
-    validate: () => false,
+    check: (ctx) =>
+      !!ctx.attrs.minlength && ctx.model.value?.length < ctx.attrs.minlength,
   },
   stepMismatch: {
     message: translate(messages.formErrors.stepMismatch),
-    validate: () => false,
+    check: () => false,
   },
   typeMismatch: {
     message: translate(messages.formErrors.typeMismatch),
-    validate: () => false,
+    check: () => false,
   },
   valueMissing: {
     message: translate(messages.formErrors.valueMissing),
-    validate: (ctx) => ctx.isRequired && !ctx.model.value,
+    check: (ctx) => ctx.isRequired && !ctx.model.value,
   },
 };
 const errorKeys = Object.keys(errorMap);
@@ -60,8 +62,9 @@ const errorKeys = Object.keys(errorMap);
 function createValidity(ctx) {
   const validity = {};
   errorKeys.forEach((k) => {
-    validity[k] = !!ctx.inputRef?.validity?.[k] || errorMap[k].validate(ctx);
+    validity[k] = !!ctx.inputRef?.validity?.[k] || errorMap[k].check(ctx);
   });
+  console.log({ validity });
   const valid = Object.values(validity).every((value) => !value);
   return { ...validity, valid };
 }
