@@ -64,7 +64,6 @@ function createValidity(ctx) {
   errorKeys.forEach((k) => {
     validity[k] = !!ctx.inputRef?.validity?.[k] || errorMap[k].check(ctx);
   });
-  console.log({ validity });
   const valid = Object.values(validity).every((value) => !value);
   return { ...validity, valid };
 }
