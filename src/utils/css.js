@@ -6,66 +6,51 @@ const parsed = parseJson(rawCSS.JSON);
 /**
  * Breakpoint defintions
  * @typedef {{
- *  s: number,
- *  m: number,
- *  l: number,
- *  xl: number,
- *  xxl: number,
+ *  s: number
+ *  m: number
+ *  l: number
+ *  xl: number
+ *  xxl: number
  * }} Breakpoints
  * /
 
 /**
  * Color definitions
- * @typedef {{
- *  base: string,
- *  contrast: string,
- *  opaque: string,
- *  light: string,
- *  lighter: string,
- *  lightest: string,
- *  dark: string,
- *  darker: string,
- *  darkest: string
- * }} Color
+ * @typedef { primary | secondary | success | info | warning | danger | light | grey | dark  } ColorNames
+ * @typedef { base | contrast | opaque | light | lighter | lightest | max-light | dark | darker | darkest | max-dark } ColorVariants
+ * @typedef { text | background } SolidColorNames
  * 
- * @typedef {{
- *  text: string,
- *  background: string
- *  primary: Color,
- *  secondary: Color,
- *  success: Color,
- *  info: Color,
- *  warning: Color,
- *  danger: Color,
- *  light: Color,
- *  grey: Color,
- *  dark: Color
- * }} Colors
+ * @typedef { Record<ColorNames, ColorVariants> } PaletteColors
+ * @typedef { Record<SolidColorNames, string> } SolidColors
  */
 
 /** 
  * z-index defintions
  * @typedef {{
- *  toast: number,
- *  modal: number,
+ *  toast: number
+ *  modal: number
  * }} ZIndex
  * /
  
 /**
  * @type {{
- *  breakpoints: Breakpoints,
- *  colors: Colors,
- *  prefix: string,
- *  prefixRaw: string,
+ *  prefixRaw: string
+ *  prefix: string
+ *  colors: PaletteColors
+ *  solidColors: SolidColors
+ *  zIndex: number
+ *  breakpoints: Breakpoints
  * }}
  */
-
 export const css = {
   prefixRaw: parsed.prefix,
   prefix: parsed.prefix.replace(/[^\w\s]/gi, ""),
   colors: parsed.colors,
+  solidColors: parsed.solidColors,
   zIndex: parsed.zIndex,
   breakpoints: Object.fromEntries(
     Object.entries(parsed.breakpoints).map(([k, v]) => [k, parseInt(v)])
   ),
 };
+
+console.log(css);
