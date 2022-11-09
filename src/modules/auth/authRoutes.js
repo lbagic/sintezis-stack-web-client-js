@@ -1,5 +1,3 @@
-import { ROLES } from "../../enums/ROLES";
-
 /** @type { import("vue-router").RouteRecordRaw[] } */
 export const authRoutes = [
   {
@@ -7,7 +5,7 @@ export const authRoutes = [
     component: () => import("./views/AuthLoginView.vue"),
     meta: {
       title: "Log In",
-      authorize: (role) => !ROLES.values.includes(role),
+      authorize: ({ isLoggedIn }) => !isLoggedIn,
     },
   },
   {
@@ -15,7 +13,7 @@ export const authRoutes = [
     component: () => import("./views/AuthRegisterView.vue"),
     meta: {
       title: "Register",
-      authorize: (role) => !ROLES.values.includes(role),
+      authorize: ({ isLoggedIn }) => !isLoggedIn,
     },
   },
 ];

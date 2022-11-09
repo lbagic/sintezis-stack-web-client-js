@@ -1,4 +1,7 @@
+deps:
+	brew install bufbuild/buf/buf
+
 proto: 
-	npm run proto-clean
-	npm run proto-update
-	npm run proto-generate
+	rm -rf ./src/gen
+	cd ./buf; buf mod update
+	buf generate

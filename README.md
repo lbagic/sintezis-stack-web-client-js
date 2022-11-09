@@ -11,6 +11,20 @@ git remote rename origin upstream
 git remote add origin PROJECT_URL
 ```
 
+## Working with protos
+
+Install dependencies:
+
+```sh
+brew install bufbuild/buf/buf
+```
+
+Generate proto files:
+
+```sh
+make proto
+```
+
 ## Customize configuration
 
 See [Vite Configuration Reference](https://vitejs.dev/config/).
@@ -20,6 +34,7 @@ See [Vite Configuration Reference](https://vitejs.dev/config/).
 Install recommended extensions:
 
 - volar: https://marketplace.visualstudio.com/items?itemName=Vue.volar
+- type support: https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin
 - prettier: https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode
 - eslint: https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
 

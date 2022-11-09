@@ -12,48 +12,44 @@ $base-colors: (
 );
 
 // colors without variants
-$additiona-colors: (
+$solid-colors: (
   "text": #212121,
   "background": #fff,
 );
 
 $base-color-variants: (
-  "light": (
-    "saturation": -5%,
-    "lightness": 5%,
-  ),
-  "lighter": (
-    "saturation": -10%,
-    "lightness": 15%,
+  "max-light": (
+    "lightness": 95%,
   ),
   "lightest": (
-    "saturation": -20%,
-    "lightness": 40%,
+    "lightness": 80%,
+  ),
+  "lighter": (
+    "lightness": 50%,
+  ),
+  "light": (
+    "lightness": 20%,
   ),
   "dark": (
-    "saturation": 5%,
-    "lightness": -5%,
-  ),
-  "darker": (
-    "saturation": 10%,
     "lightness": -15%,
   ),
+  "darker": (
+    "lightness": -30%,
+  ),
   "darkest": (
-    "saturation": 20%,
-    "lightness": -40%,
+    "lightness": -45%,
+  ),
+  "max-dark": (
+    "lightness": -75%,
   ),
   "opaque": (
     "alpha": -0.66%,
   ),
   "opaque-light": (
     "saturation": -20%,
-    "lightness": 20%,
+    "brightness": 20%,
     "alpha": -0.66%,
   ),
 );
 
-$colors: generate-color-palette(
-  $base-colors,
-  $base-color-variants,
-  $additiona-colors
-);
+$colors: generate-color-palette($base-colors, $base-color-variants);

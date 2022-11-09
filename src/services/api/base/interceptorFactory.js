@@ -3,7 +3,6 @@
  * @typedef {{
  *  data: any
  *  headers: Record<string, string>
- *  metadata: any
  *  method: string
  *  name: string
  *  query: string
@@ -13,8 +12,13 @@
  * @typedef {{
  *  data: any
  *  headers: Record<string, string>
- *  metadata: any
  * }} ResponseContext
+ * @typedef {{
+ *  code: number
+ *  title: string
+ *  message: string
+ *  debug: string
+ * }} ResponseErrorContext
  *
  * Request/Response types
  * @typedef { import("@bufbuild/connect-web").UnaryRequest<import("@bufbuild/protobuf").AnyMessage> } GrpcRequestObject
@@ -37,7 +41,6 @@
 const grpcRequestContext = (request) => ({
   data: request.message,
   headers: Object.fromEntries(request.header.entries()),
-  metadata: request.metadata,
   method: request.init.method,
   name: request.method.name,
   query: "",
@@ -52,8 +55,18 @@ const grpcRequestContext = (request) => ({
 const grpcResponseContext = (response) => ({
   data: response.message,
   headers: Object.fromEntries(response.header.entries()),
-  metadata: response.metadata,
 });
+
+/** @returns { ResponseErrorContext } */
+const grpcResponseErrorContext = (error) => {
+  const [title, message, debug] = error.rawMessage.split("|");
+  return {
+    code: error.code,
+    title,
+    message,
+    debug,
+  };
+};
 
 /**
  * @param { RestRequestObject } request
@@ -66,7 +79,6 @@ const restRequestContext = (request) => {
   return {
     data: request.data,
     headers: request.headers.common,
-    metadata: request.metadata,
     method,
     name: `${method} ${name}`,
     query: `?${query}`,
@@ -82,16 +94,15 @@ const restRequestContext = (request) => {
 const restResponseContext = (response) => ({
   data: response.data,
   headers: response.headers,
-  metadata: response.metadata,
 });
 
 /**
  *
  * @param {{
- *  onRequest: (data: {requestContext: RequestContext, setHeader: SetRequestHeader }) => RequestContext | undefined
- *  onRequestError: (data: { error: Error, requestContext: RequestContext }) => void
- *  onResponse: (data: { requestContext: RequestContext, responseContext: ResponseContext }) => void
- *  onResponseError: (data: { error: Error, requestContext: RequestContext }) => void
+ *  onRequest: (data: { request: any, requestContext: RequestContext, setHeader: SetRequestHeader }) => RequestContext | undefined
+ *  onRequestError: (data: { error: Error, errorContext: any, requestContext: RequestContext }) => void
+ *  onResponse: (data: { response: any, requestContext: RequestContext, responseContext: ResponseContext }) => void
+ *  onResponseError: (data: { error: Error, errorContext: ResponseErrorContext, requestContext: RequestContext }) => void
  * }}
  * @returns {{
  *  grpc: GrpcInterceptor
@@ -111,15 +122,16 @@ export const createInterceptor = ({
     const requestContext = grpcRequestContext(request);
     const setHeader = (key, value) => request.header.set(key, value);
     try {
-      onRequest?.({ requestContext, setHeader });
+      onRequest?.({ request, requestContext, setHeader });
     } catch (error) {
-      onRequestError?.({ error, requestContext });
+      const errorContext = {};
+      onRequestError?.({ error, errorContext, requestContext });
       throw error;
     }
     try {
       const response = await next(request);
       const responseContext = grpcResponseContext(response);
-      onResponse?.({ requestContext, responseContext });
+      onResponse?.({ response, requestContext, responseContext });
       // TODO - handle stream logging
       // if (res.stream)
       //   return {
@@ -133,7 +145,8 @@ export const createInterceptor = ({
       //   };
       return response;
     } catch (error) {
-      onRequestError?.({ error, requestContext });
+      const errorContext = grpcResponseErrorContext(error);
+      onResponseError?.({ error, errorContext, requestContext });
       throw error;
     }
   },
@@ -142,12 +155,13 @@ export const createInterceptor = ({
       (request) => {
         const requestContext = restRequestContext(request);
         const setHeader = (key, value) => (request.headers.common[key] = value);
-        onRequest?.({ requestContext, setHeader });
+        onRequest?.({ request, requestContext, setHeader });
         return request;
       },
       (error) => {
+        const errorContext = {};
         const requestContext = restRequestContext(error.config);
-        onRequestError?.({ error, requestContext });
+        onRequestError?.({ error, errorContext, requestContext });
         return Promise.reject(error);
       },
     ],
@@ -156,12 +170,13 @@ export const createInterceptor = ({
         const request = response.config;
         const responseContext = restResponseContext(response);
         const requestContext = restRequestContext(request);
-        onResponse?.({ requestContext, responseContext });
+        onResponse?.({ response, requestContext, responseContext });
         return response;
       },
       (error) => {
+        const errorContext = {};
         const requestContext = restRequestContext(error.config);
-        onResponseError?.({ error, requestContext });
+        onResponseError?.({ error, errorContext, requestContext });
         return Promise.reject(error);
       },
     ],

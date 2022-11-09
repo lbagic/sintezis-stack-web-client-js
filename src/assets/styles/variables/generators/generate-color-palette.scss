@@ -1,12 +1,12 @@
-@function generate-color-palette($palette, $variants, $additional) {
-  $output: $additional;
+@function generate-color-palette($palette, $variants) {
+  $output: ();
   @each $base-name, $base-value in $palette {
     $color-map: (
       "base": $base-value,
       "contrast": color-contrast($base-value),
     );
     @each $variant-name, $map in $variants {
-      $variant-value: adjust-color(
+      $variant-value: scale-color(
         $base-value,
         $lightness: map-get($map, "lightness") or 0%,
         $saturation: map-get($map, "saturation") or 0%,
