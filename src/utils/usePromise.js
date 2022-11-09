@@ -26,6 +26,7 @@ export function usePromise(promise) {
     });
   }
   Object.keys(state).forEach(defineProp);
+  state.isPending = true;
   promise
     .then((res) => (state.data = res))
     .catch((err) => (state.error = err))
