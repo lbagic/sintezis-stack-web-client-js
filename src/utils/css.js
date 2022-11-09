@@ -52,5 +52,3 @@ export const css = {
     Object.entries(parsed.breakpoints).map(([k, v]) => [k, parseInt(v)])
   ),
 };
-
-console.log(css);

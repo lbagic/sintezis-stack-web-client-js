@@ -27,8 +27,18 @@ const authInterceptor = createInterceptor({
   },
 });
 
+const transformErrorInterceptor = createInterceptor({
+  onResponseError: ({ error, errorContext }) => {
+    Object.assign(error, { meta: errorContext });
+  },
+});
+
 // TODO - logoutInterceptor
-const interceptors = [authInterceptor, loggingInterceptor];
+const interceptors = [
+  authInterceptor,
+  loggingInterceptor,
+  transformErrorInterceptor,
+];
 
 export const grpcInterceptors = interceptors.map((el) => el.grpc);
 export const restInterceptors = interceptors.map((el) => el.rest);
