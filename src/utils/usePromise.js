@@ -2,20 +2,24 @@ import { reactive } from "vue";
 
 /**
  * @type { <T extends PromiseLike<any>>(promise: T) => T & {
- *  error: any
  *  data: Awaited<T>
+ *  error: any
+ *  isFulfilled: boolean
  *  isPending: boolean
+ *  isRejected: boolean
  *  isSettled: boolean
  * }}
  * */
 export function usePromise(promise) {
   const state = reactive({
-    error: undefined,
     data: undefined,
-    isPending: false,
+    error: undefined,
+    isFulfilled: false,
+    isPending: true,
+    isRejected: false,
     isSettled: false,
   });
-  function defineProp(prop) {
+  Object.keys(state).forEach((prop) =>
     Object.defineProperty(promise, prop, {
       get() {
         return state[prop];
@@ -23,14 +27,19 @@ export function usePromise(promise) {
       set(value) {
         state[prop] = value;
       },
-    });
-  }
-  Object.keys(state).forEach(defineProp);
-  state.isPending = true;
+    })
+  );
+
   promise
-    .then((res) => (state.data = res))
-    .catch((err) => (state.error = err))
-    .finally(() => {
+    .then((res) => {
+      state.data = res;
+      state.isFulfilled = true;
+      state.isPending = false;
+      state.isSettled = true;
+    })
+    .catch((err) => {
+      state.error = err;
+      state.isRejected = true;
       state.isPending = false;
       state.isSettled = true;
     });
