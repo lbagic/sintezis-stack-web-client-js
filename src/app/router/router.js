@@ -1,4 +1,4 @@
-import { useAuthStore } from "@/modules/auth/authStore";
+import { useAccountStore } from "@/modules/account/accountStore";
 import { appName } from "@/app/setup";
 import { createRouter, createWebHistory } from "vue-router";
 import { routes as webClientRoutes } from "@/routes";
@@ -20,7 +20,7 @@ router.beforeEach((to, from, next) => {
   router.referrer = from;
 
   document.title = to.matched.reduce((a, c) => c.meta.title ?? a, appName);
-  const { roles, isLoggedIn } = useAuthStore();
+  const { roles, isLoggedIn } = useAccountStore();
   const isFound = to.matched.length;
   const isAuthorized = to.matched.every(
     (route) => route.meta.authorize?.({ roles, isLoggedIn }) ?? true

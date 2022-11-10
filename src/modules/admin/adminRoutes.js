@@ -1,15 +1,12 @@
-import { authRoutes } from "../auth/authRoutes";
-
 /** @type { import("vue-router").RouteRecordRaw[] } */
 export const adminRoutes = [
-  ...authRoutes,
   {
     path: "/",
-    component: () => import("./views/IndexView.vue"),
+    component: () => import("./views/AdminIndexView.vue"),
     children: [
       {
         path: "",
-        component: () => import("./views/DashboardView.vue"),
+        component: () => import("./views/AdminDashboardView.vue"),
         meta: {
           title: "Dashboard",
         },

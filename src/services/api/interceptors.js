@@ -1,5 +1,5 @@
 import { createInterceptor } from "./base/interceptorFactory";
-import { useAuthStore } from "@/modules/auth/authStore";
+import { useAccountStore } from "@/modules/account/accountStore";
 
 const loggingInterceptor = createInterceptor({
   onResponse: ({ requestContext, responseContext }) =>
@@ -22,7 +22,7 @@ const loggingInterceptor = createInterceptor({
 
 const authInterceptor = createInterceptor({
   onRequest({ setHeader }) {
-    const token = useAuthStore().token;
+    const { token } = useAccountStore();
     if (token) setHeader("Authorization", `Bearer ${token}`);
   },
 });

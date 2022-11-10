@@ -1,5 +1,5 @@
 import { adminRoutes } from "./modules/admin/adminRoutes";
-import { authRoutes } from "./modules/auth/authRoutes";
+import { accountRoutes } from "./modules/account/accountRoutes";
 import { testRoutes } from "./modules/test/testRoutes";
 
 /**
@@ -8,7 +8,7 @@ import { testRoutes } from "./modules/test/testRoutes";
  */
 export const routes = [
   // Import module routes
-  ...authRoutes,
+  ...accountRoutes,
   ...adminRoutes,
 ];
 
