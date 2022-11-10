@@ -1,5 +1,5 @@
-import { translate } from "../../app/plugins/i18n";
-import { messages } from "../../app/translations/messages";
+import { translate } from "@/app/plugins/i18n";
+import { messages } from "@/app/translations/messages";
 
 /**
  * @typedef { import("./input.ctl").InputContext } InputContext

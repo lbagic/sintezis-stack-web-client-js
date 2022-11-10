@@ -1,7 +1,7 @@
 import "./init";
 
 import { i18nPlugin } from "./plugins/i18n";
-import { router } from "./router/router.js";
+import { router } from "./router/router";
 import { setupAdmin } from "./setup.admin";
 import { pinia } from "./store/store.js";
 
