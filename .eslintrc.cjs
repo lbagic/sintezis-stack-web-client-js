@@ -25,6 +25,8 @@ module.exports = {
     "jsdoc/require-returns": 0,
     "jsdoc/require-returns-description": 0,
     "jsdoc/valid-types": 0,
+    //
+    "jsdoc/check-line-alignment": 1,
   },
   ignorePatterns: ["**/*.d.ts"],
   settings: {

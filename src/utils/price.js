@@ -6,7 +6,7 @@
  *  currency?: string
  *  locale?: string
  * }} options Format price options.
- * @returns { string }  Returns formatted price.
+ * @returns { string } Returns formatted price.
  */
 
 export function formatPrice(price, options = undefined) {
