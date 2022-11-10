@@ -1,6 +1,6 @@
 import { createApp } from "vue";
 import App from "./App.vue";
-import { setup } from "./setup";
+import { setup } from "./app/setup";
 
 const app = createApp(App);
 setup(app);

@@ -1,13 +1,13 @@
-<template>
-  <div class="app-line" :data-type="type" :data-direction="direction"></div>
-</template>
-
 <script setup>
 defineProps({
   direction: { type: String, default: "horizontal" },
   type: { type: String, default: "solid" },
 });
 </script>
+
+<template>
+  <div class="app-line" :data-type="type" :data-direction="direction"></div>
+</template>
 
 <style scoped lang="scss">
 .app-line[data-type="solid"],

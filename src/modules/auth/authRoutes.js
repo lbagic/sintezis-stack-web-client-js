@@ -2,7 +2,7 @@
 export const authRoutes = [
   {
     path: "/login",
-    component: () => import("./views/AuthLoginView.vue"),
+    component: () => import("./views/LoginView.vue"),
     meta: {
       title: "Log In",
       authorize: ({ isLoggedIn }) => !isLoggedIn,
@@ -10,7 +10,7 @@ export const authRoutes = [
   },
   {
     path: "/register",
-    component: () => import("./views/AuthRegisterView.vue"),
+    component: () => import("./views/RegisterView.vue"),
     meta: {
       title: "Register",
       authorize: ({ isLoggedIn }) => !isLoggedIn,

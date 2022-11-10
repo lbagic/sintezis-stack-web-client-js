@@ -3,6 +3,7 @@
 
 interface ImportMetaEnv {
   // Sintezis
+  readonly VITE_ADMIN_PANEL: string
   readonly VITE_SNT_API_URL: string
   readonly VITE_SNT_GRPC_URL: string
   readonly VITE_SNT_HASH: string
