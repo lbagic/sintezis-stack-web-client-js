@@ -1,13 +1,13 @@
-const secretKey = window.atob(import.meta.env.VITE_SNT_HASH);
+const salt = import.meta.env.VITE_SNT_HASH;
 
 export const createHash = async (string) => {
-  const secret = secretKey; // the secret key
+  if (!salt) return string;
   const enc = new TextEncoder("utf-8");
   const algorithm = { name: "HMAC", hash: "SHA-256" };
 
   const key = await crypto.subtle.importKey(
     "raw",
-    enc.encode(secret),
+    enc.encode(salt),
     algorithm,
     false,
     ["sign"]

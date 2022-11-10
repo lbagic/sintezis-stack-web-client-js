@@ -3,9 +3,7 @@ import { createGrpcPromiseClient } from "./base/grpcClientFactory";
 import { grpcInterceptors } from "./interceptors";
 
 export const grpc = createGrpcPromiseClient({
-  services: {
-    GatewayController,
-  },
+  services: { GatewayController },
   baseUrl: import.meta.env.VITE_SNT_GRPC_URL,
   interceptors: grpcInterceptors,
-});
+}).GatewayController;

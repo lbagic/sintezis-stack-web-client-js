@@ -1,4 +1,4 @@
-import { ROLES } from "../enums/ROLES"
+import { ROLES } from "../../enums/ROLES"
 
 declare module 'vue-router' {
   interface RouteMeta {
