@@ -16,9 +16,9 @@ const parsed = parseJson(rawCSS.JSON);
 
 /**
  * Color definitions
- * @typedef { primary | secondary | success | info | warning | danger | light | grey | dark  } ColorNames
- * @typedef { base | contrast | opaque | light | lighter | lightest | max-light | dark | darker | darkest | max-dark } ColorVariants
- * @typedef { text | background } SolidColorNames
+ * @typedef { "primary" | "secondary" | "success" | "info" | "warning" | "danger" | "light" | "grey" | "dark"  } ColorNames
+ * @typedef { "base" | "contrast" | "opaque" | "light" | "lighter" | "lightest" | "max-light" | "dark" | "darker" | "darkest" | "max-dark" } ColorVariants
+ * @typedef { "text" | "background" } SolidColorNames
  * 
  * @typedef { Record<ColorNames, ColorVariants> } PaletteColors
  * @typedef { Record<SolidColorNames, string> } SolidColors

@@ -4,10 +4,11 @@ require("@rushstack/eslint-patch/modern-module-resolution");
 module.exports = {
   root: true,
   extends: [
-    "plugin:vue/vue3-essential",
-    "eslint:recommended",
     "@vue/eslint-config-prettier",
+    "eslint:recommended",
+    "plugin:vue/vue3-essential",
   ],
+  plugins: ["jsdoc"],
   globals: {
     $ref: "readonly",
     $computed: "readonly",
@@ -17,5 +18,13 @@ module.exports = {
     $: "readonly",
     $$: "readonly",
   },
+  rules: {
+    "jsdoc/no-undefined-types": 1,
+  },
   ignorePatterns: ["**/*.d.ts"],
+  settings: {
+    jsdoc: {
+      mode: "typescript",
+    },
+  },
 };

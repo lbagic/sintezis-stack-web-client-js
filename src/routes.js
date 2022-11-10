@@ -4,6 +4,7 @@ import { testRoutes } from "./modules/test/testRoutes";
 
 /**
  * VueRouter routes.
+ *
  * @type {import("vue-router").RouteRecordRaw[]}
  */
 export const routes = [

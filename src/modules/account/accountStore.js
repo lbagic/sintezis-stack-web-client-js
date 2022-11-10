@@ -1,10 +1,11 @@
+import { User } from "@/gen/user_pb";
 import { defineStore } from "pinia";
 
 export const useAccountStore = defineStore({
   id: "account",
   state: () => ({
     token: "",
-    /** @type { import("@/gen/user_pb").User } */
+    /** @type { User } */
     user: undefined,
   }),
   getters: {

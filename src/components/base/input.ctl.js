@@ -1,6 +1,7 @@
 import { computed, reactive } from "vue";
 import { inputValidation } from "./input.validation";
 import DateInput from "./DateInput.vue";
+import DateInputVue from "./DateInput.vue";
 
 const settings = {
   useErrorMessage: true,
@@ -11,9 +12,9 @@ const settings = {
 };
 
 /**
- * @typedef { 'top' | 'right' | 'bottom' | 'left' } labelPosition
- * @typedef { 'input' | 'textarea' | 'select' | typeof flatPickr } ComponentType
- * @typedef { 'onInput' | 'onChange' | 'onBlur' | 'onFocus' } EventNames
+ * @typedef { "top" | "right" | "bottom" | "left" } labelPosition
+ * @typedef { "input" | "textarea" | "select" | typeof DateInputVue } ComponentType
+ * @typedef { "onInput" | "onChange" | "onBlur" | "onFocus" } EventNames
  * @typedef { { target: HTMLInputElement } } InputEvent
  * @typedef {{
  *  attrs: Record<string, any>
@@ -25,8 +26,6 @@ const settings = {
  *  isRequired: boolean,
  *  setClass: (className: string) => string
  * }} InputContext
- *
- *
  * @typedef {{
  *  attrs: { type?: string }
  *  attrsFactory?: <T>(ctx: InputContext) => T
@@ -40,9 +39,10 @@ const settings = {
  *  supportOptions: boolean
  *  supportDropzone: boolean
  * }} ComponentConfig
+ * @typedef { import("flatpickr/dist/types/options").Options } FlatpickrOptions
  * */
 
-/** @type { (ctx: InputContext, options: FPOpts) => Record<string, any> } */
+/** @type { (ctx: InputContext, options: FlatpickrOptions) => Record<string, any> } */
 const createFlatpickrConfig = ({ attrs }, componentConfig = {}) => {
   const config = {
     position: "auto center",

@@ -1,5 +1,6 @@
 /**
- * Request/Response context types
+ * Context types
+ *
  * @typedef {{
  *  data: any
  *  headers: Record<string, string>
@@ -19,22 +20,27 @@
  *  message: string
  *  debug: string
  * }} ResponseErrorContext
+ */
+
+/**
+ * Request and response types
  *
- * Request/Response types
  * @typedef { import("@bufbuild/connect-web").UnaryRequest<import("@bufbuild/protobuf").AnyMessage> } GrpcRequestObject
  * @typedef { import("@bufbuild/connect-web").UnaryResponse<import("@bufbuild/protobuf").AnyMessage> | import("@bufbuild/connect-web").StreamResponse<import("@bufbuild/protobuf").AnyMessage> } GrpcResponseObject
  * @typedef { import("axios").AxiosRequestConfig<any> } RestRequestObject
  * @typedef { import("axios").AxiosRequestConfig<any> } RestResponseObject
- * @typedef { (key: string, value: string) => void } SetRequestHeader
- *
- * Interceptor types
+ */
+
+/**
  * @typedef { [(value: RestRequestObject) => RestRequestObject, (error: any) => any] } RestRequstInterceptor
  * @typedef { [(value: RestResponseObject) => RestResponseObject, (error: any) => any] } RestResponseInterceptor
  * @typedef {{ request: RestRequstInterceptor, response: RestResponseInterceptor }} RestInterceptor
  * @typedef { import("@bufbuild/connect-web").Interceptor } GrpcInterceptor
- * */
+ */
 
 /**
+ * Create request context for grpc request
+ *
  * @param { GrpcRequestObject } request
  * @returns { RequestContext }
  */
@@ -49,6 +55,8 @@ const grpcRequestContext = (request) => ({
 });
 
 /**
+ * Create response context for grpc response
+ *
  * @param { GrpcResponseObject } response
  * @returns { ResponseContext }
  */
@@ -57,7 +65,12 @@ const grpcResponseContext = (response) => ({
   headers: Object.fromEntries(response.header.entries()),
 });
 
-/** @returns { ResponseErrorContext } */
+/**
+ * Create response error context for grpc response error
+ *
+ * @param { Error } error
+ * @returns { ResponseErrorContext }
+ */
 const grpcResponseErrorContext = (error) => {
   const [title, message, debug] = error.rawMessage.split("|");
   return {
@@ -69,6 +82,8 @@ const grpcResponseErrorContext = (error) => {
 };
 
 /**
+ * Create request context for axios request
+ *
  * @param { RestRequestObject } request
  * @returns { RequestContext }
  */
@@ -88,6 +103,8 @@ const restRequestContext = (request) => {
 };
 
 /**
+ * Create response context for axios response
+ *
  * @param { RestResponseObject } response
  * @returns { ResponseContext }
  */
@@ -97,13 +114,14 @@ const restResponseContext = (response) => ({
 });
 
 /**
+ * Create call interceptor
  *
  * @param {{
- *  onRequest: (data: { request: any, requestContext: RequestContext, setHeader: SetRequestHeader }) => RequestContext | undefined
+ *  onRequest: (data: { request: any, requestContext: RequestContext, setHeader: (key: string, value: string) => void }) => RequestContext | undefined
  *  onRequestError: (data: { error: Error, errorContext: any, requestContext: RequestContext }) => void
  *  onResponse: (data: { response: any, requestContext: RequestContext, responseContext: ResponseContext }) => void
  *  onResponseError: (data: { error: Error, errorContext: ResponseErrorContext, requestContext: RequestContext }) => void
- * }}
+ * }} config
  * @returns {{
  *  grpc: GrpcInterceptor
  *  rest: {
