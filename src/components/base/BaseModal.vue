@@ -5,7 +5,7 @@ export default {
 </script>
 
 <script setup>
-import { onClickOutside } from "@vueuse/core";
+import { onClickOutside, useCssVar } from "@vueuse/core";
 import { useFocusTrap } from "@vueuse/integrations/useFocusTrap";
 import {
   getCurrentInstance,
@@ -38,15 +38,13 @@ const props = defineProps({
 if (!props.name && !props.hash && !props.query) {
   const instance = getCurrentInstance();
   throw new Error(
-    `${instance.type.__name} in "${instance.parent.type.__name}" must have at least one identifier prop: name, hash or query.`
+    `${instance.type.__name} in "${instance.parent.type.__name}" must have at least one identifier prop: "name", "hash" or "query".`
   );
 }
 
-const getCssVar = (name) =>
-  getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-const prefix = getCssVar("--prefix");
+const prefix = useCssVar("--prefix").value;
 const colorNames = Object.keys(css.colors);
-const baseZIndex = Number(getCssVar(`--${prefix}z-index-modal`));
+const baseZIndex = Number(useCssVar(`--${prefix}z-index-modal`).value);
 
 const refs = {
   modal: ref(),

@@ -215,7 +215,7 @@ export const _inputCtl = {
  * Generates reactive form data.
  *
  * @template T
- * @param { T } properties Decsripton.
+ * @param { T } properties
  * @returns {{
  *   data: T;
  *   model: Record<keyof T, { value: any, valid: boolean, error: string | null, dirty: boolean }>

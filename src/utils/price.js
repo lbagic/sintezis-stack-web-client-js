@@ -1,14 +1,13 @@
 /**
- * @param { number } price Price.
- * @param {{
+ * @typedef {{
  *  useFractions?: boolean
  *  fractionDigits?: number
  *  currency?: string
  *  locale?: string
- * }} options Format price options.
- * @returns { string } Returns formatted price.
+ * }} FormatPriceOptions
  */
 
+/** @type { (price: number, options: FormatPriceOptions) => string } */
 export function formatPrice(price, options = undefined) {
   const fractionDigits = options?.useFractions
     ? options?.fractionDigits ?? 2

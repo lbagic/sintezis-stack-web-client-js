@@ -19,14 +19,14 @@ module.exports = {
     $$: "readonly",
   },
   rules: {
+    "jsdoc/check-line-alignment": 1,
     "jsdoc/no-undefined-types": 1,
     "jsdoc/require-jsdoc": 0,
+    "jsdoc/require-param": 0,
     "jsdoc/require-param-description": 0,
     "jsdoc/require-returns": 0,
     "jsdoc/require-returns-description": 0,
     "jsdoc/valid-types": 0,
-    //
-    "jsdoc/check-line-alignment": 1,
   },
   ignorePatterns: ["**/*.d.ts"],
   settings: {

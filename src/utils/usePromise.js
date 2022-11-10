@@ -1,7 +1,8 @@
 import { reactive } from "vue";
 
 /**
- * @type { <T extends PromiseLike<any>>(promise: T) => T & {
+ * @type { <T extends PromiseLike<any>>(promise: T) =>
+ * T & {
  *  data: Awaited<T>
  *  error: any
  *  isFulfilled: boolean
