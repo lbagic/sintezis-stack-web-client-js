@@ -47,7 +47,7 @@ async function login() {
           class="snt-button primary expand small"
           style="margin-top: 1rem"
           @click="login"
-          :disabled="!form.isValid || isLoading"
+          :disabled="!form.isValid"
         >
           Submit
         </button>
