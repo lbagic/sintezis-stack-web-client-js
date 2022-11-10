@@ -40,7 +40,7 @@ const settings = {
  *  supportDropzone: boolean
  * }} ComponentConfig
  * @typedef { import("flatpickr/dist/types/options").Options } FlatpickrOptions
- * */
+ */
 
 /** @type { (ctx: InputContext, options: FlatpickrOptions) => Record<string, any> } */
 const createFlatpickrConfig = ({ attrs }, componentConfig = {}) => {

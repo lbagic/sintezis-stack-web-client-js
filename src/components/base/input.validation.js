@@ -9,7 +9,7 @@ import { messages } from "@/app/translations/messages";
  *  parse?: (text: string, ctx: InputContext) => string
  *  check: (ctx: InputContext) => boolean
  * }} HtmlErrorConfig
- * */
+ */
 
 /** @type { Record<HtmlErrorKeys, HtmlErrorConfig> } */
 const errorMap = {

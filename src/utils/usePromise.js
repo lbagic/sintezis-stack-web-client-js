@@ -9,7 +9,7 @@ import { reactive } from "vue";
  *  isRejected: boolean
  *  isSettled: boolean
  * }}
- * */
+ */
 export function usePromise(promise) {
   const state = reactive({
     data: undefined,

@@ -13,20 +13,18 @@ import { reactive, watch } from "vue";
  *  disableCloseOnEsc: boolean,
  *  disableClose: boolean,
  * }> } ModalProps
- *
  * @typedef {{
  *  isOpen: boolean,
  *  isPaused: boolean,
  *  zIndex: number,
  * }} ModalState
- *
  * @typedef {{
  *  state: ModalState
  *  props: ModalProps
  *  open: () => void
  *  close: () => void
  * }} ModalCtl
- * */
+ */
 
 /**
  * @type {{

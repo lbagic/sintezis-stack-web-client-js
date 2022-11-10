@@ -6,9 +6,9 @@ module.exports = {
   extends: [
     "@vue/eslint-config-prettier",
     "eslint:recommended",
+    "plugin:jsdoc/recommended",
     "plugin:vue/vue3-essential",
   ],
-  plugins: ["jsdoc"],
   globals: {
     $ref: "readonly",
     $computed: "readonly",
@@ -20,6 +20,11 @@ module.exports = {
   },
   rules: {
     "jsdoc/no-undefined-types": 1,
+    "jsdoc/require-jsdoc": 0,
+    "jsdoc/require-param-description": 0,
+    "jsdoc/require-returns": 0,
+    "jsdoc/require-returns-description": 0,
+    "jsdoc/valid-types": 0,
   },
   ignorePatterns: ["**/*.d.ts"],
   settings: {
