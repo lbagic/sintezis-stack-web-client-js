@@ -25,7 +25,7 @@ async function login() {
 </script>
 
 <template>
-  <div class="snt-container snt-flex center h-1-1">
+  <div class="snt-container snt-flex center h-full">
     <BaseModal name="asdf" />
     <form @submit.prevent class="snt-container-s">
       <fieldset class="snt-card primary snt-grid">

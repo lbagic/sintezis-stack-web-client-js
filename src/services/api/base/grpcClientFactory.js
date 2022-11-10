@@ -14,10 +14,7 @@ import {
  */
 
 /**
- * @type {
- * <T extends Services>(options: ConnectTransportOptions & { services: T }) =>
- *  { [K in keyof T]: PromiseClient<T[K]> }
- * }
+ * @type { <T extends Services>(options: ConnectTransportOptions & { services: T }) => { [K in keyof T]: PromiseClient<T[K]> } }
  */
 export function createGrpcPromiseClient({ services, ...options }) {
   return Object.fromEntries(
