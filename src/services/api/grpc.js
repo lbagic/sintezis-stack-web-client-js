@@ -4,6 +4,7 @@ import { grpcInterceptors } from "./interceptors";
 
 export const grpc = createGrpcPromiseClient({
   services: { GatewayController },
+  useEnvoyProxy: true,
   baseUrl: import.meta.env.VITE_SNT_GRPC_URL,
   interceptors: grpcInterceptors,
 }).GatewayController;

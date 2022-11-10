@@ -25,13 +25,9 @@ Generate proto files:
 make proto
 ```
 
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
 ## Setup local development
 
-Install recommended extensions:
+Install required extensions:
 
 - volar: https://marketplace.visualstudio.com/items?itemName=Vue.volar
 - type support: https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin
@@ -61,3 +57,7 @@ npm run dev
 ```sh
 npm run build
 ```
+
+## Customize configuration
+
+See [Vite Configuration Reference](https://vitejs.dev/config/).

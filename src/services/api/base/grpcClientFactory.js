@@ -1,5 +1,6 @@
 import {
   createConnectTransport,
+  createGrpcWebTransport,
   createPromiseClient,
 } from "@bufbuild/connect-web";
 
@@ -13,12 +14,19 @@ import {
  * @typedef { import("@bufbuild/connect-web").PromiseClient<T> } PromiseClient
  * */
 
-/** @type { <T extends Services>(options: ConnectTransportOptions & { services: T }) => Record<keyof T, PromiseClient<T[keyof T]>> } */
-export function createGrpcPromiseClient({ services, ...options }) {
+/** @type { <T extends Services>(options: ConnectTransportOptions & { services: T, useEnvoyProxy: boolean }) => Record<keyof T, PromiseClient<T[keyof T]>> } */
+export function createGrpcPromiseClient({
+  services,
+  useEnvoyProxy,
+  ...options
+}) {
+  const transport = useEnvoyProxy
+    ? createGrpcWebTransport
+    : createConnectTransport;
   return Object.fromEntries(
     Object.entries(services).map(([serviceName, service]) => [
       serviceName,
-      createPromiseClient(service, createConnectTransport(options)),
+      createPromiseClient(service, transport(options)),
     ])
   );
 }
