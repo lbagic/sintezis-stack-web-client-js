@@ -1,4 +1,10 @@
 {
+  // -------------------------- QOL --------------------------
+  "emmet.includeLanguages": {
+    "vue-html": "html",
+    "vue": "html"
+  },
+  "emmet.triggerExpansionOnTab": true,
   // -------------------------- FORMATTER --------------------------
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.detectIndentation": false,
