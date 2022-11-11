@@ -8,4 +8,5 @@
   @include generate-css-variables($breakpoints, "breakpoint");
   @include generate-css-variables($colors, "color");
   @include generate-css-variables($z-index, "z-index");
+  @include generate-css-variables($shadows, "shadow");
 }

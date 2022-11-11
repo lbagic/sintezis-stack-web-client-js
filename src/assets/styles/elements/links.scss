@@ -34,9 +34,6 @@
         &:focus:not(:focus-visible) {
           color: var(--base-color);
         }
-        &:hover:nth-child(n) {
-          color: var(--accent-color);
-        }
         &:active:nth-child(n) {
           color: var(--base-color);
         }
