@@ -1,5 +1,7 @@
 import { createPinia } from "pinia";
 import { createPersistedState } from "pinia-plugin-persistedstate";
+import { markRaw } from "vue";
+import { router } from "../router/router";
 
 export const pinia = createPinia();
 
@@ -13,6 +15,9 @@ pinia.use(
     },
   })
 );
+
+// Add router to the store
+pinia.use(({ store }) => (store.$router = markRaw(router)));
 
 // Reset plugin
 pinia.use(({ store, options }) => {

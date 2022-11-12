@@ -2,7 +2,7 @@
 
 <template>
   <div class="snt-container">
-    <p>AdminDashboardView</p>
+    <p>AdminCrudView</p>
   </div>
 </template>
 

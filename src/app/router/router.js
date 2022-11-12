@@ -10,8 +10,9 @@ export const router = createRouter({
   routes: import.meta.env.VITE_ADMIN_PANEL ? webAdminRoutes : webClientRoutes,
 });
 
-const fallbackRoutes = {
-  notAuthorized: "/login",
+const fallback = {
+  userOnly: "/",
+  visitorOnly: "/login",
   notFound: "/",
 };
 
@@ -27,8 +28,10 @@ router.beforeEach((to, from, next) => {
   );
 
   return !isFound
-    ? next(previousRoute ? false : fallbackRoutes.notFound)
-    : !isAuthorized
-    ? next(previousRoute ? false : fallbackRoutes.notAuthorized)
+    ? next(previousRoute ? false : fallback.notFound)
+    : !isAuthorized && isLoggedIn
+    ? next(previousRoute ? false : fallback.userOnly)
+    : !isAuthorized && !isLoggedIn
+    ? next(previousRoute ? false : fallback.visitorOnly)
     : next();
 });

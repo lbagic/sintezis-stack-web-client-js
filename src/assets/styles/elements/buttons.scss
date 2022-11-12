@@ -9,7 +9,7 @@
   justify-content: center;
   min-height: var(--height);
   opacity: 1;
-  outline-color: transparent !important;
+  // outline-color: transparent !important;
   padding: var(--padding-y) var(--padding-x);
   line-height: calc(var(--font-size) + var(--height) - var(--padding-y) / 2);
   transition-duration: 0.15s;
@@ -35,6 +35,9 @@
   }
   &.expand {
     width: 100%;
+  }
+  &.rounded {
+    border-radius: 4px;
   }
 }
 

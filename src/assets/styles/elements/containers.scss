@@ -56,6 +56,12 @@
     align-items: center;
     justify-content: center;
   }
+  &.equals {
+    & > * {
+      flex-basis: 0;
+      flex-grow: 1;
+    }
+  }
 }
 .#{$prefix}flex-wrap {
   @extend %#{$prefix}flexbox-gap-sizes;

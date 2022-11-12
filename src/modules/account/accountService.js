@@ -5,12 +5,10 @@ import { useAccountStore } from "./accountStore";
 export const accountService = {
   login: async ({ email, password }) => {
     password = await createHash(password);
-    const promise = grpc.AccountService.login({ email, password });
-    promise.then(({ token, user }) => {
-      const accountStore = useAccountStore();
-      accountStore.token = token;
-      accountStore.user = user;
-    });
-    return promise;
+    const response = await grpc.AccountService.login({ email, password });
+    const accountStore = useAccountStore();
+    accountStore.token = response.token;
+    accountStore.user = response.user;
+    return response;
   },
 };

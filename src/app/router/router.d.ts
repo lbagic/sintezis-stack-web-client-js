@@ -5,6 +5,9 @@ declare module 'vue-router' {
     title: string
     authorize: (options: { roles: typeof ROLES.values, isLoggedIn: boolean }) => boolean
   }
+  interface Router {
+    referrer: RouteLocationNormalizedLoaded
+  }
 }
 
 export {}

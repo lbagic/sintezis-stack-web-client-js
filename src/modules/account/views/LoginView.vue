@@ -1,6 +1,5 @@
 <script setup>
 import BaseInput from "@/components/base/BaseInput.vue";
-import BaseModal from "@/components/base/BaseModal.vue";
 import { useFormData } from "@/components/base/input.ctl";
 import { toast } from "@/components/base/toast.ctl";
 import { useRouter } from "vue-router";
@@ -26,7 +25,6 @@ async function login() {
 
 <template>
   <div class="snt-container snt-flex center h-full">
-    <BaseModal name="asdf" />
     <form @submit.prevent class="snt-container-s">
       <fieldset class="snt-card primary snt-grid">
         <legend>Login</legend>
@@ -35,6 +33,7 @@ async function login() {
           type="email"
           label="Email"
           name="username"
+          autocomplete="username"
           v-model="form.model.email"
         />
         <BaseInput
@@ -42,6 +41,7 @@ async function login() {
           type="password"
           label="Password"
           name="password"
+          autocomplete="password"
           v-model="form.model.password"
           minlength="8"
         />

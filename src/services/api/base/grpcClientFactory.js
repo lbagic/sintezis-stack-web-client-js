@@ -1,5 +1,5 @@
 import {
-  createConnectTransport,
+  createGrpcWebTransport,
   createPromiseClient,
 } from "@bufbuild/connect-web";
 
@@ -20,7 +20,7 @@ export function createGrpcPromiseClient({ services, ...options }) {
   return Object.fromEntries(
     Object.entries(services).map(([serviceName, service]) => [
       serviceName,
-      createPromiseClient(service, createConnectTransport(options)),
+      createPromiseClient(service, createGrpcWebTransport(options)),
     ])
   );
 }

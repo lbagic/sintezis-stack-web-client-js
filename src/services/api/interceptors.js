@@ -22,8 +22,9 @@ const loggingInterceptor = createInterceptor({
 
 const authInterceptor = createInterceptor({
   onRequest({ setHeader }) {
-    const { token } = useAccountStore();
-    if (token) setHeader("Authorization", `Bearer ${token}`);
+    const accountStore = useAccountStore();
+    if (accountStore.token)
+      setHeader("Authorization", `Bearer ${accountStore.token}`);
   },
 });
 
@@ -32,12 +33,19 @@ const transformErrorInterceptor = createInterceptor({
     Object.assign(error, { meta: errorContext });
   },
 });
+const transformResponseInterceptor = createInterceptor({
+  onResponse: ({ response }) => {
+    if (response?.message?.toJson)
+      response.message = response.message?.toJson();
+  },
+});
 
 // TODO - logoutInterceptor
 const interceptors = [
   authInterceptor,
   loggingInterceptor,
   transformErrorInterceptor,
+  transformResponseInterceptor,
 ];
 
 export const grpcInterceptors = interceptors.map((el) => el.grpc);

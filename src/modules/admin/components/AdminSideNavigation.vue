@@ -1,0 +1,42 @@
+<script setup>
+import { adminServices } from "../adminServices";
+import { adminState } from "../adminState";
+</script>
+
+<template>
+  <Transition name="transition">
+    <aside class="admin-side-nav" v-if="adminState.sideNavOpen">
+      <ul class="snt-grid snt-container">
+        <li v-for="service in adminServices" :key="service.name">
+          <RouterLink
+            :to="`/crud/${service.name}`"
+            class="snt-flex snt-link dark"
+            style="display: inline-flex"
+          >
+            <component height="100%" width="20px" :is="service.icon" />
+            <p>{{ service.displayName }}</p>
+          </RouterLink>
+        </li>
+      </ul>
+    </aside>
+  </Transition>
+</template>
+
+<style scoped lang="scss">
+.admin-side-nav {
+  width: 150px;
+  overflow-y: scroll;
+  background: linear-gradient(
+    120deg,
+    var(--snt-color-primary-lightest) 0%,
+    var(--snt-color-primary-max-light) 100%
+  );
+  box-shadow: var(--snt-shadow-3);
+}
+.transition {
+  @include transition(all 0.4s cubic-bezier(0.8, 0.4, 0.2, 0.8)) {
+    opacity: 0;
+    width: 0px;
+  }
+}
+</style>

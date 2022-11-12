@@ -58,7 +58,6 @@
         max-width: min($size, 100% - var(--modal-padding));
       }
     }
-    min-height: 300px;
     max-height: calc(100% - 32px);
     border-width: 1px;
     border-style: solid;
@@ -77,7 +76,7 @@
 .#{$prefix}modal-close-button {
   position: sticky;
   float: right;
-  top: 0;
+  top: calc(-0.5 * var(--modal-padding));
   margin: calc(-0.5 * var(--modal-padding));
   cursor: pointer;
   &::after {
