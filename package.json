@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@bufbuild/connect-web": "^0.3.1",
-    "@bufbuild/protobuf": "^0.1.1",
+    "@bufbuild/protobuf": "^0.2.1",
     "@lbagic/collections": "^1.0.3",
     "@vespaiach/axios-fetch-adapter": "^0.3.1",
     "@vueuse/core": "^8.9.4",
