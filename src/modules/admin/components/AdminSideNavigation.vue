@@ -1,11 +1,13 @@
 <script setup>
 import { adminServices } from "../adminServices";
-import { adminState } from "../adminState";
+import { useAdminStore } from "../adminStore";
+
+const adminStore = useAdminStore();
 </script>
 
 <template>
   <Transition name="transition">
-    <aside class="admin-side-nav" v-if="adminState.sideNavOpen">
+    <aside class="admin-side-nav" v-if="adminStore.showSideNav">
       <ul class="snt-grid snt-container">
         <li v-for="service in adminServices" :key="service.name">
           <RouterLink

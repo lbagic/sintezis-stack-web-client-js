@@ -1,10 +1,6 @@
 <script setup>
-import { onMounted } from "vue";
-import { adminState } from "../adminState";
 import AdminNavigation from "../components/AdminNavigation.vue";
 import AdminSideNavigation from "../components/AdminSideNavigation.vue";
-
-onMounted(() => (adminState.sideNavOpen = true));
 </script>
 
 <template>

@@ -4,8 +4,10 @@ import { modal } from "@/components/base/modal.ctl";
 import { useAccountStore } from "@/modules/account/accountStore";
 import { breakpoint } from "@/utils/breakpoint";
 import { useRoute } from "vue-router";
-import { adminState } from "../adminState";
+import { useAdminStore } from "../adminStore";
 import AdminIconPower from "./icons/AdminIconPower.vue";
+
+const adminStore = useAdminStore();
 const route = useRoute();
 const breadcrumbs = $computed(() => {
   const list = [];
@@ -23,8 +25,8 @@ const isSmallScreen = breakpoint.smaller("s");
   <nav class="admin-nav snt-container snt-flex">
     <button
       class="admin-nav-burger"
-      :data-active="adminState.sideNavOpen"
-      @click="adminState.sideNavOpen = !adminState.sideNavOpen"
+      :data-active="adminStore.showSideNav"
+      @click="adminStore.showSideNav = !adminStore.showSideNav"
     >
       <div></div>
       <div></div>
