@@ -29,11 +29,11 @@ import { markRaw } from "vue";
  *  service: Service,
  *  usePagination: boolean,
  *  usePaginationOverride: boolean,
- * }} ServiceFactory
+ * }} ResourceFactory
  */
 
-/** @type { ServiceFactory } */
-export const createService = (config) => {
+/** @type { ResourceFactory } */
+export const createResource = (config) => {
   /** @type { import('@bufbuild/protobuf').MessageType<any> } */
   const entity = config.entity;
   const entityFields = entity.fields.list();

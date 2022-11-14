@@ -1,9 +1,9 @@
 import { AirlinesResponse } from "@/gen/proto/location/location_response_pb";
 import { Airline } from "@/gen/proto/models/airline_pb";
 import { grpc } from "@/services/api/grpc";
-import { createService } from "./base/serviceFactory";
+import { createResource } from "./base/resourceFactory";
 
-export const AirlineService = createService({
+export const airlineResource = createResource({
   entity: Airline,
   service: grpc.AirlineService,
   mapDisplayFields: (obj) => ({

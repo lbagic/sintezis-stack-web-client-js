@@ -1,5 +1,5 @@
 <script setup>
-import { adminServices } from "../adminServices";
+import { adminResources } from "../adminResources";
 import { useAdminStore } from "../adminStore";
 
 const adminStore = useAdminStore();
@@ -9,14 +9,14 @@ const adminStore = useAdminStore();
   <Transition name="transition">
     <aside class="admin-side-nav" v-if="adminStore.showSideNav">
       <ul class="snt-grid snt-container">
-        <li v-for="service in adminServices" :key="service.name">
+        <li v-for="resource in adminResources" :key="resource.name">
           <RouterLink
-            :to="`/crud/${service.name}`"
+            :to="`/crud/${resource.name}`"
             class="snt-flex snt-link dark"
             style="display: inline-flex"
           >
-            <component height="100%" width="20px" :is="service.icon" />
-            <p>{{ service.displayName }}</p>
+            <component height="100%" width="20px" :is="resource.icon" />
+            <p>{{ resource.displayName }}</p>
           </RouterLink>
         </li>
       </ul>

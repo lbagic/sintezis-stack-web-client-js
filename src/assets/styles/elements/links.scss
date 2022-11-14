@@ -13,7 +13,7 @@
     &.#{$color} {
       --base-color: var(--#{$prefix}color-#{$color});
       --accent-color: var(--#{$prefix}color-#{$color}-dark);
-      --focus-color: var(--#{$prefix}color-#{$color}-darker);
+      --focus-color: var(--#{$prefix}color-#{$color}-dark);
       --contrast-color: var(--#{$prefix}color-#{$color}-contrast);
     }
   }

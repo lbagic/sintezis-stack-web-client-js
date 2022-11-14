@@ -1,4 +1,4 @@
-import { adminServices } from "./adminServices";
+import { adminResources } from "./adminResources";
 
 /** @type { import("vue-router").RouteRecordRaw[] } */
 export const adminRoutes = [
@@ -19,12 +19,12 @@ export const adminRoutes = [
       },
       {
         name: "crud-view",
-        path: "crud/:serviceName",
+        path: "crud/:resourceName",
         component: () => import("./views/AdminCrudView.vue"),
         beforeEnter(to, from, next) {
-          const serviceName = to.params.serviceName;
-          const serviceExists = adminServices.some(
-            ({ name }) => name === serviceName
+          const resourceName = to.params.resourceName;
+          const serviceExists = adminResources.some(
+            ({ name }) => name === resourceName
           );
           if (!serviceExists) next("/");
           else next();

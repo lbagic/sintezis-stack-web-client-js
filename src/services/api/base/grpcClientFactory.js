@@ -18,8 +18,8 @@ import {
  */
 export function createGrpcPromiseClient({ services, ...options }) {
   return Object.fromEntries(
-    Object.entries(services).map(([serviceName, service]) => [
-      serviceName,
+    Object.entries(services).map(([key, service]) => [
+      key,
       createPromiseClient(service, createGrpcWebTransport(options)),
     ])
   );
