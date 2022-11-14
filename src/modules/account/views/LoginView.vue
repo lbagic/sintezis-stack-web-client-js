@@ -2,22 +2,21 @@
 import BaseInput from "@/components/base/BaseInput.vue";
 import { useFormData } from "@/components/base/input.ctl";
 import { toast } from "@/components/base/toast.ctl";
-import { useRouter } from "vue-router";
-import { accountService } from "../accountService";
-
-const router = useRouter();
+import { usePromise } from "@/utils/usePromise";
+import { useAccountStore } from "../accountStore";
 
 const form = useFormData({
   email: "",
   password: "",
 });
 
-async function login() {
+const accountStore = useAccountStore();
+const login = usePromise(accountStore.login);
+async function onLogin() {
   try {
-    await accountService.login(form.data);
+    await login.execute(form.data);
     toast.success("Logged in");
-    router.push("/");
-  } catch (e) {
+  } catch {
     toast.danger("Failed to log in");
   }
 }
@@ -48,8 +47,8 @@ async function login() {
         <button
           class="snt-button primary expand small"
           style="margin-top: 1rem"
-          @click="login"
-          :disabled="!form.isValid"
+          @click="onLogin"
+          :disabled="!form.isValid || login.isPending"
         >
           Submit
         </button>

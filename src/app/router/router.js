@@ -11,27 +11,30 @@ export const router = createRouter({
 });
 
 const fallback = {
-  userOnly: "/",
-  visitorOnly: "/login",
-  notFound: "/",
+  user: "/",
+  visitor: "/login",
 };
 
+const createAuthorization = (roles, isLoggedIn) => (route) =>
+  route.meta.authorize?.({ roles, isLoggedIn }) ?? true;
+
 router.beforeEach((to, from, next) => {
-  const previousRoute = router.referrer;
-  router.referrer = from;
-
-  document.title = to.matched.reduce((a, c) => c.meta.title ?? a, appName);
   const { roles, isLoggedIn } = useAccountStore();
-  const isFound = to.matched.length;
-  const isAuthorized = to.matched.every(
-    (route) => route.meta.authorize?.({ roles, isLoggedIn }) ?? true
-  );
+  const authorize = createAuthorization(roles, isLoggedIn);
+  const referrer = router.referrer;
 
-  return !isFound
-    ? next(previousRoute ? false : fallback.notFound)
-    : !isAuthorized && isLoggedIn
-    ? next(previousRoute ? false : fallback.userOnly)
-    : !isAuthorized && !isLoggedIn
-    ? next(previousRoute ? false : fallback.visitorOnly)
-    : next();
+  router.referrer = from;
+  document.title = to.matched.reduce((a, c) => c.meta.title ?? a, appName);
+
+  const isFound = !!to.matched.length;
+  const isAuthorized = to.matched.every(authorize);
+  const isValid = isFound && isAuthorized;
+
+  return isValid
+    ? next()
+    : referrer && authorize(from)
+    ? next(from)
+    : referrer && authorize(referrer)
+    ? next(referrer)
+    : next(isLoggedIn ? fallback.user : fallback.visitor);
 });

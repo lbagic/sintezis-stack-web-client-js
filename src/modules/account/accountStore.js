@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { accountService } from "./accountService";
 
 export const useAccountStore = defineStore({
   id: "account",
@@ -11,9 +12,17 @@ export const useAccountStore = defineStore({
     roles: (ctx) => ctx.user?.roles.map((el) => el.name) ?? [],
   },
   actions: {
+    /** @type { typeof accountService.login } */
+    async login(payload) {
+      const response = await accountService.login(payload);
+      this.token = response.token;
+      this.user = response.user;
+      this.$router.push("/");
+      return response;
+    },
     logout() {
       this.$reset();
-      this.$router.go();
+      this.$router.push("/login");
     },
   },
   persist: true,

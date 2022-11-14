@@ -40,19 +40,15 @@ const isSmallScreen = breakpoint.smaller("s");
       }}</RouterLink>
     </template>
     <button
-      class="snt-button white rounded small"
+      :class="{
+        'snt-button white rounded small': isSmallScreen,
+        'snt-link white': !isSmallScreen,
+      }"
       style="margin-left: auto"
-      v-if="isSmallScreen"
-    >
-      <AdminIconPower width="24px" height="100%" />
-    </button>
-    <button
-      class="snt-link white"
-      style="margin-left: auto"
-      v-else
       @click="modal.logout.open"
     >
-      Logout
+      <AdminIconPower width="24px" height="100%" v-if="isSmallScreen" />
+      <span v-else>Logout</span>
     </button>
     <BaseModal name="logout" class="snt-container-s">
       <p>Are you sure you want to log out?</p>
