@@ -28,8 +28,14 @@
 
 .#{$prefix}grid {
   @extend %#{$prefix}flexbox-gap-sizes;
+  --gtc: initial;
+  --gtr: initial;
+  --gta: initial;
   display: grid;
   align-content: flex-start;
+  grid-template-columns: var(--gtc);
+  grid-template-rows: var(--gtr);
+  grid-template-areas: var(--gta);
   gap: var(--gap);
   &.center {
     align-content: center;
