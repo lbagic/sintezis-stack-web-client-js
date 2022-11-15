@@ -76,8 +76,8 @@
 .#{$prefix}modal-close-button {
   position: sticky;
   float: right;
-  top: calc(-1 * var(--modal-padding));
-  margin: calc(-1 * var(--modal-padding));
+  top: calc(-1.2 * var(--modal-padding));
+  margin: calc(-1.2 * var(--modal-padding));
   right: calc(0.75 * var(--modal-padding));
   width: 0;
 

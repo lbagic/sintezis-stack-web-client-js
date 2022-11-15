@@ -77,7 +77,10 @@ const useClose = {
 
 const focusTrap = props.local
   ? { activate: () => util.getFocusElement()?.focus?.(), deactivate: () => {} }
-  : useFocusTrap(wrapperRef, { initialFocus: util.getFocusElement });
+  : useFocusTrap(wrapperRef, {
+      initialFocus: util.getFocusElement,
+      allowOutsideClick: true,
+    });
 
 function initColor() {
   if (!modalRef.value) return;
@@ -85,7 +88,12 @@ function initColor() {
   if (color) wrapperRef.value.classList.add(color);
 }
 
-if (useClose.onClickOutside) onClickOutside(modalRef, () => close(false));
+if (useClose.onClickOutside)
+  onClickOutside(modalRef, (e) => {
+    const className = e.target.className;
+    const clickOutside = className.includes(`${prefix}modal-wrapper`);
+    if (clickOutside) close(false);
+  });
 
 function open() {
   const isOpened = _modalCtl.open({ state, props, baseZIndex });
