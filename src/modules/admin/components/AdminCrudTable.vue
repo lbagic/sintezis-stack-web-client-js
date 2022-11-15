@@ -7,6 +7,7 @@ defineProps({
 </script>
 
 <template>
+  <button @click="$router.push('#create')">Create</button>
   <table class="snt-table light">
     <thead>
       <tr>

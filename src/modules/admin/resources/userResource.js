@@ -18,6 +18,22 @@ export const userResource = createResource({
     rpc: GatewayController.methods.createUser,
     form: {
       firstName: { value: "", bind: { label: "First Name", required: true } },
+      lastName: { value: "", bind: { label: "Last Name", required: true } },
+      titleId: { value: "", bind: { label: "Title", required: true } },
+      email: { value: "", bind: { label: "Email", required: true } },
+      // TODO hashing
+      password: { value: "", bind: { label: "Password", required: true } },
+      dateOfBirth: {
+        value: "2022-10-31T23:00:00.000Z",
+        bind: {
+          label: "Date of birth",
+          type: "date",
+          required: true,
+        },
+      },
+      phone: { value: "", bind: { label: "Phone" } },
+      address: { value: "", bind: { label: "Address" } },
+      airportId: { value: "", bind: { label: "Airport" } },
     },
   },
   mapDisplayItem: (obj = {}) => ({

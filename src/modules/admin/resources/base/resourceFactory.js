@@ -9,12 +9,12 @@ import { markRaw } from "vue";
  *  I: MessageType,
  *  O: MessageType,
  *  kind: MethodKind
- * }} BaseRpc
+ * }} RpcStruct
  */
 
 /**
  * @template Rpc
- * @template EntityInstance
+ * @template { Record<string, any> } EntityInstance
  * @template ParseReturnType
  * @typedef {{
  *  call: (request: InstanceType<Rpc['I']>) => Promise<InstanceType<Rpc['O']>>,
@@ -22,7 +22,7 @@ import { markRaw } from "vue";
  *  parse: (response: InstanceType<Rpc['O']>) => ParseReturnType,
  *  rpc: Rpc
  *  form?: EntityInstance
- * }} ServiceCall
+ * }} ServiceStruct
  */
 
 /**
@@ -31,8 +31,8 @@ import { markRaw } from "vue";
  * @template RpcGetAll
  * @typedef {{
  *  entity: Entity,
- *  getAll: ServiceCall<RpcGetAll, InstanceType<Entity>, InstanceType<Entity>[]>,
- *  create?: ServiceCall<RpcCreate, InstanceType<Entity>, InstanceType<Entity>>,
+ *  getAll: ServiceStruct<RpcGetAll, InstanceType<Entity>, InstanceType<Entity>[]>,
+ *  create?: ServiceStruct<RpcCreate, InstanceType<Entity>, InstanceType<Entity>>,
  *  icon?: ReturnType<markRaw>,
  *  mapDisplayItem: (obj: InstanceType<Entity>) => Record<string, unknown>,
  *  name?: string,
@@ -43,8 +43,8 @@ import { markRaw } from "vue";
 /**
  * @typedef {<
  *  Entity extends MessageType,
- *  RpcCreate extends BaseRpc,
- *  RpcGetAll extends BaseRpc,
+ *  RpcCreate extends RpcStruct,
+ *  RpcGetAll extends RpcStruct,
  *  Fields = ReturnType<Entity['fields']['list']>,
  * >(config: ResourceConfig<Entity, RpcCreate, RpcGetAll>) =>
  * Required<ResourceConfig<Entity, RpcCreate, RpcGetAll>> & {

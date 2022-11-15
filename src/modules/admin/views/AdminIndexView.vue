@@ -10,7 +10,7 @@ const route = useRoute();
   <div class="admin-index">
     <AdminNavigation style="grid-area: nav" />
     <AdminSideNavigation style="grid-area: side-nav" />
-    <RouterView style="grid-area: main" :key="route.fullPath"></RouterView>
+    <RouterView style="grid-area: main" :key="route.path"></RouterView>
   </div>
 </template>
 
