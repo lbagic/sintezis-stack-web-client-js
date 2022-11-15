@@ -46,10 +46,8 @@ const prefix = useCssVar("--prefix").value;
 const colorNames = Object.keys(css.colors);
 const baseZIndex = Number(useCssVar(`--${prefix}z-index-modal`).value);
 
-const refs = {
-  modal: ref(),
-  wrapper: ref(),
-};
+const modalRef = ref(null);
+const wrapperRef = ref(null);
 
 const state = reactive({
   isOpen: false,
@@ -60,11 +58,11 @@ const state = reactive({
 const util = {
   filterColorName: (name) => colorNames.includes(name),
   getFocusElement: () =>
-    refs.modal.value.querySelector("[autofocus]") ||
-    refs.modal.value.querySelector(
+    modalRef.value.querySelector("[autofocus]") ||
+    modalRef.value.querySelector(
       `a, button:not(.${prefix}modal-close-button), input, textarea, select, summary`
     ) ||
-    refs.wrapper.value,
+    wrapperRef.value,
 };
 
 const useClose = {
@@ -79,14 +77,15 @@ const useClose = {
 
 const focusTrap = props.local
   ? { activate: () => util.getFocusElement()?.focus?.(), deactivate: () => {} }
-  : useFocusTrap(refs.wrapper, { initialFocus: util.getFocusElement });
+  : useFocusTrap(wrapperRef, { initialFocus: util.getFocusElement });
 
-async function initColor() {
-  const color = [...refs.modal.value.classList].find(util.filterColorName);
-  if (color) refs.wrapper.value.classList.add(color);
+function initColor() {
+  if (!modalRef.value) return;
+  const color = [...modalRef.value.classList].find(util.filterColorName);
+  if (color) wrapperRef.value.classList.add(color);
 }
 
-if (useClose.onClickOutside) onClickOutside(refs.modal, () => close(false));
+if (useClose.onClickOutside) onClickOutside(modalRef, () => close(false));
 
 function open() {
   const isOpened = _modalCtl.open({ state, props, baseZIndex });
@@ -147,7 +146,7 @@ if (props.name) {
     <Transition :name="`${prefix}modal-transition`">
       <div
         :class="`${prefix}modal-wrapper`"
-        :ref="(el) => (refs.wrapper.value = el)"
+        ref="wrapperRef"
         :data-expand="props.expand"
         :data-local="props.local"
         :data-paused="state.isPaused"
@@ -161,7 +160,7 @@ if (props.name) {
           :class="`${prefix}modal`"
           v-bind="$attrs"
           :data-expand="props.expand"
-          :ref="(el) => (refs.modal.value = el)"
+          ref="modalRef"
         >
           <button
             v-if="useClose.onButton"
