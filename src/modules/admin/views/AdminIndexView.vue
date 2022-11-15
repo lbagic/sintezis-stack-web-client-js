@@ -1,13 +1,16 @@
 <script setup>
+import { useRoute } from "vue-router";
 import AdminNavigation from "../components/AdminNavigation.vue";
 import AdminSideNavigation from "../components/AdminSideNavigation.vue";
+
+const route = useRoute();
 </script>
 
 <template>
   <div class="admin-index">
     <AdminNavigation style="grid-area: nav" />
     <AdminSideNavigation style="grid-area: side-nav" />
-    <RouterView style="grid-area: main"></RouterView>
+    <RouterView style="grid-area: main" :key="route.fullPath"></RouterView>
   </div>
 </template>
 

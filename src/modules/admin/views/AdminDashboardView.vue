@@ -21,8 +21,8 @@ const data = {
       <RouterLink
         class="snt-link primary"
         v-for="resource in adminResources"
-        :key="resource.name"
-        :to="`/crud/${resource.name}`"
+        :key="resource.id"
+        :to="`/crud/${resource.id}`"
         >{{ resource.displayName }}</RouterLink
       >
     </div>

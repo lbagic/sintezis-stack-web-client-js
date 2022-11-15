@@ -19,12 +19,11 @@ export const adminRoutes = [
       },
       {
         name: "crud-view",
-        path: "crud/:resourceName",
+        path: "crud/:resourceId",
         component: () => import("./views/AdminCrudView.vue"),
         beforeEnter(to, from, next) {
-          const resourceName = to.params.resourceName;
           const serviceExists = adminResources.some(
-            ({ name }) => name === resourceName
+            ({ id }) => id === to.params.resourceId
           );
           if (!serviceExists) next("/");
           else next();

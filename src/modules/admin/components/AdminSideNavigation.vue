@@ -9,14 +9,14 @@ const adminStore = useAdminStore();
   <Transition name="transition">
     <aside class="admin-side-nav" v-if="adminStore.showSideNav">
       <ul class="snt-grid snt-container">
-        <li v-for="resource in adminResources" :key="resource.name">
+        <li v-for="resource in adminResources" :key="resource.id">
           <RouterLink
-            :to="`/crud/${resource.name}`"
+            :to="`/crud/${resource.id}`"
             class="snt-flex snt-link dark"
             style="display: inline-flex"
           >
             <component height="100%" width="20px" :is="resource.icon" />
-            <p>{{ resource.displayName }}</p>
+            <p>{{ resource.id }}</p>
           </RouterLink>
         </li>
       </ul>
@@ -27,7 +27,7 @@ const adminStore = useAdminStore();
 <style scoped lang="scss">
 .admin-side-nav {
   width: 150px;
-  overflow-y: scroll;
+  overflow-y: auto;
   background: linear-gradient(
     120deg,
     var(--snt-color-primary-lightest) 0%,

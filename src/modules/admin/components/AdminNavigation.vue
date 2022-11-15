@@ -11,11 +11,10 @@ const adminStore = useAdminStore();
 const route = useRoute();
 const breadcrumbs = $computed(() => {
   const list = [];
-  const resourceName = route.params.resourceName;
-  if (resourceName)
-    list.push({ name: resourceName, to: `/crud/${resourceName}` });
-  if (route.fullPath.includes(`${resourceName}/details`))
-    list.push({ name: `Details`, to: `/crud/${resourceName}/details` });
+  const resourceId = route.params.resourceId;
+  if (resourceId) list.push({ name: resourceId, to: `/crud/${resourceId}` });
+  if (route.fullPath.includes(`${resourceId}/details`))
+    list.push({ name: `Details`, to: `/crud/${resourceId}/details` });
   return list;
 });
 const accountStore = useAccountStore();

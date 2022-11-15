@@ -2,52 +2,72 @@ import AdminIconFolder from "@/modules/admin/components/icons/AdminIconFolder.vu
 import { markRaw } from "vue";
 
 /**
- * @typedef {<
- *  _Entity,
- *  _GetAllResponse,
- *  Service extends Record<"add" | "edit" | "get" | "getAll" | "delete", (request: any) => Promise<any>>,
- *  Entity = InstanceType<_Entity>,
- *  GetAllResponse = InstanceType<_GetAllResponse>,
- * >(config: {
- *  GetAllResponse: _GetAllResponse,
- *  displayName?: string,
- *  entity: _Entity,
- *  icon?: any,
- *  mapDisplayFields: (obj: Entity) => Record<string, any>,
- *  mapGetAll: (response: GetAllResponse) => { data: Entity[], pagination: GetAllResponse['pagination'] }
- *  service: Service,
- *  usePagination: boolean,
- * }) => {
- *  GetAllResponse: _GetAllResponse,
- *  displayName: string,
- *  entity: _Entity,
- *  fields: ReturnType<MessageType<any>['fields']['list']>
- *  icon: any,
- *  mapDisplayFields: (obj: Entity) => Record<string, any>,
- *  mapGetAll: (response: GetAllResponse) => { data: Entity[], pagination: GetAllResponse['pagination'] }
+ * @typedef { import('@bufbuild/protobuf').MethodKind } MethodKind
+ * @typedef { import('@bufbuild/protobuf').MessageType<unknown> } MessageType
+ * @typedef {{
  *  name: string,
- *  service: Service,
+ *  I: MessageType,
+ *  O: MessageType,
+ *  kind: MethodKind
+ * }} BaseRpc
+ */
+
+/**
+ * @template Rpc
+ * @template EntityInstance
+ * @template ParseReturnType
+ * @typedef {{
+ *  call: (request: InstanceType<Rpc['I']>) => Promise<InstanceType<Rpc['O']>>,
+ *  prepare: (data: EntityInstance) => InstanceType<Rpc['I']>
+ *  parse: (response: InstanceType<Rpc['O']>) => ParseReturnType,
+ *  rpc: Rpc
+ *  form?: EntityInstance
+ * }} ServiceCall
+ */
+
+/**
+ * @template Entity
+ * @template RpcCreate
+ * @template RpcGetAll
+ * @typedef {{
+ *  entity: Entity,
+ *  getAll: ServiceCall<RpcGetAll, InstanceType<Entity>, InstanceType<Entity>[]>,
+ *  create?: ServiceCall<RpcCreate, InstanceType<Entity>, InstanceType<Entity>>,
+ *  icon?: ReturnType<markRaw>,
+ *  mapDisplayItem: (obj: InstanceType<Entity>) => Record<string, unknown>,
+ *  name?: string,
  *  usePagination: boolean,
- *  usePaginationOverride: boolean,
+ * }} ResourceConfig
+ */
+
+/**
+ * @typedef {<
+ *  Entity extends MessageType,
+ *  RpcCreate extends BaseRpc,
+ *  RpcGetAll extends BaseRpc,
+ *  Fields = ReturnType<Entity['fields']['list']>,
+ * >(config: ResourceConfig<Entity, RpcCreate, RpcGetAll>) =>
+ * Required<ResourceConfig<Entity, RpcCreate, RpcGetAll>> & {
+ *  fields: Fields,
+ *  hasPagination: boolean,
+ *  id: string,
  * }} ResourceFactory
  */
 
 /** @type { ResourceFactory } */
 export const createResource = (config) => {
-  /** @type { import('@bufbuild/protobuf').MessageType<any> } */
   const entity = config.entity;
-  const entityFields = entity.fields.list();
-  /** @type { import('@bufbuild/protobuf').MessageType<any> } */
-  const getAllResponse = config.GetAllResponse;
-  const responseFields = getAllResponse.fields.list();
-  const hasPagination = responseFields.some((el) => el.name === "pagination");
+  const fields = entity.fields.list();
+
+  const hasPagination = config.getAll.rpc["O"].fields
+    .list()
+    .some((el) => el.name === "pagination");
   return {
     ...config,
+    fields,
+    hasPagination,
     icon: config.icon ?? markRaw(AdminIconFolder),
-    displayName: config.displayName ?? entity.name,
-    fields: entityFields,
-    name: entity.name,
-    usePagination: hasPagination && config.usePagination,
-    usePaginationOverride: hasPagination && !config.usePagination,
+    name: config.name ?? entity.name,
+    id: entity.name,
   };
 };

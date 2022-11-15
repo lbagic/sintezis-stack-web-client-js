@@ -1,3 +1,3 @@
-import { airlineResource } from "./resources/airlineResource";
+import { userResource } from "./resources/userResource";
 
-export const adminResources = [airlineResource];
+export const adminResources = [userResource];
