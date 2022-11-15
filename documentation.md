@@ -1,5 +1,6 @@
 TODO:
 
+- input - format + parse, promise options + watchOptions + object list options (key/val)
 - update docs
 - storybook integration
 - GRPC/REST - stream logger

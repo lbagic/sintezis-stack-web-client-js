@@ -1,4 +1,5 @@
 import {
+  createConnectTransport,
   createGrpcWebTransport,
   createPromiseClient,
 } from "@bufbuild/connect-web";
@@ -14,13 +15,21 @@ import {
  */
 
 /**
- * @type { <T extends Services>(options: ConnectTransportOptions & { services: T }) => { [K in keyof T]: PromiseClient<T[K]> } }
+ * @type { <T extends Services>(options: ConnectTransportOptions & { services: T, useEnvoyProxy?: boolean }) => { [K in keyof T]: PromiseClient<T[K]> } }
  */
-export function createGrpcPromiseClient({ services, ...options }) {
+export function createGrpcPromiseClient({
+  services,
+  useEnvoyProxy,
+  ...options
+}) {
+  const createTransport = useEnvoyProxy
+    ? createGrpcWebTransport
+    : createConnectTransport;
+
   return Object.fromEntries(
     Object.entries(services).map(([key, service]) => [
       key,
-      createPromiseClient(service, createGrpcWebTransport(options)),
+      createPromiseClient(service, createTransport(options)),
     ])
   );
 }
