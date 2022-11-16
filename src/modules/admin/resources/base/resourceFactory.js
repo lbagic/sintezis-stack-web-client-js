@@ -18,7 +18,7 @@ import { markRaw } from "vue";
  * @template ParseReturnType
  * @typedef {{
  *  call: (request: InstanceType<Rpc['I']>) => Promise<InstanceType<Rpc['O']>>,
- *  prepare: (data: EntityInstance) => InstanceType<Rpc['I']>
+ *  prepare: (data: EntityInstance) => Promise<InstanceType<Rpc['I']>>
  *  parse: (response: InstanceType<Rpc['O']>) => ParseReturnType,
  *  rpc: Rpc
  *  form?: EntityInstance
