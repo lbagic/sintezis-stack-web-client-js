@@ -14,8 +14,6 @@ dist
 dist-ssr
 coverage
 *.local
-/src/gen
-/buf/buf.lock
 
 # env files
 .env
@@ -37,3 +35,7 @@ coverage
 *.sw?
 
 docs
+
+# proto files
+buf/buf.lock
+src/gen
