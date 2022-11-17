@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package elude.proto;
+
+option go_package = "./;gen";
+
+option java_multiple_files = true;
+option java_outer_classname = "PaginationProto";
+option java_package = "co.sintezis.elude";
+
+// Pagination is used in GetAll requests that have a large number of results. CLients should set page and page_size.
+message Pagination {
+  int32 page = 1; // Pagination page. Clients set this.
+  int32 page_size = 2; // Pagination page size. How many items can fit on one page. Clients set this.
+  int32 total = 3; // Number of total items. Clients do not set this.
+  int32 total_pages = 4; // Number of total pages to display all items. Clients do not set this.
+  bool override_pagination = 5; // If true selected pagination does not apply.
+}
+

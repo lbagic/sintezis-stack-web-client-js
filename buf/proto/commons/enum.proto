@@ -1,0 +1,102 @@
+syntax = "proto3";
+
+package elude.proto;
+
+option go_package = "./;gen";
+
+// Enum listing possible priorities
+enum PriorityEnum {
+    HIGH = 0;
+    MEDIUM = 1;
+    LOW = 2;
+}
+
+// Enum listing all possible budget tiers
+enum BudgetTierEnum {
+    NONE = 0;
+    PLATINUM = 1;
+    GOLD = 2;
+    SILVER = 3;
+    BRONZE = 4;
+}
+
+// Enum listing all possible GDS providers
+enum GDSEnum {
+    NOT_SET = 0;
+    TRAVELPORT = 1; // Currently unused, do not set this.
+    SABRE = 2;
+    AMADEUS = 3; // Currently unused, do not set this.
+}
+
+// Enum listing all possible traveller types
+enum TravellerTypeEnum {
+    ADULT = 0; // 12 and older
+    CHILD = 1; // between 2 and 12 years old
+    INFANT = 2; //  younger than 2
+}
+
+// Enum listing all possible booking classes
+enum BookingClassEnum {
+    ECONOMY = 0;
+    BUSINESS = 1;
+    FIRST = 2;
+}
+
+// Enum listing all possible auth providers
+enum AuthProviderEnum {
+    EMAIL = 0;
+    FACEBOOK = 1;
+    GOOGLE = 2;
+    TWITTER = 3;
+    APPLE = 4;
+}
+
+// Enum listing all possible payment providers
+enum PaymentProvidersEnum {
+    stripe = 0;
+    paypal = 1;
+}
+
+// Enum listing all possible trip abandoment stages
+enum AbandonedStageEnum {
+    DEPARTURE_FLIGHT = 0;
+    RETURN_FLIGHT = 1;
+    HOTEL = 2;
+    ROOM = 3;
+    SUMMARY = 4;
+}
+
+// Enum listing all possible search types
+enum SearchTypeEnum {
+    FLIGHT_SEARCH = 0;
+    LOCATION_SEARCH = 1;
+    COMBINED_SEARCH = 2;
+    AIRPORT_SEARCH = 3;
+}
+
+// Enum listing all possible location types
+enum LocationTypeEnum {
+    METROPOLITAN_AREA = 0;
+    CITY = 1;
+    AIRPORT = 2;
+    REGION = 3;
+    COUNTRY = 4;
+    LOCATION = 5;
+}
+
+// Enum listing all possible hotel search types
+enum HotelSearchTypeEnum {
+    REGULAR_SEARCH = 0;
+    TIMEZONE_SEARCH = 1;
+    PRIORITY_SEARCH = 2;
+    PRIORITY_TIMEZONE_SEARCH = 3;
+}
+
+// Enum listing all possible device types
+enum DeviceTypeEnum {
+    DEVICE_UNKNOWN = 0;
+    IOS = 1;
+    WEB = 2;
+    ANDROID = 3;
+    CLI = 4;
+}

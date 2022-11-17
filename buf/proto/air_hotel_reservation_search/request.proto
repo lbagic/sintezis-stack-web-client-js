@@ -1,0 +1,196 @@
+syntax = "proto3";
+
+package elude.proto;
+
+option go_package = "./;gen";
+
+import "validate/validate.proto";
+import "proto/commons/flow_common.proto";
+import "proto/commons/status.proto";
+import "proto/commons/auth.proto";
+import "proto/commons/session_info.proto";
+import "proto/commons/options.proto";
+import "proto/commons/enum.proto";
+import "proto/models/traveller.proto";
+import "proto/models/user.proto";
+
+// ItineraryRequest is used in all internal and external GDS search rpc calls. Used in different calls to populate the booking. Clients should only use this when using RunSearch rpc in Search service.
+message ItineraryRequest {
+    Auth auth = 1; // Used to authorize the request.
+    int32 num_results = 2; // Expected number of search results.
+    Travellers travellers = 3 [(validate.rules).message.required = true]; // Trip travellers.
+    Budget budget = 4; // Financial search budget.
+    HotelRequirements hotel_requirements = 5; // Hotel search filters.
+    AirRequirements air_requirements = 6; // Flight search filters.
+    Dates dates = 7 [(validate.rules).message.required = true]; // Beginning and end trip dates.
+    LocationsRequirements locations_requirements = 8 [(validate.rules).message.required = true]; // Locations search filters.
+    Options options = 9; // Common options for request.
+    SessionInfo session_info = 10; // Session information.
+    bool priority_search = 11; // Used for hotel priority searches.
+    BudgetTierEnum budget_tier = 12 [(validate.rules).enum.defined_only = true]; // Used for budget tier searches.
+    bool additional_date_search = 13; // Used to create an additional hotel search if flight arrival and departure dates don't match. Clients shouldn't set this.
+    int32 additional_date_search_flight_id = 14; // Used to get the complete itinerary request from cache. Clients shouldn't set this.
+    int32 search_id_prefix = 15; // Id that determines where the id counter starts for searches. Clients shouldn't set this.
+    HotelSearchTypeEnum hotel_search_type = 16; // Enum that specifies the type of the hotel search. Clients shouldn't set this.
+    repeated string location_iata_codes = 17;  // List of iata codes for parent locations.
+    bool rerun = 18; // If true, rerun search with same params. Ignore cache and run new search with new results.
+    Budget air_budget = 19; // Budget calculated for flights. Clients shouldn't set this.
+    Budget hotel_budget = 20; // Budget calculated for hotels. Clients shouldn't set this.
+}
+
+// ReservationRequest is used in all internal and external GDS reservation rpc calls. Clients should only use this when using StreamCreateReservation
+// rpc in Reservation service.
+message ReservationRequest {
+    Auth auth = 1; // Used to authorize the request.
+    Options options = 2; // Common options for request.
+    int32 hotel_id = 3; // Hotel id for reservation request in database hotels table.
+    int32 room_id = 4; // Room id for reservation request in database rooms table.
+    int32 flight_id = 5; // Flight id for reservation request in database flights table.
+    int32 payment_method_id = 7 [(validate.rules).int32 = {gte: 1}]; // Payment method id for reservation request in database payment methods table.
+    repeated int32 traveller_ids = 8; // List of traveller ids for reservation request in database travellers table.
+    GDSUser user = 9; // User who is making the reservation.
+    PaymentMethod payment_method = 10; // Payment method used to create a reservation.
+    repeated GDSTraveller travellers = 11; // Travellers on the trip.
+    GDSBackend hotel_gds = 12; // Gds for hotel reservation.
+    GDSBackend flight_gds = 13; // Gds for flight reservation.
+    SessionInfo session_info = 14 [(validate.rules).message.required = true]; // Session information.
+    string promotion_code = 15 [deprecated = true]; // Promotion code for payment discount.
+    int32 promotion_code_id = 16; // Promotion code id for payment discount.
+}
+
+// CancelRequest is used in CancelReservation requests.
+message CancelRequest {
+    Auth auth = 1; // Used to authorize the request.
+    Options options = 2; // Common options for request.
+    int32 booking_id = 3 [(validate.rules).int32 = {gte: 1}]; // Booking id in database bookings table for cancel reservation.
+    string hotel_reservation_identifier = 4; // Hotel identifiers from gds. Saved in database.
+    string air_reservation_identifier = 5; // Air identifiers from gds. Saved in database.
+    GDSBackend hotel_gds = 6; // Gds for hotel cancel reservation.
+    GDSBackend flight_gds = 7; // Gds for flight cancel reservation.
+    SessionInfo session_info = 8; // Session information.
+    bool void_tickets = 9; // Used for flight ticket operations.
+}
+
+// TicketRequest is used only in internal GDS rpc calls. Used in Ticket request. Clients should not use this.
+message TicketRequest {
+    Auth auth = 1; // Used to authorize the request.
+    Options options = 2; // Common options for request.
+    GDSBackend gds = 3 [(validate.rules).message.required = true]; // Gds for ticket request.
+    SessionInfo session_info = 4 [(validate.rules).message.required = true]; // Session information.
+    string air_reservation_identifier = 5 [(validate.rules).string.min_len = 3]; // Air gds identifier for specific flight. Saved in database.
+    repeated PriceQuote price_quotes = 6 [(validate.rules).repeated.min_items = 1]; // Used for sabre query price quotes.
+}
+
+// VoidTicketRequest is used only in internal GDS rpc calls. Used in VoidTicket request. Clients should not use this.
+message VoidTicketRequest {
+    Auth auth = 1; // Used to authorize the request.
+    Options options = 2; // Common options for request.
+    GDSBackend gds = 3 [(validate.rules).message.required = true]; // Gds for void ticket request.
+    SessionInfo session_info = 4 [(validate.rules).message.required = true]; // Session information.
+    string air_reservation_identifier = 5 [(validate.rules).string.min_len = 3]; // // Air gds identifier for specific flight. Saved in database.
+    string ticket_identifier = 6 [(validate.rules).string.min_len = 3]; // Identifier used for a specific ticket.
+}
+
+// GetPriceRequest is used only in internal GDS rpc calls. Used to get hotel/air price requests. Clients should not use this.
+message GetPriceRequest {
+    Auth auth = 1; // Used to authorize the request.
+    Options options = 2; // Common options for request.
+    int32 hotel_id = 3 [(validate.rules).int32 = {gte: 1}]; // Hotel id for get price request in database hotels table.
+    int32 room_id = 4 [(validate.rules).int32 = {gte: 1}]; // Room id for get price request in database rooms table.
+    int32 flight_id = 5 [(validate.rules).int32 = {gte: 1}]; // Flight id for get price request in database flights table.
+    GDSBackend hotel_gds = 6 [(validate.rules).message.required = true]; // Gds for hotel reservation.
+    GDSBackend flight_gds = 7 [(validate.rules).message.required = true]; // Gds for flight reservation.
+    SessionInfo session_info = 8 [(validate.rules).message.required = true]; // Session information.
+}
+
+// RetrieveRequest is used in all internal and external GDS RetrieveReservation rpc calls. Used to retrieve hotel/air reservations.
+// Clients should only use this when using RetrieveReservation rpc in Reservation service.
+message RetrieveRequest {
+    Auth auth = 1; // Used to authorize the request.
+    Options options = 2; // Common options for request.
+    int32 booking_id = 3 [(validate.rules).int32 = {gte: 1}]; // Booking id for retrieve reservation in database bookings table.
+    string hotel_reservation_identifier = 4; // Hotel Identifiers from gds. Saved in database.
+    string air_reservation_identifier = 5; // Air Identifiers from gds. Saved in database.
+    GDSBackend hotel_gds = 6; // Gds for hotel reservation.
+    GDSBackend flight_gds = 7; // Gds for flight reservation.
+    SessionInfo session_info = 8; // Session information.
+}
+
+// GetAbandonTripSearchRequest is used in GetAbandonTripSearch rpc calls. Used to make a search request based on abandon trip information.
+message GetAbandonTripSearchRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2 [(validate.rules).message.required = true]; // Session information.
+    ItineraryRequest itinerary_request = 3 [(validate.rules).message.required = true]; // Booking related information.
+    int32	flight_id = 4 [(validate.rules).int32 = {gte: 0}]; // Flight id for get abandon trip search in database flights table.
+    int32 hotel_id = 5 [(validate.rules).int32 = {gte: 0}]; // Hotel id for get abandon strip search in database hotels table.
+    GDSBackend flight_gds = 6 [(validate.rules).message.required = true]; // Gds for flight reservation. Saved in database.
+    GDSBackend hotel_gds = 7 [(validate.rules).message.required = true]; // Gds for hotel reservation. Saved in database.
+    AbandonedStageEnum abandoned_stage = 8 [(validate.rules).enum.defined_only = true]; // Used to save abandon stage.
+    Options options = 9; // Common options for request.
+}
+
+// RevalidateItineraryRequest is used in all internal and external GDS RevalidateItinerary rpc calls.
+// Clients should only use this when using RevalidateItinerary rpc in Reservation service.
+message RevalidateItineraryRequest {
+    Auth auth = 1; // Used to authorize the request.
+    Options options = 2; // Common options for request.
+    int32 hotel_id = 3; // Hotel id for revalidate itinerary in database hotels table.
+    int32 room_id = 4; // Room id for revalidate itinerary in database rooms table.
+    int32 flight_id = 5; // Flight id for revalidate itinerary in database flights table.
+    GDSBackend hotel_gds = 6; // Gds for hotel reservation.
+    GDSBackend flight_gds = 7; // Gds for flight reservation.
+    repeated GDSTraveller travellers = 8; // Travellers on a trip.
+    SessionInfo session_info = 9 [(validate.rules).message.required = true]; // Session information.
+    repeated int32 traveller_ids = 10; // List of traveller ids for revalidate itinerary in database travellers table.
+}
+
+// HotelDetailsRequest is used in all internal and external GDS GetHotelDetails rpc calls.
+// Clients should only use this when using GetHotelDetails rpc in Search service.
+message HotelDetailsRequest {
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2; // Session information.
+    GDSBackend gds = 3 [(validate.rules).message.required = true]; // Gds for hotel reservation.
+    int32 hotel_id = 4  [(validate.rules).int32 = {gte: 1}]; // Hotel id for hotel details in database hotels table.
+    Options options = 5; // Common options for request.
+}
+
+// AbandonTripRequest is used in AbandonTrip rpc calls.
+message AbandonTripRequest {
+    reserved 3;
+    reserved 4;
+    Auth auth = 1; // Used to authorize the request.
+    SessionInfo session_info = 2 [(validate.rules).message.required = true]; // Session information.
+    Dates dates = 5 [(validate.rules).message.required = true]; // Beginning and end trip dates.
+    Travellers travellers = 6 [(validate.rules).message.required = true]; // Travellers on a trip.
+    int32 budget = 7; // Max budget price.
+    int32	flight_id = 8; // Flight id for abandon trip in database flights table.
+    int32 hotel_id = 9; // Hotel id for abandon trip in database hotels table.
+    int32	room_id = 10; // Room id for abandon trip in database rooms table.
+    AbandonedStageEnum abandoned_stage = 11 [(validate.rules).enum.defined_only = true]; // Used to save abandon stage.
+    Options options = 12; // Common options for request.
+    AirRequirements air_requirements = 13; // Air search filters.
+    HotelRequirements hotel_requirements = 14; // Hotel search filters.d
+    LocationsRequirements locations_requirements = 15 [(validate.rules).message.required = true]; // Departure and arrival location data for abandon trip.
+    BudgetTierEnum  budget_tier = 16; // Budget tier for abandon trip search query.
+    string search_type =17; // Abandon trip search type (combo, package, flight, hotel).
+}
+
+// BuildHotelRequest is used in internal GDS BuildHotel rpc calls. Travelport gds currently not used.
+message BuildHotelRequest {
+    SessionInfo session_info = 1;
+    GDSHotel hotel = 2;
+    Travellers travellers = 3;
+    Budget budget = 4;
+    // Required: status code.
+    Status status = 5;
+    Options options = 6;
+}
+
+// SetSearchCacheRequest is used in internal GDS SeatSearchCache rpc calls. Currently not used.
+message SetSearchCacheRequest {
+    SessionInfo session_info = 1;
+    GDSBackend flight_gds = 2;
+    // Required: status code.
+    Status status = 3;
+    Options options = 4;
+}

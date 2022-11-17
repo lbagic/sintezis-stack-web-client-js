@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package elude.proto;
+
+option go_package = "./;gen";
+
+import "validate/validate.proto";
+
+// FlightType message is returned in responses for FlightType CRUD operations. It contains all the information for FlightType model.
+message FlightType {
+  int32 id = 1; // Flight type id.
+  string type = 2 [(validate.rules).string = {pattern: "^[a-zA-Z ]*$",min_len: 1}]; // Flight type.
+}

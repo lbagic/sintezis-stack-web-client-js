@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package elude.proto;
+
+option go_package = "./;gen";
+
+import "proto/models/media.proto";
+import "proto/models/country.proto";
+import "proto/models/region.proto";
+import "proto/models/gds.proto";
+import "proto/models/property_chain.proto";
+import "proto/models/property_type.proto";
+import "proto/commons/weather.proto";
+import "validate/validate.proto";
+
+// Shard message is mainly used in GetSearchLocations rpc.
+message Shard {
+  int32 id = 1; // Shard id.
+  string name = 2; // Shard name.
+  repeated ShardConnections shard_connections = 3; // Shard connections.
+}
+
+// ShardConnections message is mainly used in GetSearchLocations rpc.
+message ShardConnections {
+    int32 shard_id = 1; // Shard ID.
+    int32 shard_connection_id = 2; // Shard connection ID.
+    int32 average_flight_price = 3; // Average flight price between shards.
+  }

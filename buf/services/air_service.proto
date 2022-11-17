@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+package elude.proto;
+
+option go_package = "./;gen";
+
+import "proto/air_hotel_reservation_search/request.proto";
+import "proto/air_hotel_reservation_search/response.proto";
+
+// It will send a request to multiple GDS provider and then stream back responses
+service AirController {
+
+    rpc RunAirSearch(ItineraryRequest) returns (stream ItineraryResponse) {} // RunAirSearch method runs a Flight search based on Air requirements taking in account budget, budget tiers and locations.
+
+    rpc CreateReservation(ReservationRequest) returns (ReservationResponse) {} // CreateReservation method is used to create flight reservations.
+
+    rpc StreamCreateReservation(ReservationRequest) returns (stream ReservationResponse) {} // StreamCreateReservation method uses CreateReservation and returns response as a stream.
+
+    rpc CancelReservation(CancelRequest) returns (CancelResponse) {} // CancelReservation method is used to cancel an existing flight reservations.
+
+    rpc TicketFlight(TicketRequest) returns (TicketResponse) {} // TicketFlight method is used to ticket a flight.
+
+    rpc VoidTicket(VoidTicketRequest) returns (VoidTicketResponse) {} // VoidTicket method is used to void a ticketed flight.
+
+    rpc GetPrice(GetPriceRequest) returns (GetPriceResponse) {} // GetPrice method is used to get flight price.
+
+    rpc RetrieveReservation(RetrieveRequest) returns (RetrieveResponse) {} // RetrieveReservation method is used to retrieve an existing flight reservations.
+
+    rpc GetAbandonTripSearch(GetAbandonTripSearchRequest) returns (GetAbandonTripSearchResponse) {} // GetAbandonTripSearch method returns ItineraryResponse based on AbandonTrip parameters.
+
+    rpc RevalidateItinerary(RevalidateItineraryRequest) returns (RevalidateItineraryResponse) {} // RevalidateItinerary method is used to revalidate a flight itinerary.
+
+    rpc SetSearchCache(SetSearchCacheRequest) returns (SetSearchCacheResponse) {} // SetSearchCache method is used to set flight search cache.
+}
+
+// Generic server that can work with all of the adapter
+service AirAdapter {
+
+    rpc GetFlightOption(ItineraryRequest) returns (ItineraryResponse) {} // GetFlightOption method is used to get possible gds flight option.
+
+    rpc CreateReservation(ReservationRequest) returns (ReservationResponse) {} // CreateReservation method is used to create flight reservations.
+
+    rpc CancelReservation(CancelRequest) returns (CancelResponse) {} // CancelReservation method is used to cancel an existing flight reservations.
+
+    rpc TicketFlight(TicketRequest) returns (TicketResponse) {} // TicketFlight method is used to ticket a flight.
+
+    rpc VoidTicket(VoidTicketRequest) returns (VoidTicketResponse) {} // VoidTicket method is used to void a ticketed flight.
+
+    rpc GetPrice(GetPriceRequest) returns (GetPriceResponse) {} // GetPrice method is used to get flight price.
+
+    rpc RetrieveReservation(RetrieveRequest) returns (RetrieveResponse) {} // RetrieveReservation method is used to retrieve an existing flight reservations.
+
+    rpc GetAbandonTripSearch(GetAbandonTripSearchRequest) returns (GetAbandonTripSearchResponse) {} // GetAbandonTripSearch method returns ItineraryResponse based on AbandonTrip parameters.
+
+    rpc RevalidateItinerary(RevalidateItineraryRequest) returns (RevalidateItineraryResponse) {} // RevalidateItinerary method is used to revalidate a flight itinerary.
+
+    rpc SetSearchCache(SetSearchCacheRequest) returns (SetSearchCacheResponse) {} // SetSearchCache method is used to set flight search cache.
+}

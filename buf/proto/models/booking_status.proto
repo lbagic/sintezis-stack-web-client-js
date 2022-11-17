@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package elude.proto;
+
+option go_package = "./;gen";
+
+import "validate/validate.proto";
+
+// BookingStatus is returned as association for booking. Contains information about current booking status.
+message BookingStatus {
+    int32 id = 1; // Booking status id.
+    string name = 2 [(validate.rules).string = {pattern: "^[a-zA-Z0-9_ ]*$",min_len: 1}]; // Booking status name.
+}

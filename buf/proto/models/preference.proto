@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package elude.proto;
+
+option go_package = "./;gen";
+
+import "validate/validate.proto";
+
+// Preference message is returned in Preference CRUD rpc calls. Contains info on a preference.
+message Preference {
+    int32 id = 1; // Preference id.
+    string name = 2 [(validate.rules).string = {pattern: "^[a-zA-Z0-9_ ]*$",min_len: 1}]; // Preference name.
+    string source = 3 [(validate.rules).string = {pattern: "^[a-zA-Z0-9_ ]*$",min_len: 1}]; // Preference source.
+    int32 preference_subcategory_id = 4; // PreferenceSubcategory preference subcategory id.
+    PreferenceSubcategory preference_subcategory= 5; // PreferenceSubcategory preference subcategory data.
+}
+
+// PreferenceSubcategory is returned as association for preference.
+message PreferenceSubcategory {
+    int32 id = 1; // Preference subcategory id.
+    string name = 2 [(validate.rules).string = {pattern: "^[a-zA-Z0-9_ ]*$",min_len: 1}]; // Preference subcategory name.
+    int32 preference_category_id = 3; // PreferenceCategory preference category id.
+    PreferenceCategory preference_category= 4; // PreferenceSubcategory preference category data.
+}
+
+// PreferenceCategory is returned as association for preference.
+message PreferenceCategory {
+    int32 id = 1; // Preference category id.
+    string name = 2 [(validate.rules).string = {pattern: "^[a-zA-Z0-9_ ]*$",min_len: 1}]; // Preference category name.
+}

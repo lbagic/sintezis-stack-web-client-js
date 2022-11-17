@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package elude.proto;
+
+option go_package = "./;gen";
+
+import "validate/validate.proto";
+
+// PaymentProvider message is returned as an association in multiple messages. Contains info on the payment provider.
+message PaymentProvider {
+    int32 id = 1; // Payment provider id.
+    string name = 2 [(validate.rules).string = {pattern: "^[a-zA-Z ]*$",min_len: 1}]; // Payment provider name.
+}

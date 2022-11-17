@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package elude.proto;
+
+option go_package = "./;gen";
+
+import "validate/validate.proto";
+
+// Continent message is returned as an association of Country message. Contains info about a continent.
+message Continent {
+    int32 id = 1; // Continent id.
+    string name = 2  [(validate.rules).string = {pattern: "^[a-zA-Z ]*$",min_len: 1}]; // Continent name.
+    string iso_code = 3 [(validate.rules).string = {pattern: "^[A-Z0-9]*$",len: 2}]; // Continent iso code, 2 letter code.
+}

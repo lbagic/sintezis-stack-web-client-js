@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package elude.proto;
+
+option go_package = "./;gen";
+
+import "validate/validate.proto";
+import "proto/models/media.proto";
+import "proto/models/gds.proto";
+
+// Amenity message is returned in responses for Amenity CRUD operations. It contains all the information for Amenity model.
+message Amenity {
+  int32 id = 1; // Amenity id.
+  string name = 2 [(validate.rules).string = {pattern: "^[a-zA-Z0-9 !@&*()-_/,.]*$",min_len: 1}]; // Amenity name.
+  int32 gds_id = 3 [(validate.rules).int32 = {gte: 1}]; // Amenity gds id.
+  int32 image_id = 4; // Amenity image id in database media table.
+  Media media = 5; // Amenity media data.
+  Gds gds = 6; // Amenity gds data.
+  bool is_active = 7; // If false amenity is not used.
+}

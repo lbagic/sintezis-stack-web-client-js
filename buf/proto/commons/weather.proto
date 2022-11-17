@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package elude.proto;
+
+option go_package = "./;gen";
+
+// Weather contains information about the current weather for a specific city/coordinates. Uses Open Weather.
+message Weather {
+    string weather = 1; // Weather title (e.g. Rain)
+    string weather_description = 2; // Weather description (e.g. light rain)
+    float current_temperature = 3; // Weather temperature in celsius
+    int32 humidity = 4; // Weather humidity (e.g. 81 -> 81%)
+}
