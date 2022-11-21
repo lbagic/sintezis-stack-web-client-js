@@ -15,7 +15,6 @@
   @each $color, $value in $base-colors {
     &.#{$color} {
       --base-color: var(--#{$prefix}color-#{$color});
-      --focus-color: var(--#{$prefix}color-#{$color}-dark-2);
       --accent-color: var(--#{$prefix}color-#{$color}-dark);
     }
   }
@@ -31,7 +30,7 @@
       @media (hover: hover) {
         &:focus,
         &:focus-visible {
-          color: var(--focus-color);
+          color: var(--accent-color);
         }
         &:focus:not(:focus-visible) {
           color: var(--base-color);
