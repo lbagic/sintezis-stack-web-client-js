@@ -7,6 +7,10 @@ import { createResource } from "./base/resourceFactory";
 export const userResource = createResource({
   entity: User,
   usePagination: true,
+  tableColumns: [
+    { label: "First Name", field: "firstName" },
+    { label: "Last Name", field: "lastName" },
+  ],
   getAll: {
     call: grpc.UserService.getAll,
     parse: ({ users }) => users,
@@ -61,14 +65,4 @@ export const userResource = createResource({
       },
     },
   },
-  mapDisplayItem: (obj = {}) => ({
-    id: obj.id,
-    Address: obj.address,
-    Name: obj.firstName,
-  }),
-  // createForm: {
-  //   firstName: { value: "", map: (o) => o.fir },
-  //   title: { value: "", bind: {} },
-  //   roles: [{}],
-  // },
 });

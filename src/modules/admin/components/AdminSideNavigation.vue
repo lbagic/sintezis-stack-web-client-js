@@ -31,7 +31,7 @@ const adminStore = useAdminStore();
   background: linear-gradient(
     120deg,
     var(--snt-color-primary-lightest) 0%,
-    var(--snt-color-primary-max-light) 100%
+    var(--snt-color-primary-lightest-2) 100%
   );
   box-shadow: var(--snt-shadow-3);
 }

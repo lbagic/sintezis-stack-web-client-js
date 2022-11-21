@@ -13,6 +13,11 @@ import { markRaw } from "vue";
  */
 
 /**
+ * @template T
+ * @typedef { import("@/components/base/table/table.ctl").TableColumns<T> } TableColumns
+ */
+
+/**
  * @template Rpc
  * @template { Record<string, any> } EntityInstance
  * @template ParseReturnType
@@ -34,7 +39,7 @@ import { markRaw } from "vue";
  *  getAll: ServiceStruct<RpcGetAll, InstanceType<Entity>, InstanceType<Entity>[]>,
  *  create?: ServiceStruct<RpcCreate, InstanceType<Entity>, InstanceType<Entity>>,
  *  icon?: ReturnType<markRaw>,
- *  mapDisplayItem: (obj: InstanceType<Entity>) => Record<string, unknown>,
+ *  tableColumns: TableColumns<InstanceType<Entity>>,
  *  name?: string,
  *  usePagination: boolean,
  * }} ResourceConfig
@@ -46,8 +51,7 @@ import { markRaw } from "vue";
  *  RpcCreate extends RpcStruct,
  *  RpcGetAll extends RpcStruct,
  *  Fields = ReturnType<Entity['fields']['list']>,
- * >(config: ResourceConfig<Entity, RpcCreate, RpcGetAll>) =>
- * Required<ResourceConfig<Entity, RpcCreate, RpcGetAll>> & {
+ * >(config: ResourceConfig<Entity, RpcCreate, RpcGetAll>) => Required<ResourceConfig<Entity, RpcCreate, RpcGetAll>> & {
  *  fields: Fields,
  *  hasPagination: boolean,
  *  id: string,

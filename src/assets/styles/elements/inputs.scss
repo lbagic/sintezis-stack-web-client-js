@@ -11,7 +11,7 @@
   --input-text-color: var(--#{$prefix}color-text);
   --input-placeholder-color: var(--#{$prefix}color-grey);
   --input-background-color: var(--#{$prefix}color-light);
-  --input-border-color: var(--#{$prefix}color-light-darker);
+  --input-border-color: var(--#{$prefix}color-light-dark-2);
   --input-padding-x: 8px;
   --input-padding-y: calc(
     (var(--input-height) - var(--input-font-size) * var(--input-line-height)) /
@@ -35,6 +35,7 @@
   padding: var(--input-padding-y) var(--input-padding-x);
   border-width: 1px;
   border-style: solid;
+  border-radius: 2px;
   border-color: var(--input-border-color);
   background-color: var(--input-background-color);
 }

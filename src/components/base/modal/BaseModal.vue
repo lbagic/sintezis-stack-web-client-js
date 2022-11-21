@@ -17,7 +17,7 @@ import {
   watch,
 } from "vue";
 import { useRouter } from "vue-router";
-import { css } from "../../utils/css.js";
+import { css } from "../../../utils/css.js";
 import { _modalCtl } from "./modal.ctl.js";
 
 const router = useRouter();

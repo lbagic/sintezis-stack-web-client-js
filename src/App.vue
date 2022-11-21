@@ -1,5 +1,5 @@
 <script setup>
-import BaseToast from "./components/base/BaseToast.vue";
+import BaseToast from "./components/base/toast/BaseToast.vue";
 </script>
 
 <template>

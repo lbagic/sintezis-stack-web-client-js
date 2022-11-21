@@ -1,12 +1,12 @@
 .#{$prefix}button {
-  align-items: center;
-  border-radius: 1px;
+  border-radius: 2px;
   border: 1.5px solid transparent;
   cursor: pointer;
-  display: inline-flex;
+  display: inline;
+  align-items: center;
+  justify-content: center;
   font-size: 16px;
   font-weight: 400;
-  justify-content: center;
   min-height: var(--height);
   opacity: 1;
   // outline-color: transparent !important;
@@ -23,10 +23,15 @@
   --height: 42px;
   --padding-y: 6px;
   --padding-x: 18px;
+  &.xsmall {
+    --height: initial;
+    --padding-y: initial;
+    --padding-x: initial;
+  }
   &.small {
     --height: 34px;
     --padding-y: 4px;
-    --padding-x: 12px;
+    --padding-x: 8px;
   }
   &.large {
     --height: 50px;
@@ -37,7 +42,7 @@
     width: 100%;
   }
   &.rounded {
-    border-radius: 4px;
+    border-radius: 6px;
   }
 }
 
@@ -51,14 +56,13 @@
   @each $color, $value in $base-colors {
     &.#{$color} {
       --base-color: var(--#{$prefix}color-#{$color});
-      --accent-color: var(--#{$prefix}color-#{$color}-dark);
-      --focus-color: var(--#{$prefix}color-#{$color}-darker);
+      --accent-color: var(--#{$prefix}color-#{$color}-light-2);
+      --focus-color: var(--#{$prefix}color-#{$color}-dark-2);
       --contrast-color: var(--#{$prefix}color-#{$color}-contrast);
     }
   }
 
   &:not(.text):not(.outline) {
-    box-shadow: 0 0 4px #0004;
     @each $color, $value in $base-colors {
       &.#{$color} {
         color: var(--contrast-color);
@@ -92,7 +96,6 @@
   }
   &.outline {
     background-color: transparent;
-    box-shadow: 0 0 4px #0004;
     @each $color, $value in $base-colors {
       &.#{$color} {
         color: var(--base-color);
@@ -125,7 +128,6 @@
   }
   &.text {
     background-color: transparent;
-    @extend %#{$prefix}animate-underline;
     @each $color, $value in $base-colors {
       &.#{$color} {
         color: var(--base-color);

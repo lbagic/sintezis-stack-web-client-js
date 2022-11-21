@@ -1,7 +1,7 @@
 <script setup>
-import BaseInput from "@/components/base/BaseInput.vue";
-import { useFormData } from "@/components/base/input.ctl";
-import { toast } from "@/components/base/toast.ctl";
+import BaseInput from "@/components/base/input/BaseInput.vue";
+import { useFormData } from "@/components/base/input/input.ctl";
+import { toast } from "@/components/base/toast/toast.ctl";
 import { usePromise } from "@/utils/usePromise";
 import { useAccountStore } from "../accountStore";
 

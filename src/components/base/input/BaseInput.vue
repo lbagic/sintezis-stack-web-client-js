@@ -51,15 +51,15 @@ function focusFirstInvalidElement(form) {
 <script setup>
 const props = defineProps({
   id: { type: [String, Number] },
-  modelValue: undefined,
-  value: undefined,
+  modelValue: { type: undefined },
+  value: { type: undefined },
   type: { type: String, default: "text" },
-  options: undefined,
+  options: { type: [Object, Array] },
   strictOptions: { type: Boolean, default: true },
-  hint: String,
-  label: String,
-  labelPosition: String,
-  validator: Function,
+  hint: { type: String },
+  label: { type: String },
+  labelPosition: { type: String },
+  validator: { type: Function },
   useErrorBorder: { type: Boolean, default: settings.useErrorBorder },
   useErrorMessage: { type: Boolean, default: settings.useErrorMessage },
   useHtmlValidation: { type: Boolean, default: settings.useHtmlValidation },
@@ -175,7 +175,7 @@ function onInternalUpdate() {
   cfg.onInternalUpdate?.(ctx);
   externalModel = model;
 }
-function onExternalUpdate(forceUpdate) {
+function onExternalUpdate(forceUpdate = false) {
   const nothingChanged =
     model.value === externalModel.value &&
     model.error === externalModel.error &&

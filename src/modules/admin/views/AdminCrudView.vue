@@ -1,20 +1,17 @@
 <script setup>
+import BaseTable from "@/components/base/table/BaseTable.vue";
 import { Pagination } from "@/gen/proto/commons/pagination_pb";
 import { onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { adminResources } from "../adminResources";
 import AdminCrudCreateForm from "../components/AdminCrudCreateForm.vue";
-import AdminCrudTable from "../components/AdminCrudTable.vue";
 
 const route = useRoute();
 const resourceId = route.params.resourceId;
 const resource = adminResources.find((el) => el.id === resourceId);
-const { create, getAll, hasPagination, mapDisplayItem, usePagination } =
-  resource;
+const { create, getAll, hasPagination, usePagination } = resource;
 
 let rawData = $ref([]);
-const displayKeys = Object.keys(mapDisplayItem());
-const displayData = $computed(() => rawData.map(mapDisplayItem));
 
 let pagination = $ref(new Pagination());
 if (!usePagination) pagination.overridePagination = true;
@@ -25,6 +22,9 @@ async function getAllItems() {
   const response = await getAll.call(payload);
   rawData = getAll.parse(response);
   if (response.pagination) pagination = response.pagination;
+}
+function log(x) {
+  console.log(x);
 }
 
 onMounted(() => {
@@ -37,10 +37,15 @@ onMounted(() => {
     <template v-if="create">
       <AdminCrudCreateForm :service="create" :name="resource.name" />
     </template>
-    <AdminCrudTable
-      :raw-data="rawData"
-      :display-data="displayData"
-      :display-keys="displayKeys"
+    <BaseTable
+      :columns="resource.tableColumns"
+      :data="rawData"
+      use-sort
+      class="muted"
+      @info="log"
+      use-delete
+      use-edit
+      use-info
     />
   </div>
 </template>

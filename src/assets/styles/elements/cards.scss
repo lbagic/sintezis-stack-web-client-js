@@ -7,7 +7,7 @@
   box-shadow: var(--card-box-shadow);
   @each $color, $value in $base-colors {
     &.#{$color} {
-      background: var(--#{$prefix}color-#{$color}-max-light);
+      background: var(--#{$prefix}color-#{$color}-lightest-2);
       border-color: var(--#{$prefix}color-#{$color}-lighter);
     }
   }

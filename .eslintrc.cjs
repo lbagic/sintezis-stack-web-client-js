@@ -19,6 +19,7 @@ module.exports = {
     $$: "readonly",
   },
   rules: {
+    "vue/require-v-for-key": 0,
     "jsdoc/check-line-alignment": 1,
     "jsdoc/no-undefined-types": 1,
     "jsdoc/require-jsdoc": 0,

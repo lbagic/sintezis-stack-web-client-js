@@ -63,6 +63,11 @@
     border-color: var(--#{$prefix}color-danger);
     color: var(--#{$prefix}color-danger-lightest-contrast);
   }
+  &[data-type="warning"] {
+    background: var(--#{$prefix}color-warning-lightest);
+    border-color: var(--#{$prefix}color-warning);
+    color: var(--#{$prefix}color-warning-lightest-contrast);
+  }
   &[data-type="info"] {
     background: var(--#{$prefix}color-info-lightest);
     border-color: var(--#{$prefix}color-info);

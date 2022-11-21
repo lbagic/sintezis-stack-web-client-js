@@ -2,7 +2,7 @@ import { reactive } from "vue";
 
 /**
  * @typedef {{ id: number, message: string, type: ToastType }} ToastItem
- * @typedef { 'success' | 'danger' | 'info' } ToastType
+ * @typedef { 'success' | 'danger' | 'info' | 'warning' } ToastType
  * @typedef { 'top left' | 'top center' | 'top right' | 'bottom left' | 'bottom center' | 'bottom right' } ToastPosition
  * @typedef {{ position?: ToastPosition, duration?: number, closable?: boolean }} ToastOptions
  * @typedef { (message: string, options?: ToastOptions) => void } CreateToastFunction
@@ -13,6 +13,7 @@ import { reactive } from "vue";
 const settings = {
   success: { position: "top center", duration: 3 * 1000 },
   danger: { position: "top center", duration: 3 * 1000 },
+  warning: { position: "bottom right", duration: 20 * 1000, closable: true },
   info: { position: "bottom right", duration: 20 * 1000, closable: true },
 };
 
@@ -28,7 +29,7 @@ export const _toastCtl = {
     "bottom right": [],
   }),
   /** @type { ToastType[] } */
-  types: ["success", "danger", "info"],
+  types: ["success", "danger", "info", "warning"],
 };
 
 /** @type { (type: ToastType) => CreateToastFunction } */

@@ -6,6 +6,7 @@ TODO:
 - GRPC/REST - stream logger
 - input - test performance, maybe some eager computeds?
 - components - a11y
+- rework colors
 
 # WebStack Documentation
 

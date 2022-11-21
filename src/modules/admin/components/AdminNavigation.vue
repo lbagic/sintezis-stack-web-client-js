@@ -1,6 +1,6 @@
 <script setup>
-import BaseModal from "@/components/base/BaseModal.vue";
-import { modal } from "@/components/base/modal.ctl";
+import BaseModal from "@/components/base/modal/BaseModal.vue";
+import { modal } from "@/components/base/modal/modal.ctl";
 import { useAccountStore } from "@/modules/account/accountStore";
 import { breakpoint } from "@/utils/breakpoint";
 import { useRoute } from "vue-router";
@@ -60,7 +60,7 @@ const isSmallScreen = breakpoint.smaller("s");
           Yes, logout
         </button>
         <button
-          class="snt-button small rounded primary"
+          class="snt-link small rounded primary"
           @click="modal.logout.close"
         >
           No

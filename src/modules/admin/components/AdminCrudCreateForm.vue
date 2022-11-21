@@ -1,7 +1,7 @@
 <script setup>
-import BaseInput from "@/components/base/BaseInput.vue";
-import BaseModal from "@/components/base/BaseModal.vue";
-import { useFormFactory } from "@/components/base/input.ctl";
+import BaseInput from "@/components/base/input/BaseInput.vue";
+import BaseModal from "@/components/base/modal/BaseModal.vue";
+import { useFormFactory } from "@/components/base/input/input.ctl";
 
 const props = defineProps({ service: undefined, name: String });
 // const emit = defineEmits(["response"]);

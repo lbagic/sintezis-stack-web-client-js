@@ -6,11 +6,12 @@ $base-colors: (
   "info": #0dcaf0,
   "warning": #ffc107,
   "danger": #dc3545,
-  "white": #ffffff,
-  "light": #f8f9fa,
-  "grey": #888,
-  "dark": #212529,
   "black": #000000,
+  "dark": #212529,
+  "grey": #888,
+  "muted": #ddd,
+  "light": #f8f9fa,
+  "white": #ffffff,
 );
 
 // colors without variants
@@ -20,14 +21,20 @@ $solid-colors: (
 );
 
 $base-color-variants: (
-  "max-light": (
+  "lightest-2": (
     "lightness": 95%,
   ),
   "lightest": (
-    "lightness": 80%,
+    "lightness": 90%,
+  ),
+  "lighter-2": (
+    "lightness": 50%,
   ),
   "lighter": (
-    "lightness": 50%,
+    "lightness": 40%,
+  ),
+  "light-2": (
+    "lightness": 20%,
   ),
   "light": (
     "lightness": 10%,
@@ -35,14 +42,20 @@ $base-color-variants: (
   "dark": (
     "lightness": -10%,
   ),
+  "dark-2": (
+    "lightness": -20%,
+  ),
   "darker": (
-    "lightness": -30%,
+    "lightness": -40%,
+  ),
+  "darker-2": (
+    "lightness": -50%,
   ),
   "darkest": (
-    "lightness": -45%,
+    "lightness": -80%,
   ),
-  "max-dark": (
-    "lightness": -75%,
+  "darkest-2": (
+    "lightness": -90%,
   ),
   "opaque": (
     "alpha": -0.66,

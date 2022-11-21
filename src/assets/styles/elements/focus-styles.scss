@@ -1,7 +1,7 @@
 %focus-styles {
   --outline-width: 1px;
   --outline-style: solid;
-  --outline-color: var(--#{$prefix}color-light-dark);
+  --outline-color: var(--#{$prefix}color-light-dark-2);
 
   outline: var(--outline-width) var(--outline-style) var(--outline-color);
   outline-offset: 1px;
