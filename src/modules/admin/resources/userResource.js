@@ -6,62 +6,59 @@ import { createResource } from "./base/resourceFactory";
 
 export const userResource = createResource({
   entity: User,
-  usePagination: true,
+  usePagination: false,
   tableColumns: [
     { label: "First Name", field: "firstName" },
     { label: "Last Name", field: "lastName" },
   ],
-  getAll: {
-    call: grpc.UserService.getAll,
-    parse: ({ users }) => users,
-    rpc: GatewayController.methods.getUsers,
-  },
-  create: {
-    call: grpc.UserService.add,
-    prepare: async (user) => {
-      const password = createHash(user.password);
-      return {
-        user: { ...user, password, authProviderId: 1 },
-      };
+  services: {
+    getAll: {
+      rpc: GatewayController.methods.getUsers,
+      call: grpc.UserService.getAll,
     },
-    parse: ({ user }) => user,
-    rpc: GatewayController.methods.createUser,
-    form: {
-      firstName: {
-        value: "",
-        bind: { label: "First Name", required: true },
+    create: {
+      rpc: GatewayController.methods.createUser,
+      call: async (request) => {
+        request.user.password = await createHash(request.user.password);
+        return grpc.UserService.add(request);
       },
-      lastName: {
-        value: "",
-        bind: { label: "Last Name", required: true },
-      },
-      titleId: {
-        value: "",
-        bind: { label: "Title", required: true },
-      },
-      email: {
-        value: "",
-        bind: { label: "Email", required: true },
-      },
-      password: {
-        value: "",
-        bind: { label: "Password", required: true },
-      },
-      dateOfBirth: {
-        value: "",
-        bind: { label: "Date of birth", type: "date", required: true },
-      },
-      phone: {
-        value: "",
-        bind: { label: "Phone" },
-      },
-      address: {
-        value: "",
-        bind: { label: "Address" },
-      },
-      airportId: {
-        value: "",
-        bind: { label: "Airport" },
+      form: {
+        firstName: {
+          value: "",
+          bind: { label: "First Name", required: true },
+        },
+        lastName: {
+          value: "",
+          bind: { label: "Last Name", required: true },
+        },
+        titleId: {
+          value: "",
+          bind: { label: "Title", required: true },
+        },
+        email: {
+          value: "",
+          bind: { label: "Email", required: true },
+        },
+        password: {
+          value: "",
+          bind: { label: "Password", required: true },
+        },
+        dateOfBirth: {
+          value: "",
+          bind: { label: "Date of birth", type: "date", required: true },
+        },
+        phone: {
+          value: "",
+          bind: { label: "Phone" },
+        },
+        address: {
+          value: "",
+          bind: { label: "Address" },
+        },
+        airportId: {
+          value: "",
+          bind: { label: "Airport" },
+        },
       },
     },
   },

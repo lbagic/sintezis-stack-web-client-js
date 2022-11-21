@@ -4,17 +4,21 @@ import { modal } from "@/components/base/modal/modal.ctl";
 import { useAccountStore } from "@/modules/account/accountStore";
 import { breakpoint } from "@/utils/breakpoint";
 import { useRoute } from "vue-router";
+import { adminResources } from "../adminResources";
 import { useAdminStore } from "../adminStore";
 import AdminIconPower from "./icons/AdminIconPower.vue";
 
 const adminStore = useAdminStore();
 const route = useRoute();
 const breadcrumbs = $computed(() => {
-  const list = [];
+  const list = [{ name: "Dashboard", to: "/" }];
   const resourceId = route.params.resourceId;
-  if (resourceId) list.push({ name: resourceId, to: `/crud/${resourceId}` });
-  if (route.fullPath.includes(`${resourceId}/details`))
-    list.push({ name: `Details`, to: `/crud/${resourceId}/details` });
+  const resource = adminResources.find((el) => el.id === resourceId);
+  if (resource) {
+    list.push({ name: resource.name, to: `/crud/${resourceId}` });
+    if (route.path.includes(`${resourceId}/details`))
+      list.push({ name: `Details`, to: `/crud/${resourceId}/details` });
+  }
   return list;
 });
 const accountStore = useAccountStore();
@@ -32,9 +36,8 @@ const isSmallScreen = breakpoint.smaller("s");
       <div></div>
       <div></div>
     </button>
-    <RouterLink class="snt-link white" to="/">Dashboard</RouterLink>
-    <template v-for="crumb in breadcrumbs" :key="crumb">
-      <p>&middot;</p>
+    <template v-for="(crumb, index) in breadcrumbs" :key="crumb">
+      <p v-if="index !== 0">&middot;</p>
       <RouterLink class="snt-link white" :to="crumb.to">{{
         crumb.name
       }}</RouterLink>

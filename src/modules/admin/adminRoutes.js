@@ -22,11 +22,12 @@ export const adminRoutes = [
         path: "crud/:resourceId",
         component: () => import("./views/AdminCrudView.vue"),
         beforeEnter(to, from, next) {
-          const serviceExists = adminResources.some(
-            ({ id }) => id === to.params.resourceId
+          const resource = adminResources.find(
+            (el) => el.id === to.params.resourceId
           );
-          if (!serviceExists) next("/");
-          else next();
+          if (!resource) return next("/");
+          document.title = resource.name;
+          return next();
         },
       },
     ],

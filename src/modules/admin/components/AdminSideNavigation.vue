@@ -16,7 +16,7 @@ const adminStore = useAdminStore();
             style="display: inline-flex"
           >
             <component height="100%" width="20px" :is="resource.icon" />
-            <p>{{ resource.id }}</p>
+            <p>{{ resource.name }}</p>
           </RouterLink>
         </li>
       </ul>

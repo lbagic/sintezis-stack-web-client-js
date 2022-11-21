@@ -20,11 +20,10 @@ import { markRaw } from "vue";
 /**
  * @template Rpc
  * @template { Record<string, any> } EntityInstance
- * @template ParseReturnType
+ * @template ResponseType
  * @typedef {{
  *  call: (request: InstanceType<Rpc['I']>) => Promise<InstanceType<Rpc['O']>>,
- *  prepare: (data: EntityInstance) => Promise<InstanceType<Rpc['I']>>
- *  parse: (response: InstanceType<Rpc['O']>) => ParseReturnType,
+ *  parseResponseData: (response: InstanceType<Rpc['O']>) => ResponseType,
  *  rpc: Rpc
  *  form?: EntityInstance
  * }} ServiceStruct
@@ -36,8 +35,12 @@ import { markRaw } from "vue";
  * @template RpcGetAll
  * @typedef {{
  *  entity: Entity,
- *  getAll: ServiceStruct<RpcGetAll, InstanceType<Entity>, InstanceType<Entity>[]>,
- *  create?: ServiceStruct<RpcCreate, InstanceType<Entity>, InstanceType<Entity>>,
+ *  services: {
+ *    getAll: ServiceStruct<RpcGetAll, InstanceType<Entity>, InstanceType<Entity>[]>,
+ *    create?: ServiceStruct<RpcCreate, InstanceType<Entity>, InstanceType<Entity>>,
+ *    edit?: ServiceStruct<RpcCreate, InstanceType<Entity>, InstanceType<Entity>>,
+ *    delete?: ServiceStruct<RpcCreate, InstanceType<Entity>, InstanceType<Entity>>,
+ *  }
  *  icon?: ReturnType<markRaw>,
  *  tableColumns: TableColumns<InstanceType<Entity>>,
  *  name?: string,
@@ -54,6 +57,7 @@ import { markRaw } from "vue";
  * >(config: ResourceConfig<Entity, RpcCreate, RpcGetAll>) => Required<ResourceConfig<Entity, RpcCreate, RpcGetAll>> & {
  *  fields: Fields,
  *  hasPagination: boolean,
+ *  hasSearch: boolean,
  *  id: string,
  * }} ResourceFactory
  */
@@ -63,13 +67,22 @@ export const createResource = (config) => {
   const entity = config.entity;
   const fields = entity.fields.list();
 
-  const hasPagination = config.getAll.rpc["O"].fields
-    .list()
-    .some((el) => el.name === "pagination");
+  Object.values(config.services).forEach((service) => {
+    const dataField = service.rpc["O"].fields
+      .list()
+      .find((el) => entity.equals(entity, el.T));
+    if (!dataField)
+      throw new Error("Entity field not found, cant create response parser.");
+    service.parseResponseData = (response) => response[dataField.name];
+  });
+
+  const requestFields = config.services.getAll.rpc["I"].fields.list();
+
   return {
     ...config,
     fields,
-    hasPagination,
+    hasPagination: requestFields.some((el) => el.name === "pagination"),
+    hasSearch: requestFields.some((el) => el.name === "search"),
     icon: config.icon ?? markRaw(AdminIconFolder),
     name: config.name ?? entity.name,
     id: entity.name,
