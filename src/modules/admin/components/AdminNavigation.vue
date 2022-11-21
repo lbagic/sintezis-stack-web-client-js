@@ -41,7 +41,7 @@ const isSmallScreen = breakpoint.smaller("s");
     </template>
     <button
       :class="{
-        'snt-button white rounded small': isSmallScreen,
+        'snt-button white small': isSmallScreen,
         'snt-link white': !isSmallScreen,
       }"
       style="margin-left: auto"
