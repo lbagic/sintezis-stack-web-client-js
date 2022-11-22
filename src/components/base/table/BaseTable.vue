@@ -130,6 +130,10 @@ onMounted(() => {
     { immediate: true }
   );
 });
+
+const delayMultiplier = $computed(() =>
+  items.length > 20 ? 1 / items.length : 0.05
+);
 </script>
 
 <template>
@@ -154,7 +158,7 @@ onMounted(() => {
       <tr
         v-for="{ row, raw, id } in items"
         :key="id"
-        :style="`transition-delay: ${id * 0.05}s`"
+        :style="`transition-delay: ${id * delayMultiplier}s`"
       >
         <td
           v-if="useActions"
