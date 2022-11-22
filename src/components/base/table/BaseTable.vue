@@ -1,6 +1,6 @@
 <script setup>
 import * as R from "ramda";
-import { onMounted, reactive } from "vue";
+import { onMounted, reactive, watch } from "vue";
 import TableIconDelete from "./icons/TableIconDelete.vue";
 import TableIconEdit from "./icons/TableIconEdit.vue";
 import TableIconInfo from "./icons/TableIconInfo.vue";
@@ -60,9 +60,10 @@ const useSort = $computed(() => !!sortOrders.size);
 const searchTerm = $computed(() => props.search.toLowerCase?.());
 
 const data = $computed(() =>
-  props.data.map((item) => ({
+  props.data.map((item, index) => ({
     raw: item,
     row: cfg.fields.map((field) => field(item)),
+    id: index,
   }))
 );
 const searchable = $computed(() =>
@@ -117,15 +118,22 @@ const actionColumnSize = $computed(
     cssVars.iconGap * (numberOfActions - 1)
 );
 
+let items = $ref([]);
+
 onMounted(() => {
   cssVars.cellPaddingX = parseInt(getTableCssVar("--table-cell-padding-x"));
   cssVars.iconGap = parseInt(getTableCssVar("--table-icon-gap"));
   cssVars.iconSize = parseInt(getTableCssVar("--table-icon-size"));
+  watch(
+    () => sortedData,
+    (value) => (items = value),
+    { immediate: true }
+  );
 });
 </script>
 
 <template>
-  <table class="snt-table" ref="tableRef">
+  <table :class="`${$prefix}table`" ref="tableRef">
     <thead>
       <tr>
         <th v-if="useActions" :style="{ width: `${actionColumnSize}px` }"></th>
@@ -142,38 +150,42 @@ onMounted(() => {
         </th>
       </tr>
     </thead>
-    <tbody>
-      <tr v-for="{ row, raw } in sortedData">
+    <TransitionGroup name="table-transition" tag="tbody">
+      <tr
+        v-for="{ row, raw, id } in items"
+        :key="id"
+        :style="`transition-delay: ${id * 0.05}s`"
+      >
         <td
           v-if="useActions"
-          class="snt-flex"
+          :class="`${$prefix}flex`"
           style="--gap: var(--table-icon-gap)"
         >
           <button
             v-if="props.useInfo"
-            class="snt-flex action-btn info"
+            :class="`${$prefix}button text info action-button`"
             @click="emit('info', raw)"
           >
-            <TableIconInfo class="snt-table-icon" />
+            <TableIconInfo :class="`${$prefix}table-icon`" />
           </button>
           <button
             v-if="props.useEdit"
-            class="snt-flex action-btn edit"
+            :class="`${$prefix}button text warning action-button`"
             @click="emit('edit', raw)"
           >
-            <TableIconEdit class="snt-table-icon" />
+            <TableIconEdit :class="`${$prefix}table-icon`" />
           </button>
           <button
             v-if="props.useDelete"
-            class="snt-flex action-btn delete"
+            :class="`${$prefix}button text danger action-button`"
             @click="emit('delete', raw)"
           >
-            <TableIconDelete class="snt-table-icon" />
+            <TableIconDelete :class="`${$prefix}table-icon`" />
           </button>
         </td>
         <td v-for="field in row">{{ field }}</td>
       </tr>
-    </tbody>
+    </TransitionGroup>
   </table>
 </template>
 
@@ -206,24 +218,7 @@ th {
     clip-path: polygon(50% 0%, 50% 0%, 100% 100%, 0% 100%);
   }
 }
-.action-btn {
-  --default-color: var(--#{$prefix}color-grey);
-  --accent-color: white;
-  &.info {
-    --accent-color: var(--#{$prefix}color-info);
-  }
-  &.edit {
-    --accent-color: var(--#{$prefix}color-warning);
-  }
-  &.delete {
-    --accent-color: var(--#{$prefix}color-danger);
-  }
-
-  transition: all 0.2s ease;
-  color: var(--default-color);
-  &:hover,
-  &:active {
-    color: var(--accent-color);
-  }
+.action-button {
+  --base-color: var(--#{$prefix}color-grey);
 }
 </style>

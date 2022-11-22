@@ -1,6 +1,7 @@
 <script>
 export default {
   inheritAttrs: false,
+  components: { ModalIconClose },
 };
 </script>
 
@@ -18,6 +19,7 @@ import {
 } from "vue";
 import { useRouter } from "vue-router";
 import { css } from "../../../utils/css.js";
+import ModalIconClose from "./icons/ModalIconClose.vue";
 import { _modalCtl } from "./modal.ctl.js";
 
 const router = useRouter();
@@ -173,8 +175,11 @@ if (props.name) {
           <button
             v-if="useClose.onButton"
             @click="close(false)"
-            :class="`${prefix}modal-close-button`"
-          ></button>
+            :class="`${prefix}modal-close-button ${$prefix}button danger text`"
+            :style="{ '--base-color': `var(--${prefix}color-grey-dark)` }"
+          >
+            <ModalIconClose style="width: inherit; height: inherit" />
+          </button>
           <slot></slot>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import "./init";
 
+import { useCssVar } from "@vueuse/core";
 import { i18nPlugin } from "./plugins/i18n";
 import { router } from "./router/router";
 import { setupAdmin } from "./setup.admin";
@@ -10,6 +11,7 @@ export function setup(app) {
   // Vue global properties
   // IMPORTANT: register in setup.d.ts
   app.config.globalProperties.$image = "https://picsum.photos/500/500";
+  app.config.globalProperties.$prefix = useCssVar("--prefix").value;
 
   // Vue Plugins
   app.use(pinia);

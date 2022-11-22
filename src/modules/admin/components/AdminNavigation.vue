@@ -38,15 +38,16 @@ const isSmallScreen = breakpoint.smaller("s");
     </button>
     <template v-for="(crumb, index) in breadcrumbs" :key="crumb">
       <p v-if="index !== 0">&middot;</p>
-      <RouterLink class="snt-link white" :to="crumb.to">{{
+      <RouterLink class="snt-button text white underline" :to="crumb.to">{{
         crumb.name
       }}</RouterLink>
     </template>
     <button
       :class="{
-        'snt-button white small': isSmallScreen,
-        'snt-link white': !isSmallScreen,
+        small: isSmallScreen,
+        'text underline': !isSmallScreen,
       }"
+      class="snt-button white"
       style="margin-left: auto"
       @click="modal.logout.open"
     >
@@ -57,13 +58,13 @@ const isSmallScreen = breakpoint.smaller("s");
       <p>Are you sure you want to log out?</p>
       <div class="snt-flex equals" style="margin-top: 16px">
         <button
-          class="snt-button small rounded danger"
+          class="snt-button text danger underline small"
           @click="accountStore.logout"
         >
           Yes, logout
         </button>
         <button
-          class="snt-link small rounded primary"
+          class="snt-button text primary underline small"
           @click="modal.logout.close"
         >
           No

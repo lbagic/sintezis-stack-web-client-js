@@ -125,7 +125,6 @@ const ctx = $computed(() => ({
   props,
   config: cfg,
   isRequired,
-  setClass,
 }));
 
 function onInput(event) {

@@ -42,7 +42,7 @@ onMounted(() => {
     </template>
     <BaseTable
       :columns="resource.tableColumns"
-      :data="ctx.data"
+      :data="ctx.data.slice(0, 10)"
       use-sort
       class="primary"
       :use-info="!!resource.services.info"

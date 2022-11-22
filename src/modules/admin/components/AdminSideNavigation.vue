@@ -12,7 +12,7 @@ const adminStore = useAdminStore();
         <li v-for="resource in adminResources" :key="resource.id">
           <RouterLink
             :to="`/crud/${resource.id}`"
-            class="snt-flex snt-link dark"
+            class="snt-flex snt-button text dark underline"
             style="display: inline-flex"
           >
             <component height="100%" width="20px" :is="resource.icon" />

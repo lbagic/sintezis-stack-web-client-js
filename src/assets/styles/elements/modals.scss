@@ -74,19 +74,14 @@
 }
 
 .#{$prefix}modal-close-button {
+  --size: 24px;
+  cursor: pointer;
   position: sticky;
   float: right;
-  top: calc(-1.2 * var(--modal-padding));
-  margin: calc(-1.2 * var(--modal-padding));
-  right: calc(0.75 * var(--modal-padding));
-  width: 0;
-
-  cursor: pointer;
-  &::after {
-    font-size: 24px;
-    padding: 0 5px;
-    content: "\2715";
-  }
+  top: calc(-0.8 * var(--modal-padding));
+  margin: calc(-0.8 * var(--modal-padding));
+  width: var(--size);
+  height: var(--size);
 }
 
 .#{$prefix}modal-transition-enter-active,

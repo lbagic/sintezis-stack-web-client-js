@@ -1,37 +1,30 @@
 .#{$prefix}button {
-  border-radius: 2px;
-  border: 1.5px solid transparent;
-  cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+
   font-size: 16px;
   font-weight: 400;
   min-height: var(--height);
-  opacity: 1;
-  // outline-color: transparent !important;
   padding: var(--padding-y) var(--padding-x);
-  line-height: calc(var(--font-size) + var(--height) - var(--padding-y) / 2);
-  transition-duration: 0.15s;
-  transition-property: color, background-color, border-color, box-shadow,
-    opacity;
-  transition-timing-function: ease-in-out;
-  user-select: none;
-  white-space: nowrap;
-  width: fit-content;
+  // line-height: calc(var(--font-size) + var(--height) - var(--padding-y) / 2);
 
-  --height: 42px;
-  --padding-y: 6px;
-  --padding-x: 18px;
-  &.xsmall {
-    --height: initial;
-    --padding-y: initial;
-    --padding-x: initial;
-  }
+  cursor: pointer;
+  border-radius: 2px;
+  user-select: none;
+  opacity: 1;
+  transition: all 0.15s ease-in-out;
+  background-color: transparent;
+
   &.small {
     --height: 34px;
     --padding-y: 4px;
     --padding-x: 8px;
+  }
+  &.medium {
+    --height: 42px;
+    --padding-y: 6px;
+    --padding-x: 18px;
   }
   &.large {
     --height: 50px;
@@ -43,6 +36,9 @@
   }
   &.rounded {
     border-radius: 6px;
+  }
+  &.underline {
+    @extend %#{$prefix}animate-underline;
   }
 }
 
@@ -57,7 +53,7 @@
     &.#{$color} {
       --base-color: var(--#{$prefix}color-#{$color});
       --accent-color: var(--#{$prefix}color-#{$color}-light-2);
-      --focus-color: var(--#{$prefix}color-#{$color}-dark-2);
+      --focus-color: var(--#{$prefix}color-#{$color}-dark);
       --contrast-color: var(--#{$prefix}color-#{$color}-contrast);
     }
   }
@@ -67,34 +63,30 @@
       &.#{$color} {
         color: var(--contrast-color);
         background: var(--base-color);
-        border-color: var(--base-color);
         &:active {
           background: var(--accent-color);
-          border-color: var(--accent-color);
         }
         @media (hover: hover) {
           &:focus,
           &:focus-visible {
             background: var(--focus-color);
-            border-color: var(--focus-color);
           }
           &:focus:not(:focus-visible) {
             background: var(--base-color);
-            border-color: var(--base-color);
           }
           &:hover:nth-child(n) {
             background: var(--accent-color);
-            border-color: var(--accent-color);
           }
           &:active:nth-child(n) {
             background: var(--base-color);
-            border-color: var(--base-color);
           }
         }
       }
     }
   }
   &.outline {
+    box-sizing: border-box;
+    border: 1.5px solid transparent;
     background-color: transparent;
     @each $color, $value in $base-colors {
       &.#{$color} {
@@ -132,7 +124,7 @@
       &.#{$color} {
         color: var(--base-color);
         &:active {
-          color: var(--accent-color);
+          color: var(--focus-color);
         }
         @media (hover: hover) {
           &:focus,
@@ -143,7 +135,7 @@
             color: var(--base-color);
           }
           &:hover:nth-child(n) {
-            color: var(--accent-color);
+            color: var(--focus-color);
           }
           &:active:nth-child(n) {
             color: var(--base-color);

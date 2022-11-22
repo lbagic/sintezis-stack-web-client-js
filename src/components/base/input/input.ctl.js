@@ -24,7 +24,6 @@ const settings = {
  *  options: Record<string, any>
  *  props: { strictOptions: boolean, validator?: Function }
  *  isRequired: boolean,
- *  setClass: (className: string) => string
  * }} InputContext
  * @typedef {{
  *  attrs: { type?: string }

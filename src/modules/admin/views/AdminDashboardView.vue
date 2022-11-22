@@ -19,11 +19,11 @@ const data = {
     <p>Resources:</p>
     <div class="snt-flex-wrap">
       <RouterLink
-        class="snt-link primary"
+        class="snt-button text primary underline"
         v-for="resource in adminResources"
         :key="resource.id"
         :to="`/crud/${resource.id}`"
-        >{{ resource.displayName }}</RouterLink
+        >{{ resource.name }}</RouterLink
       >
     </div>
   </div>

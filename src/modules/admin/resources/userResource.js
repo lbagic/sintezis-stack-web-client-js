@@ -56,8 +56,12 @@ export const userResource = createResource({
           bind: { label: "Address" },
         },
         airportId: {
-          value: "",
-          bind: { label: "Airport" },
+          value: "asdf",
+          bind: {
+            label: "Airport",
+            options: () => grpc.AirlineService.getAll({}),
+            required: true,
+          },
         },
       },
     },

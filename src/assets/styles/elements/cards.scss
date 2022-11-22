@@ -7,7 +7,11 @@
   box-shadow: var(--card-box-shadow);
   @each $color, $value in $base-colors {
     &.#{$color} {
-      background: var(--#{$prefix}color-#{$color}-lightest-2);
+      background: linear-gradient(
+        150deg,
+        var(--#{$prefix}color-#{$color}-lightest-2) 0%,
+        var(--#{$prefix}color-#{$color}-lightest) 100%
+      );
       border-color: var(--#{$prefix}color-#{$color}-lighter);
     }
   }

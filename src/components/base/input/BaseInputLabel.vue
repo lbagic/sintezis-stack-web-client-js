@@ -1,8 +1,4 @@
-<script>
-import { useCssVar } from "@vueuse/core";
-
-const prefix = useCssVar("--prefix").value;
-</script>
+<script></script>
 
 <script setup>
 import { mergeProps, useAttrs } from "vue";
@@ -22,7 +18,7 @@ const attributes = $computed(() => {
 </script>
 
 <template>
-  <label v-bind="attributes" :class="`${prefix}input-label`">
+  <label v-bind="attributes" :class="`${$prefix}input-label`">
     <slot></slot>
   </label>
 </template>
