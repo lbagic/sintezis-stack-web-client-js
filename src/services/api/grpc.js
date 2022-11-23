@@ -29,4 +29,7 @@ export const grpc = {
     getAll: _grpc.GatewayController.getAirlines,
     delete: _grpc.GatewayController.deleteAirline,
   },
+  CountryService: {
+    getAll: _grpc.GatewayController.getCountries,
+  },
 };

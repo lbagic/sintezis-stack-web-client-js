@@ -2,6 +2,7 @@ import { computed, reactive } from "vue";
 import { inputValidation } from "./input.validation";
 import DateInput from "./DateInput.vue";
 import DateInputVue from "./DateInput.vue";
+import { inputUtils } from "./input.utils";
 
 const settings = {
   useErrorMessage: true,
@@ -168,7 +169,6 @@ const components = {
       ctx.inputRef.value = names.join(", ");
       return isArray ? files : files[0];
     },
-    onExternalUpdate() {},
     alt: {
       component: "input",
       attrs: { type: "file" },
@@ -190,6 +190,7 @@ const components = {
         dateFormat: "H:i",
         time_24hr: true,
       }),
+      modelValue: ctx.model.value,
     }),
   },
   "datetime-local": {
@@ -200,6 +201,7 @@ const components = {
         dateFormat: "Y-m-d H:i",
         time_24hr: true,
       }),
+      modelValue: ctx.model.value,
     }),
   },
 };
@@ -208,6 +210,7 @@ export const _inputCtl = {
   settings,
   components,
   validate: inputValidation,
+  ...inputUtils,
 };
 
 /**

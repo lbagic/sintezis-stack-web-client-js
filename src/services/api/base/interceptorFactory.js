@@ -2,6 +2,7 @@
  * Context types
  *
  * @typedef {{
+ *  type: 'grpc' | 'rest'
  *  data: any
  *  headers: Record<string, string>
  *  method: string
@@ -45,6 +46,7 @@
  * @returns { RequestContext }
  */
 const grpcRequestContext = (request) => ({
+  type: "grpc",
   data: request.message,
   headers: Object.fromEntries(request.header.entries()),
   method: request.init.method,
@@ -92,6 +94,7 @@ const restRequestContext = (request) => {
   const url = request.baseURL + request.url;
   const method = request.method.toUpperCase();
   return {
+    type: "rest",
     data: request.data,
     headers: request.headers.common,
     method,
