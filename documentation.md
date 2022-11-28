@@ -1,12 +1,12 @@
 TODO:
 
-- input - format + parse, promise options + watchOptions + object list options (key/val)
 - update docs
 - storybook integration
 - GRPC/REST - stream logger
 - input - test performance, maybe some eager computeds?
 - components - a11y
 - rework colors
+- clickable styles ordering/adjustments (hover/focus/active/focus-active) for buttons and cards + disabled styles
 
 # WebStack Documentation
 

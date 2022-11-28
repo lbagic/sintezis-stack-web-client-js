@@ -19,6 +19,7 @@ module.exports = {
     $$: "readonly",
   },
   rules: {
+    "no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
     "vue/require-v-for-key": 0,
     "jsdoc/check-line-alignment": 1,
     "jsdoc/no-undefined-types": 1,
@@ -29,7 +30,7 @@ module.exports = {
     "jsdoc/require-returns-description": 0,
     "jsdoc/valid-types": 0,
   },
-  ignorePatterns: ["**/*.d.ts"],
+  ignorePatterns: ["**/*.d.ts", "**/*.ts"],
   settings: {
     jsdoc: {
       mode: "typescript",

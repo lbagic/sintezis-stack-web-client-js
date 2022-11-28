@@ -1,63 +1,33 @@
 import { computed, reactive } from "vue";
-import { inputValidation } from "./input.validation";
 import DateInput from "./DateInput.vue";
-import DateInputVue from "./DateInput.vue";
 import { inputUtils } from "./input.utils";
+import { inputValidation } from "./input.validation";
 
 const settings = {
   useErrorMessage: true,
   useErrorBorder: true,
   useRequiredAsterisk: true,
   useHtmlValidation: false,
+  /** @type { import("./_types").InputProps['labelPosition'] } */
   labelPosition: "top",
 };
 
-/**
- * @typedef { "top" | "right" | "bottom" | "left" } labelPosition
- * @typedef { "input" | "textarea" | "select" | typeof DateInputVue } ComponentType
- * @typedef { "onInput" | "onChange" | "onBlur" | "onFocus" } EventNames
- * @typedef { { target: HTMLInputElement } } InputEvent
- * @typedef {{
- *  attrs: Record<string, any>
- *  config: ComponentConfig
- *  inputRef: HTMLInputElement
- *  model: { value: any, valid: boolean, error: null | string, dirty: boolean }
- *  options: Record<string, any>
- *  props: { strictOptions: boolean, validator?: Function }
- *  isRequired: boolean,
- * }} InputContext
- * @typedef {{
- *  attrs: { type?: string }
- *  attrsFactory?: <T>(ctx: InputContext) => T
- *  component: ComponentType
- *  eventsFactory?: (ctx: InputContext) => Record<EventNames, (e: InputEvent) => void>
- *  labelPosition: labelPosition
- *  onExternalUpdate: (ctx: InputContext) => any
- *  onInit?: (ctx: InputContext) => any
- *  onInternalUpdate: (ctx: InputContext) => any
- *  parseInputValue: (e: InputEvent, ctx: InputContext) => any
- *  supportOptions: boolean
- *  supportDropzone: boolean
- * }} ComponentConfig
- * @typedef { import("flatpickr/dist/types/options").Options } FlatpickrOptions
- */
-
-/** @type { (ctx: InputContext, options: FlatpickrOptions) => Record<string, any> } */
-const createFlatpickrConfig = ({ attrs }, componentConfig = {}) => {
-  const config = {
+/** @type { import("./_types").FlatpickrConfigFactory } */
+const createFlatpickrConfig = ({ attrs }, config = {}) => {
+  const base = {
     position: "auto center",
     disableMobile: true,
   };
   const userConfig = attrs?.config ?? {};
-  if (attrs.min) config.minDate = attrs.min;
-  if (attrs.max) config.maxDate = attrs.max;
-  if (userConfig?.altFormat) config.altInput = true;
+  if (attrs.min) base.minDate = attrs.min;
+  if (attrs.max) base.maxDate = attrs.max;
+  if (userConfig?.altFormat) base.altInput = true;
 
-  Object.assign(config, componentConfig, userConfig);
-  return config;
+  Object.assign(base, config, userConfig);
+  return base;
 };
 
-/** @type { Record<string, ComponentConfig & { alt: ComponentConfig }> }*/
+/** @type { import("./_types").InputComponents } */
 const components = {
   text: {
     component: "input",
@@ -213,21 +183,11 @@ export const _inputCtl = {
   ...inputUtils,
 };
 
-/**
- * Generates reactive form data.
- *
- * @template T
- * @param { T } properties
- * @returns {{
- *   data: T;
- *   model: Record<keyof T, { value: any, valid: boolean, error: string | null, dirty: boolean }>
- *   isValid: boolean;
- * }}
- */
-export function useFormData(properties) {
-  const keys = Object.keys(properties);
+/** @type { import("./_types").FormDataFactory } */
+export function useFormData(data, _schema = undefined) {
+  const keys = Object.keys(data);
   const ctx = reactive({
-    value: properties,
+    value: data,
     dirty: Object.fromEntries(keys.map((key) => [key, false])),
     error: Object.fromEntries(keys.map((key) => [key, null])),
     valid: Object.fromEntries(keys.map((key) => [key, false])),
@@ -258,18 +218,23 @@ export function useFormData(properties) {
         get dirty() {
           return ctx.dirty[key];
         },
-        set dirty(value = true) {
+        set dirty(value) {
           ctx.dirty[key] = value;
         },
       },
     ])
   );
-  return reactive({ data: ctx.value, isValid, model });
+  return reactive({
+    data: ctx.value,
+    isValid,
+    model,
+  });
 }
 
-export const useFormFactory = (config) => {
+/** @type { import("./_types").FormConfigFactory } */
+export function useFormConfig(config, _schema = undefined) {
   const data = Object.fromEntries(
     Object.entries(config).map(([key, { value }]) => [key, value])
   );
-  return useFormData(data);
-};
+  return reactive({ ...useFormData(data), config });
+}
