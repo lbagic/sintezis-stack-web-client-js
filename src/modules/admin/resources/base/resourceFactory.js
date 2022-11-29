@@ -1,5 +1,7 @@
 // @ts-check
 import AdminIconFolder from "@/modules/admin/components/icons/AdminIconFolder.vue";
+import { ScalarType } from "@bufbuild/protobuf";
+import { compose, filter, map } from "ramda";
 import { markRaw } from "vue";
 
 /** @type { import("./_types").RpcServiceKeys } */
@@ -9,10 +11,11 @@ const serviceFunctionKeys = ["add", "edit", "get", "getAll", "delete"];
 export const createResource = (config) => {
   const entity = config.entity;
   const id = entity.name;
+  const fields = entity.fields.list();
+  const requestFields = config.rpc.getAll?.["I"].fields.list();
 
   if (!config.rpc.getAll)
     throw new Error(`Resource ${id} does not have "GetAll" method.`);
-  const requestFields = config.rpc.getAll["I"].fields.list();
 
   const serviceParsers = {};
   serviceFunctionKeys.forEach((key) => {
@@ -31,6 +34,15 @@ export const createResource = (config) => {
     ...config,
     ...serviceParsers,
     id,
+    tableColumns:
+      config.tableColumns ??
+      compose(
+        map((el) => ({
+          label: el.localName.toSentenceCase(),
+          field: el.localName,
+        })),
+        filter((el) => typeof el.T === "number" && el.T !== ScalarType.BYTES)
+      )(fields),
     icon: config.icon ?? markRaw(AdminIconFolder),
     name: config.name ?? entity.name,
     hasPagination: requestFields.some((el) => el.name === "pagination"),

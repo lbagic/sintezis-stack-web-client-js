@@ -33,7 +33,7 @@ export type ResourceFactory = <
   name?: string,
   icon?: Raw<object>,
   usePagination: boolean,
-  tableColumns: ReturnType<TableColumnsFactory<Entity>>,
+  tableColumns?: ReturnType<TableColumnsFactory<Entity>>,
 } & 
   Partial<ActionContextFactoryMap<Service, Entity>>
 ) => {

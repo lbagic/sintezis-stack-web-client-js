@@ -21,6 +21,7 @@ module.exports = {
   rules: {
     "no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
     "vue/require-v-for-key": 0,
+    "vue/no-setup-props-destructure": 0,
     "jsdoc/check-line-alignment": 1,
     "jsdoc/no-undefined-types": 1,
     "jsdoc/require-jsdoc": 0,
