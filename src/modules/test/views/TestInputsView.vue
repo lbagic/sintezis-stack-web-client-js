@@ -20,8 +20,7 @@ const vm = $ref(22);
 </script>
 
 <template>
-  <pre>{{ fm.data }}</pre>
-  <pre>{{ { vm } }}</pre>
+  <pre>{{ { model } }}</pre>
   <form
     class="snt-container snt-grid"
     style="--gtc: 1fr 1fr 1fr"
