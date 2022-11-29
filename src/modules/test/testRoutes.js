@@ -7,4 +7,11 @@ export const testRoutes = [
       title: "test",
     },
   },
+  {
+    path: "/test-inputs",
+    component: () => import("./views/TestInputsView.vue"),
+    meta: {
+      title: "test",
+    },
+  },
 ];

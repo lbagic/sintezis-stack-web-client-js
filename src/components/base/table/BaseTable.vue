@@ -65,9 +65,12 @@ const useSort = $computed(() => !!sortOrders.size);
 const searchTerm = $computed(() => props.search.toLowerCase?.());
 
 const data = $computed(() =>
-  props.data.map((item, index) => ({
-    raw: item,
-    row: cfg.fields.map((field) => field(item)),
+  props.data.map((el, index) => ({
+    raw: el,
+    row: cfg.fields.map((field) => {
+      const item = field(el);
+      return item?.trim ? item.trim() : item;
+    }),
     id: index,
   }))
 );
