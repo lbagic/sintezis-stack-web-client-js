@@ -177,32 +177,30 @@ const delayMultiplier = $computed(() =>
           :key="id"
           :style="`transition-delay: ${id * delayMultiplier}s`"
         >
-          <td
-            v-if="useActions"
-            :class="`${$prefix}flex`"
-            style="--gap: var(--table-icon-gap)"
-          >
-            <button
-              v-if="props.useInfo"
-              :class="`${$prefix}button text info action-button`"
-              @click="emit('info', raw)"
-            >
-              <TableIconInfo :class="`${$prefix}table-icon`" />
-            </button>
-            <button
-              v-if="props.useEdit"
-              :class="`${$prefix}button text warning action-button`"
-              @click="emit('edit', raw)"
-            >
-              <TableIconEdit :class="`${$prefix}table-icon`" />
-            </button>
-            <button
-              v-if="props.useDelete"
-              :class="`${$prefix}button text danger action-button`"
-              @click="emit('delete', raw)"
-            >
-              <TableIconDelete :class="`${$prefix}table-icon`" />
-            </button>
+          <td v-if="useActions">
+            <div :class="`${$prefix}flex`" style="--gap: var(--table-icon-gap)">
+              <button
+                v-if="props.useInfo"
+                :class="`${$prefix}button text info action-button`"
+                @click="emit('info', raw)"
+              >
+                <TableIconInfo :class="`${$prefix}table-icon`" />
+              </button>
+              <button
+                v-if="props.useEdit"
+                :class="`${$prefix}button text warning action-button`"
+                @click="emit('edit', raw)"
+              >
+                <TableIconEdit :class="`${$prefix}table-icon`" />
+              </button>
+              <button
+                v-if="props.useDelete"
+                :class="`${$prefix}button text danger action-button`"
+                @click="emit('delete', raw)"
+              >
+                <TableIconDelete :class="`${$prefix}table-icon`" />
+              </button>
+            </div>
           </td>
           <td v-for="field in row">{{ field }}</td>
         </tr>
