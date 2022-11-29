@@ -1,4 +1,4 @@
-import type { SubPartial, UnwrapCtor } from "@/utils/types"
+import type { StrictPartial, UnwrapCtor } from "@/utils/types"
 import { Options as FlatpickrOptions } from "flatpickr/dist/types/options"
 import DateInput from "./DateInput.vue"
 
@@ -11,6 +11,7 @@ type InputEvents = Partial<{
   onBlur: (e: Event) => any,
   onFocus: (e: Event) => any,
 }>
+
 type InputAttrs = Partial<{
   accept: string,
   inputmode: 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url',
@@ -24,9 +25,10 @@ type InputAttrs = Partial<{
   step: number,
   config: FlatpickrOptions
 }>
-export type InputProps<T = any> = Partial<{
+
+export type InputProps = Partial<{
   id: number | string,
-  value: T,
+  value: any,
   type: ComponentNames,
   hint: string,
   label: string,
@@ -39,7 +41,6 @@ export type InputProps<T = any> = Partial<{
   useHtmlValidation: boolean,
   useRequiredAsterisk: boolean,
 }>
-
 
 type InputContext = {
   attrs: InputAttrs,
@@ -65,35 +66,34 @@ type InputComponentConfig = {
   supportDropzone: boolean,
 }
 
-export type InputComponents = Record<ComponentNames, InputComponentConfig & { alt: InputComponentConfig }>
 export type FlatpickrConfigFactory = (ctx: InputContext, config?: FlatpickrOptions) => FlatpickrOptions
+export type InputComponents = Record<ComponentNames, InputComponentConfig & { alt: InputComponentConfig }>
 
-type InputConfig<T> =  InputAttrs & InputEvents & InputProps<T> & { value: T }
-type InputConfigMap<T> =  { [K in keyof Partial<T>]: InputConfig<T[K]> }
 
-type FormDataModel<T> = { [K in keyof T]: {
+type FormFieldModelMap<T> = { [K in keyof T]: {
   value: T[K],
   dirty: boolean,
   error: string | null,
   valid: boolean
 }}
+type FormFieldConfig<T> =  InputAttrs & InputEvents & InputProps & { value: T }
+type FormFieldConfigMap<T> =  { [K in keyof T]: FormFieldConfig<T[K]> }
 
 export type FormDataFactory<Schema = any> = <
   U extends Schema,
-  T extends SubPartial<T, UnwrapCtor<U>>
+  T extends Partial<UnwrapCtor<U>>
 >(data: T, schema?: U) => {
   data: T,
   isValid: boolean,
-  model: FormDataModel<T>
+  model: FormFieldModelMap<T>
 }
-
 
 export type FormConfigFactory<Schema = any> = <
   U extends Schema,
-  T extends SubPartial<InputConfigMap<T>, InputConfigMap<UnwrapCtor<U>>>
+  T extends FormFieldConfigMap<Partial<UnwrapCtor<U>>>
 >(data: T, schema?: U) => {
   data: { [K in keyof T]: T[K]['value'] },
   isValid: boolean,
-  model: FormDataModel<{ [K in keyof T]: T[K]['value'] }>,
+  model: FormFieldModelMap<{ [K in keyof T]: T[K]['value'] }>,
   config: T
 }

@@ -1,7 +1,7 @@
-import { SubPartial, UnwrapCtor } from '@/utils/types'
+import { StrictPartial, UnwrapCtor } from '@/utils/types'
 
 type TableColumns<T> = {
-  label: any extends infer R ? `${R & string}` : never,
+  label: string,
   field: keyof T | ((item: Partial<T>) => any),
   search?: boolean,
   sort?: boolean | 'asc' | 'desc'
@@ -9,5 +9,5 @@ type TableColumns<T> = {
 
 export type TableColumnsFactory<Schema = any> = <
   U extends Schema,
-  T extends any extends infer R ? SubPartial<TableColumns<R>, TableColumns<UnwrapCtor<U>>>[] : never
+  T extends TableColumns<UnwrapCtor<U>>[]
 >(columns: T, schema?: U) => T

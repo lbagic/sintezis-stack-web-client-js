@@ -2,34 +2,44 @@ import { GatewayController } from "@/gen/services/services_connectweb";
 import { createGrpcPromiseClient } from "./base/grpcClientFactory";
 import { grpcInterceptors } from "./interceptors";
 
-const _grpc = createGrpcPromiseClient({
-  services: {
-    GatewayController,
+export const GrpcServices = {
+  AccountService: {
+    typeName: GatewayController.typeName,
+    methods: {
+      login: GatewayController.methods.login,
+    },
   },
+  UserService: {
+    typeName: GatewayController.typeName,
+    methods: {
+      add: GatewayController.methods.createUser,
+      edit: GatewayController.methods.updateUser,
+      get: GatewayController.methods.getUser,
+      getAll: GatewayController.methods.getUsers,
+      delete: GatewayController.methods.deleteUser,
+    },
+  },
+  AirlineService: {
+    typeName: GatewayController.typeName,
+    methods: {
+      add: GatewayController.methods.createAirline,
+      edit: GatewayController.methods.updateAirline,
+      get: GatewayController.methods.getAirline,
+      getAll: GatewayController.methods.getAirlines,
+      delete: GatewayController.methods.deleteAirline,
+    },
+  },
+  CountryService: {
+    typeName: GatewayController.typeName,
+    methods: {
+      getAll: GatewayController.methods.getCountries,
+    },
+  },
+};
+
+export const grpc = createGrpcPromiseClient({
+  services: GrpcServices,
   useEnvoyProxy: true,
   baseUrl: import.meta.env.VITE_SNT_GRPC_URL,
   interceptors: grpcInterceptors,
 });
-
-export const grpc = {
-  AccountService: {
-    login: _grpc.GatewayController.login,
-  },
-  UserService: {
-    add: _grpc.GatewayController.createUser,
-    edit: _grpc.GatewayController.updateUser,
-    get: _grpc.GatewayController.getUser,
-    getAll: _grpc.GatewayController.getUsers,
-    delete: _grpc.GatewayController.deleteUser,
-  },
-  AirlineService: {
-    add: _grpc.GatewayController.createAirline,
-    edit: _grpc.GatewayController.updateAirline,
-    get: _grpc.GatewayController.getAirline,
-    getAll: _grpc.GatewayController.getAirlines,
-    delete: _grpc.GatewayController.deleteAirline,
-  },
-  CountryService: {
-    getAll: _grpc.GatewayController.getCountries,
-  },
-};
