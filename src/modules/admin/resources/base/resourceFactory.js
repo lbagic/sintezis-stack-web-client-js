@@ -45,6 +45,8 @@ export const createResource = (config) => {
       )(fields),
     icon: config.icon ?? markRaw(AdminIconFolder),
     name: config.name ?? entity.name,
+    useDetails: !!config.useDetails,
+    usePagination: !!config.usePagination,
     hasPagination: requestFields.some((el) => el.name === "pagination"),
     hasSearch: requestFields.some((el) => el.name === "search"),
   };

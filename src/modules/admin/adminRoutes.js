@@ -18,6 +18,21 @@ export const adminRoutes = [
         },
       },
       {
+        name: "crud-details-view",
+        path: "crud/:resourceId/:entityId",
+        component: () => import("./views/AdminCrudDetailsView.vue"),
+        beforeEnter(to, from, next) {
+          const resource = adminResources.find(
+            (el) => el.id === to.params.resourceId
+          );
+          if (!resource) return next("/");
+          if (!resource.useDetails)
+            return next(`/crud/${resource.id}/${to.params.entityId}`);
+          document.title = resource.name + " details";
+          return next();
+        },
+      },
+      {
         name: "crud-view",
         path: "crud/:resourceId",
         component: () => import("./views/AdminCrudView.vue"),

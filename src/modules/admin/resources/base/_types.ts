@@ -32,16 +32,18 @@ export type ResourceFactory = <
   rpc: Service,
   name?: string,
   icon?: Raw<object>,
-  usePagination: boolean,
+  usePagination?: boolean,
+  useDetails?: boolean,
   tableColumns?: ReturnType<TableColumnsFactory<Entity>>,
 } & 
-  Partial<ActionContextFactoryMap<Service, Entity>>
+Partial<ActionContextFactoryMap<Service, Entity>>
 ) => {
   entity: Entity,
   rpc: Service,
   name: string,
   icon: Raw<object>,
   usePagination: boolean,
+  useDetails: boolean,
   tableColumns: ReturnType<TableColumnsFactory<Entity>>,
   id: string,
   hasPagination?: boolean,
