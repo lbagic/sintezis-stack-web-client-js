@@ -1,5 +1,5 @@
 import { TableColumnsFactory } from "@/components/base/table/_types"
-import { StrictPartial } from "@/utils/types"
+import { StrictPartial, UnwrapCtor } from "@/utils/types"
 import { FieldInfo, Message, MessageType, MethodKind } from "@bufbuild/protobuf"
 import { Raw } from "vue"
 
@@ -18,7 +18,7 @@ type ActionContextFactory<Method extends RpcMethod, T> = (data?: T) => {
 }
 
 type ActionContextFactoryMap<Service extends StrictPartial<Service, RpcService>, Entity extends MessageType> = {
-  [K in keyof Service as `setup${Capitalize<string & K>}Context`]: ActionContextFactory<Service[K], Entity>
+  [K in keyof Service as `setup${Capitalize<string & K>}Context`]: ActionContextFactory<Service[K], UnwrapCtor<Entity>>
 }
 export type ActionParserMap<Service = RpcService> = {
   [K in keyof Service as `parse${Capitalize<string & K>}Data`]: (response: any) => any

@@ -5,44 +5,47 @@ import { modal } from "@/components/base/modal/modal.ctl";
 import { toast } from "@/components/base/toast/toast.ctl";
 import { usePromise } from "@/utils/usePromise";
 
-const props = defineProps({ resource: undefined });
-const emit = defineEmits(["addItem"]);
+const props = defineProps({ resource: undefined, item: undefined });
+const emit = defineEmits(["editItem"]);
 
 /** @type { ReturnType<import("../resources/base/_types").ResourceFactory> } */
 const resource = props.resource;
-const ctx = resource.setupAddContext();
-const call = usePromise(ctx.call);
-async function actionCreate() {
+const ctx = $computed(() =>
+  props.item ? resource.setupEditContext(props.item) : {}
+);
+const call = $computed(() => usePromise(ctx.call));
+async function actionEdit() {
   try {
     const response = await call.execute();
-    modal.createResource.close();
-    const item = resource.parseAddData(response);
-    emit("addItem", item);
-    toast.success(`${resource.id} created.`);
+    modal.editResource.close();
+    const item = resource.parseEditData(response);
+    emit("editItem", item);
+    toast.success(`${resource.id} edited.`);
   } catch {
-    toast.warning(`Failed to create ${resource.id}.`);
+    toast.warning(`Failed to edit ${resource.id}.`);
   }
 }
 </script>
 
 <template>
-  <BaseModal class="primary" name="createResource">
-    <form @submit.prevent :class="`${$prefix}grid`">
-      <p>Create {{ resource.name }}</p>
+  <BaseModal class="primary" name="editResource">
+    <form @submit.prevent v-if="ctx" :class="`${$prefix}grid`">
+      <p>Edit {{ resource.name }}</p>
       <div :class="`${$prefix}grid`" style="--gtc: 1fr 1fr">
         <BaseInput
-          v-for="(_, key) in ctx.form.model"
+          v-for="(config, key) in ctx.form.config"
           :key="key"
           v-model="ctx.form.model[key]"
-          v-bind="ctx.form.config[key]"
+          v-bind="config"
         />
       </div>
       <button
         :class="`${$prefix}button small success expand`"
+        style="margin-top: 16px"
         :disabled="!ctx.form.isValid || call.isPending"
-        @click="actionCreate"
+        @click="actionEdit"
       >
-        Create
+        Save
       </button>
     </form>
   </BaseModal>

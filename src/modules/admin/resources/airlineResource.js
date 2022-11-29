@@ -1,4 +1,4 @@
-// @ts-check
+// @@ts-check
 
 import { useFormConfig } from "@/components/base/input/input.ctl";
 import { Airline } from "@/gen/proto/models/airline_pb";
@@ -32,6 +32,39 @@ export const airlineResource = createResource({
     return {
       form,
       call: () => grpc.AirlineService.add({ airline: form.data }),
+    };
+  },
+  setupEditContext(item) {
+    const form = useFormConfig(
+      {
+        id: {
+          value: item.id,
+          type: "number",
+          label: "Id",
+          required: true,
+          disabled: true,
+        },
+        name: {
+          value: item.name,
+          required: true,
+          label: "Name",
+        },
+        iataCode: {
+          value: item.iataCode,
+          required: true,
+          label: "Iata Code",
+        },
+      },
+      Airline
+    );
+    return {
+      form,
+      call: () => grpc.AirlineService.edit({ airline: form.data }),
+    };
+  },
+  setupDeleteContext() {
+    return {
+      call: (item) => grpc.AirlineService.delete({ id: item.id }),
     };
   },
 });
