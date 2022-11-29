@@ -1,7 +1,6 @@
 <script setup>
 import { modal } from "@/components/base/modal/modal.ctl";
 import BaseTable from "@/components/base/table/BaseTable.vue";
-import { Pagination } from "@/gen/proto/commons/pagination_pb";
 import { onMounted, reactive } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { adminResources } from "../adminResources";
@@ -22,7 +21,9 @@ const ctx = reactive({
   data: [],
   toDelete: undefined,
   toEdit: undefined,
-  pagination: new Pagination({ overridePagination: !resource.usePagination }),
+  pagination: new resource.Pagination({
+    overridePagination: !resource.usePagination,
+  }),
 });
 
 async function actionGetAll() {

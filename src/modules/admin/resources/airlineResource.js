@@ -6,7 +6,7 @@ import { grpc, GrpcServices } from "@/services/api/grpc";
 import { createResource } from "./base/resourceFactory";
 
 export const airlineResource = createResource({
-  entity: Airline,
+  Entity: Airline,
   rpc: GrpcServices.AirlineService.methods,
   usePagination: false,
   useDetails: true,

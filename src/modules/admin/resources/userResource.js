@@ -7,7 +7,7 @@ import { createHash } from "@/utils/hash";
 import { createResource } from "./base/resourceFactory";
 
 export const userResource = createResource({
-  entity: User,
+  Entity: User,
   rpc: GrpcServices.UserService.methods,
   usePagination: false,
   useDetails: true,

@@ -5,7 +5,7 @@ import { grpc, GrpcServices } from "@/services/api/grpc";
 import { createResource } from "./base/resourceFactory";
 
 export const titleResource = createResource({
-  entity: Title,
+  Entity: Title,
   rpc: GrpcServices.TitleService.methods,
   usePagination: false,
   useDetails: true,

@@ -1,24 +1,20 @@
 <script setup>
 import BaseTable from "@/components/base/table/BaseTable.vue";
 import { createTableColumns } from "@/components/base/table/table.ctl";
-import { User } from "@/gen/proto/models/user_pb";
 import { css } from "@/utils/css";
 import { ref } from "vue";
 
 const search = ref("");
 const tdata = [
-  new User({ firstName: "Chuck", lastName: "Norris" }),
-  new User({ firstName: "Bruce", lastName: "Lee" }),
-  new User({ firstName: "Alma", lastName: "Norris" }),
-  new User({ firstName: "Alba", lastName: "Lee" }),
+  { firstName: "Chuck", lastName: "Norris" },
+  { firstName: "Bruce", lastName: "Lee" },
+  { firstName: "Alma", lastName: "Norris" },
+  { firstName: "Alba", lastName: "Lee" },
 ];
-const columns = createTableColumns(
-  [
-    { label: "First Name", field: "firstName" },
-    { label: "Last Name", field: (o) => o.lastName },
-  ],
-  User
-);
+const columns = createTableColumns([
+  { label: "First Name", field: "firstName" },
+  { label: "Last Name", field: (o) => o.lastName },
+]);
 </script>
 
 <template>
