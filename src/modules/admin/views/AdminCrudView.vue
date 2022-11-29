@@ -28,7 +28,7 @@ async function actionGetAll() {
   if (response.pagination) ctx.pagination = response.pagination;
 }
 function actionDetails(item) {
-  router.push(route.fullPath + "/" + item.id);
+  router.push(route.fullPath + "/details/" + item.id);
 }
 
 onMounted(() => {
@@ -40,7 +40,7 @@ onMounted(() => {
   <div :class="`${$prefix}container`" style="overflow-y: auto; padding-top: 0">
     <p style="padding-top: 16px">{{ resource.name }}</p>
     <template v-if="resource.setupAddContext">
-      <RouterLink :class="`${$prefix}button primary`" to="#create"
+      <RouterLink :class="`${$prefix}button primary small`" to="#create"
         >Create {{ resource.name }}</RouterLink
       >
       <AdminCrudCreateForm :resource="resource" />

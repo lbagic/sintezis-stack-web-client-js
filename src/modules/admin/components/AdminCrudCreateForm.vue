@@ -1,26 +1,27 @@
 <script setup>
 import BaseInput from "@/components/base/input/BaseInput.vue";
 import BaseModal from "@/components/base/modal/BaseModal.vue";
-import { useFormFactory } from "@/components/base/input/input.ctl";
 
-const props = defineProps({ service: undefined, name: String });
-// const emit = defineEmits(["response"]);
-const form = useFormFactory(props.service.form);
+const props = defineProps({ resource: undefined });
 
-// function createItem() {}
+/** @type { ReturnType<import("../resources/base/_types").ResourceFactory> } */
+const resource = props.resource;
+const { form } = resource.setupAddContext();
 </script>
 
 <template>
   <BaseModal hash="#create" class="primary">
     <form @submit.prevent>
-      <p>Create {{ props.name }}</p>
+      <p>Create {{ resource.name }}</p>
       <pre>{{ form.data }}</pre>
+      <pre>{{ form.model }}</pre>
+      <pre>{{ form.isValid }}</pre>
       <div class="snt-grid" style="--gtc: 1fr 1fr">
         <BaseInput
           v-for="(_, key) in form.model"
           :key="key"
           v-model="form.model[key]"
-          v-bind="props.service.form[key].bind"
+          v-bind="form.config[key]"
         />
       </div>
       <button

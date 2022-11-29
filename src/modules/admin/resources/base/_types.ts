@@ -36,7 +36,7 @@ export type ResourceFactory = <
   useDetails?: boolean,
   tableColumns?: ReturnType<TableColumnsFactory<Entity>>,
 } & 
-Partial<ActionContextFactoryMap<Service, Entity>>
+  Partial<ActionContextFactoryMap<Service, Entity>>
 ) => {
   entity: Entity,
   rpc: Service,

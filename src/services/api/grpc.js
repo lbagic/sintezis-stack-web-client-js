@@ -29,6 +29,12 @@ export const GrpcServices = {
       delete: GatewayController.methods.deleteAirline,
     },
   },
+  TitleService: {
+    typeName: GatewayController.typeName,
+    methods: {
+      getAll: GatewayController.methods.getTitles,
+    },
+  },
   CountryService: {
     typeName: GatewayController.typeName,
     methods: {

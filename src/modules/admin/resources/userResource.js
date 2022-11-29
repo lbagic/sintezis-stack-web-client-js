@@ -10,10 +10,11 @@ export const userResource = createResource({
   entity: User,
   rpc: GrpcServices.UserService.methods,
   usePagination: false,
-  tableColumns: [
-    { label: "First Name", field: "firstName" },
-    { label: "Last Name", field: "lastName" },
-  ],
+  useDetails: true,
+  // tableColumns: [
+  //   { label: "First Name", field: "firstName" },
+  //   { label: "Last Name", field: "lastName" },
+  // ],
   setupGetAllContext() {
     return { call: grpc.UserService.getAll };
   },

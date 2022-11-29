@@ -24,8 +24,8 @@ export const createResource = (config) => {
 
     const responseFields = method.O.fields.list();
     const parserName = `parse${key.toPascalCase()}Data`;
-    const dataField = responseFields.find((/** @type { any } */ el) =>
-      entity.equals(entity, el.T)
+    const dataField = responseFields.find(
+      (/** @type { any } */ el) => entity.typeName === el.T.typeName
     ).name;
     serviceParsers[parserName] = (response) => response[dataField];
   });
