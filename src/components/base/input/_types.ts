@@ -14,6 +14,8 @@ type InputEvents = Partial<{
 
 type InputAttrs = Partial<{
   accept: string,
+  config: FlatpickrOptions
+  disabled: boolean,
   inputmode: 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url',
   max: number | string,
   maxlength: number,
@@ -21,9 +23,9 @@ type InputAttrs = Partial<{
   minlength: number,
   multiple: boolean,
   pattern: string,
+  readonly: boolean,
   required: boolean,
   step: number,
-  config: FlatpickrOptions
 }>
 
 export type InputProps = Partial<{

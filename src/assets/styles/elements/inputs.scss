@@ -11,6 +11,7 @@
   --input-text-color: var(--#{$prefix}color-text);
   --input-placeholder-color: var(--#{$prefix}color-grey);
   --input-background-color: var(--#{$prefix}color-light);
+  --input-disabled-color: var(--#{$prefix}color-muted-lighter);
   --input-border-color: var(--#{$prefix}color-light-dark-2);
   --input-padding-x: 8px;
   --input-padding-y: calc(
@@ -38,6 +39,10 @@
   border-radius: 2px;
   border-color: var(--input-border-color);
   background-color: var(--input-background-color);
+  &[readonly],
+  &[disabled] {
+    background-color: var(--input-disabled-color);
+  }
 }
 
 .#{$prefix}input-text,

@@ -5,7 +5,14 @@ export default { inheritAttrs: false };
 <script setup>
 import { useDebounceFn } from "@vueuse/shared";
 import "flatpickr/dist/flatpickr.css";
-import { mergeProps, onMounted, reactive, useAttrs, watch } from "vue";
+import {
+  mergeProps,
+  nextTick,
+  onMounted,
+  reactive,
+  useAttrs,
+  watch,
+} from "vue";
 import BaseInputInfo from "./BaseInputInfo.vue";
 import BaseInputLabel from "./BaseInputLabel.vue";
 import { _inputCtl as ctl } from "./input.ctl";
@@ -145,6 +152,10 @@ function onExternalUpdate(payload = { forceUpdate: false }) {
       state.inputRef.value
     );
   state.inputRef.value = inputValue;
+  nextTick(() => {
+    ctl.validate(ctx);
+    externalModel = model;
+  });
 }
 
 const search = useDebounceFn((e) => emit("search", e.target.value), 250, {
@@ -202,8 +213,6 @@ onMounted(() => {
     () => onExternalUpdate(),
     { immediate: true, deep: true }
   );
-  ctl.validate(ctx);
-  // if (!model.value) onInternalUpdate({ target: state.inputRef });
 });
 
 const rootAttributes = $computed(() => {
