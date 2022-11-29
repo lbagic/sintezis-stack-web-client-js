@@ -52,7 +52,7 @@
   @each $color, $value in $base-colors {
     &.#{$color} {
       --base-color: var(--#{$prefix}color-#{$color});
-      --accent-color: var(--#{$prefix}color-#{$color}-light-2);
+      --accent-color: var(--#{$prefix}color-#{$color}-light);
       --focus-color: var(--#{$prefix}color-#{$color}-dark);
       --contrast-color: var(--#{$prefix}color-#{$color}-contrast);
     }

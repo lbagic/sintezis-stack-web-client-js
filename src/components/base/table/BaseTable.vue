@@ -61,8 +61,9 @@ const cfg = $computed(() => {
   return o;
 });
 const useSearch = $computed(() => !!cfg.searchableIndexes.length);
-const useSort = $computed(() => !!sortOrders.size);
 const searchTerm = $computed(() => props.search.toLowerCase?.());
+const useSort = $computed(() => !!cfg.sortableLabels.length);
+const hasActiveSort = $computed(() => !!sortOrders.size);
 
 const data = $computed(() =>
   props.data.map((el, index) => ({
@@ -109,7 +110,7 @@ const composeSortFunctions = R.compose(
 );
 
 const sortedData = $computed(() => {
-  if (!useSort) return filteredData;
+  if (!hasActiveSort) return filteredData;
   const sortFunctions = composeSortFunctions([...sortOrders.entries()]);
   return R.compose(...sortFunctions)(filteredData);
 });
@@ -145,67 +146,81 @@ const delayMultiplier = $computed(() =>
 </script>
 
 <template>
-  <div :style="`overflow-x: auto; box-shadow: var(--${$prefix}shadow-3);`">
-    <table :class="`${$prefix}table`" ref="tableRef" v-bind="attrs">
-      <thead>
-        <tr>
-          <th
-            v-if="useActions"
-            :style="{ width: `${actionColumnSize}px` }"
-          ></th>
-          <th
-            v-for="label in cfg.labels"
-            :key="label"
-            @click="cycleSort(label)"
-            style="white-space: nowrap"
+  <div>
+    <div v-if="useSort" style="margin-bottom: 4px">
+      <button
+        class="snt-button text primary underline"
+        :disabled="!hasActiveSort"
+        @click="sortOrders.clear"
+      >
+        Clear sort
+      </button>
+    </div>
+    <div :style="`overflow-x: auto; box-shadow: var(--${$prefix}shadow-3);`">
+      <table :class="`${$prefix}table`" ref="tableRef" v-bind="attrs">
+        <thead>
+          <tr>
+            <th
+              v-if="useActions"
+              :style="{ width: `${actionColumnSize}px` }"
+            ></th>
+            <th
+              v-for="label in cfg.labels"
+              :key="label"
+              @click="cycleSort(label)"
+              style="white-space: nowrap"
+            >
+              {{ label }}
+              <span
+                class="sort-arrow"
+                :class="[
+                  sortOrders.get(label) ?? 'initial',
+                  activeLabel === label && 'active',
+                ]"
+                v-if="cfg.sortableLabels.includes(label)"
+              ></span>
+            </th>
+          </tr>
+        </thead>
+        <TransitionGroup name="table-transition" tag="tbody">
+          <tr
+            v-for="{ row, raw, id } in items"
+            :key="id"
+            :style="`transition-delay: ${id * delayMultiplier}s`"
           >
-            {{ label }}
-            <span
-              class="sort-arrow"
-              :class="[
-                sortOrders.get(label) ?? 'initial',
-                activeLabel === label && 'active',
-              ]"
-              v-if="cfg.sortableLabels.includes(label)"
-            ></span>
-          </th>
-        </tr>
-      </thead>
-      <TransitionGroup name="table-transition" tag="tbody">
-        <tr
-          v-for="{ row, raw, id } in items"
-          :key="id"
-          :style="`transition-delay: ${id * delayMultiplier}s`"
-        >
-          <td v-if="useActions">
-            <div :class="`${$prefix}flex`" style="--gap: var(--table-icon-gap)">
-              <button
-                v-if="props.useInfo"
-                :class="`${$prefix}button text info action-button`"
-                @click="emit('info', raw)"
+            <td v-if="useActions">
+              <div
+                :class="`${$prefix}flex`"
+                style="--gap: var(--table-icon-gap)"
               >
-                <TableIconInfo :class="`${$prefix}table-icon`" />
-              </button>
-              <button
-                v-if="props.useEdit"
-                :class="`${$prefix}button text warning action-button`"
-                @click="emit('edit', raw)"
-              >
-                <TableIconEdit :class="`${$prefix}table-icon`" />
-              </button>
-              <button
-                v-if="props.useDelete"
-                :class="`${$prefix}button text danger action-button`"
-                @click="emit('delete', raw)"
-              >
-                <TableIconDelete :class="`${$prefix}table-icon`" />
-              </button>
-            </div>
-          </td>
-          <td v-for="field in row">{{ field }}</td>
-        </tr>
-      </TransitionGroup>
-    </table>
+                <button
+                  v-if="props.useInfo"
+                  :class="`${$prefix}button text info action-button`"
+                  @click="emit('info', raw)"
+                >
+                  <TableIconInfo :class="`${$prefix}table-icon`" />
+                </button>
+                <button
+                  v-if="props.useEdit"
+                  :class="`${$prefix}button text warning action-button`"
+                  @click="emit('edit', raw)"
+                >
+                  <TableIconEdit :class="`${$prefix}table-icon`" />
+                </button>
+                <button
+                  v-if="props.useDelete"
+                  :class="`${$prefix}button text danger action-button`"
+                  @click="emit('delete', raw)"
+                >
+                  <TableIconDelete :class="`${$prefix}table-icon`" />
+                </button>
+              </div>
+            </td>
+            <td v-for="field in row">{{ field }}</td>
+          </tr>
+        </TransitionGroup>
+      </table>
+    </div>
   </div>
 </template>
 

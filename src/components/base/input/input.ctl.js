@@ -236,5 +236,7 @@ export function useFormConfig(config, _schema = undefined) {
   const data = Object.fromEntries(
     Object.entries(config).map(([key, { value }]) => [key, value])
   );
-  return reactive({ ...useFormData(data), config });
+  const form = useFormData(data);
+  Object.assign(form, { config });
+  return form;
 }
