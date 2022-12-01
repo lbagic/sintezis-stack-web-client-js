@@ -1,3 +1,4 @@
+import { lifecycleHooks } from "@/lifecycleHooks";
 import { defineStore } from "pinia";
 import { accountService } from "./accountService";
 
@@ -18,11 +19,13 @@ export const useAccountStore = defineStore({
       this.token = response.token;
       this.user = response.user;
       this.$router.push("/");
+      lifecycleHooks.onLoggedIn();
       return response;
     },
     logout() {
       this.$reset();
       this.$router.push("/login");
+      lifecycleHooks.onLoggedOut();
     },
   },
   persist: true,

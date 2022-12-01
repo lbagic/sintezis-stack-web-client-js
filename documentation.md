@@ -1,5 +1,6 @@
 TODO:
 
+- same repo for frontend/backend app when deploying?
 - update docs
 - storybook integration
 - GRPC/REST - stream logger

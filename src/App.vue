@@ -1,5 +1,11 @@
 <script setup>
 import BaseToast from "./components/base/toast/BaseToast.vue";
+import { lifecycleHooks } from "./lifecycleHooks";
+
+lifecycleHooks.onApplicationOpened();
+window.addEventListener("beforeunload", () =>
+  lifecycleHooks.onApplicationClosed()
+);
 </script>
 
 <template>
