@@ -1,12 +1,12 @@
 <script setup>
+import AdminCrudCreateForm from "@/components/admin/AdminCrudCreateForm.vue";
+import AdminCrudDeleteForm from "@/components/admin/AdminCrudDeleteForm.vue";
+import AdminCrudEditForm from "@/components/admin/AdminCrudEditForm.vue";
 import { modal } from "@/components/base/modal/modal.ctl";
 import BaseTable from "@/components/base/table/BaseTable.vue";
+import { adminResources } from "@/modules/admin/adminResources";
 import { onMounted, reactive } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { adminResources } from "../adminResources";
-import AdminCrudCreateForm from "../components/AdminCrudCreateForm.vue";
-import AdminCrudDeleteForm from "../components/AdminCrudDeleteForm.vue";
-import AdminCrudEditForm from "../components/AdminCrudEditForm.vue";
 
 const route = useRoute();
 const router = useRouter();

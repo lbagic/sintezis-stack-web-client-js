@@ -1,5 +1,5 @@
 import { TableColumnsFactory } from "@/components/base/table/_types"
-import { StrictPartial, UnwrapCtor } from "@/utils/types"
+import { StrictPartial, UnwrapCtor } from "@/types/utilTypes"
 import { MessageType, MethodKind } from "@bufbuild/protobuf"
 import { Raw } from "vue"
 import { PaginationMessage } from "./resourceFactory"

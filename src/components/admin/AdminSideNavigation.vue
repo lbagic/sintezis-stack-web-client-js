@@ -1,6 +1,6 @@
 <script setup>
-import { adminResources } from "../adminResources";
-import { useAdminStore } from "../adminStore";
+import { adminResources } from "@/modules/admin/adminResources";
+import { useAdminStore } from "@/modules/admin/adminStore";
 
 const adminStore = useAdminStore();
 </script>

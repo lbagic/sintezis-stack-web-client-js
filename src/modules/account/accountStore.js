@@ -1,4 +1,4 @@
-import { lifecycleHooks } from "@/lifecycleHooks";
+import { lifecycleHooks } from "@/app/hooks";
 import { defineStore } from "pinia";
 import { accountService } from "./accountService";
 

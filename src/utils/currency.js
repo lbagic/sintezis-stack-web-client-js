@@ -8,7 +8,7 @@
  */
 
 /** @type { (price: number, options: FormatPriceOptions) => string } */
-export function formatPrice(price, options = undefined) {
+export function formatCurrency(price, options = undefined) {
   const fractionDigits = options?.useFractions
     ? options?.fractionDigits ?? 2
     : 0;

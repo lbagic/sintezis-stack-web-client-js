@@ -1,15 +1,17 @@
+// @ts-check
+
 /** @type { import("vue-router").RouteRecordRaw[] } */
-export const testRoutes = [
+export const routes = [
   {
     path: "/test",
-    component: () => import("./views/TestView.vue"),
+    component: () => import("@/views/dev/TestView.vue"),
     meta: {
       title: "test",
     },
   },
   {
     path: "/test-inputs",
-    component: () => import("./views/TestInputsView.vue"),
+    component: () => import("@/views/dev/TestInputsView.vue"),
     meta: {
       title: "test",
     },

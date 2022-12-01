@@ -1,13 +1,12 @@
 import { useAccountStore } from "@/modules/account/accountStore";
-import { appName } from "@/app/setup";
+import { applicationName } from "@/app/setup/setup";
 import { createRouter, createWebHistory } from "vue-router";
-import { routes as webClientRoutes } from "@/routes";
-import { routes as webAdminRoutes } from "@/routes.admin";
+import { routes } from "@/routes/routes";
 
 // Vue Router
 export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: import.meta.env.VITE_ADMIN_PANEL ? webAdminRoutes : webClientRoutes,
+  routes,
 });
 
 const fallback = {
@@ -24,7 +23,10 @@ router.beforeEach((to, from, next) => {
   const referrer = router.referrer;
 
   router.referrer = from;
-  document.title = to.matched.reduce((a, c) => c.meta.title ?? a, appName);
+  document.title = to.matched.reduce(
+    (a, c) => c.meta.title ?? a,
+    applicationName
+  );
 
   const isFound = !!to.matched.length;
   const isAuthorized = to.matched.every(authorize);

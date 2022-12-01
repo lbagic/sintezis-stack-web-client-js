@@ -1,7 +1,7 @@
 import { createPinia } from "pinia";
 import { createPersistedState } from "pinia-plugin-persistedstate";
 import { markRaw } from "vue";
-import { router } from "../router/router";
+import { router } from "@/app/router";
 
 export const pinia = createPinia();
 

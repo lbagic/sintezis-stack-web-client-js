@@ -1,5 +1,5 @@
 <script setup>
-import { adminResources } from "../adminResources";
+import { adminResources } from "@/modules/admin/adminResources";
 
 const data = {
   Users: 23,

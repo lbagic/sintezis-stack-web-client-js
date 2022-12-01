@@ -1,7 +1,7 @@
 <script setup>
+import AdminNavigation from "@/components/admin/AdminNavigation.vue";
+import AdminSideNavigation from "@/components/admin/AdminSideNavigation.vue";
 import { useRoute } from "vue-router";
-import AdminNavigation from "../components/AdminNavigation.vue";
-import AdminSideNavigation from "../components/AdminSideNavigation.vue";
 
 const route = useRoute();
 </script>

@@ -3,8 +3,8 @@ import AppBreadcrumbs from "@/components/AppBreadcrumbs.vue";
 import BaseModal from "@/components/base/modal/BaseModal.vue";
 import { modal } from "@/components/base/modal/modal.ctl";
 import { useAccountStore } from "@/modules/account/accountStore";
+import { useAdminStore } from "@/modules/admin/adminStore";
 import { breakpoint } from "@/utils/breakpoint";
-import { useAdminStore } from "../adminStore";
 import AdminIconPower from "./icons/AdminIconPower.vue";
 
 const adminStore = useAdminStore();

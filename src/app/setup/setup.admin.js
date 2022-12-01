@@ -1,4 +1,4 @@
 /** @param { import("vue").App<Element> } app */
-export function setupAdmin(app) {
+export function setup(app) {
   app;
 }

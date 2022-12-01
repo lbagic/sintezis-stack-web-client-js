@@ -1,6 +1,6 @@
 // @ts-check
+import AdminIconFolder from "@/components/admin/icons/AdminIconFolder.vue";
 import { Pagination } from "@/gen/pagination_pb";
-import AdminIconFolder from "@/modules/admin/components/icons/AdminIconFolder.vue";
 import { ScalarType } from "@bufbuild/protobuf";
 import { compose, filter, map } from "ramda";
 import { markRaw } from "vue";

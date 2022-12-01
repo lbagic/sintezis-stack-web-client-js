@@ -1,4 +1,4 @@
-import type { StrictPartial, UnwrapCtor } from "@/utils/types"
+import type { StrictPartial, UnwrapCtor } from "@/types/utilTypes"
 import { Options as FlatpickrOptions } from "flatpickr/dist/types/options"
 import DateInput from "./DateInput.vue"
 

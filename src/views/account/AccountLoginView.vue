@@ -2,8 +2,8 @@
 import BaseInput from "@/components/base/input/BaseInput.vue";
 import { useFormData } from "@/components/base/input/input.ctl";
 import { toast } from "@/components/base/toast/toast.ctl";
+import { useAccountStore } from "@/modules/account/accountStore";
 import { usePromise } from "@/utils/usePromise";
-import { useAccountStore } from "../accountStore";
 
 const form = useFormData({
   email: "",
