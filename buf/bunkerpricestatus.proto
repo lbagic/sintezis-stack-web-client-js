@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+package bunkerpricestatus.proto;
+
+option go_package = "api-service-go/gen;gen";
+
+import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
+import "validate/validate.proto";
+import "pagination.proto";
+import "filter.proto";
+
+message BunkerPriceStatus {
+	uint32 ID = 1;
+	string price_status = 2;
+}
+
+message BunkerPriceStatuses {
+  repeated BunkerPriceStatus bunker_price_statuses = 1;
+  pagination.proto.Pagination pagination = 2;
+}
+
+message GetBunkerPriceStatus {
+  int32 ID = 1;
+}
+
+message GetBunkerPriceStatuses {
+  pagination.proto.Pagination pagination = 1 [(validate.rules).message.required = true];
+  filter.proto.FilterOptions filter_options = 2;
+}
+
+message DeleteBunkerPriceStatus {
+  int32 ID = 1;
+}
+
+service BunkerPriceStatusService {
+  rpc Add(BunkerPriceStatus) returns (BunkerPriceStatus) {
+    option (google.api.http) = {
+      post: "/api/v1/bunker_price_statuses"
+      body: "*"
+    };
+  }
+  rpc Edit(BunkerPriceStatus) returns (BunkerPriceStatus) {
+    option (google.api.http) = {
+      put: "/api/v1/bunker_price_statuses/{ID}"
+      body: "*"
+    };
+  }
+  rpc Get(GetBunkerPriceStatus) returns (BunkerPriceStatus) {
+    option (google.api.http) = {
+      get: "/api/v1/bunker_price_statuses/{ID}"
+    };
+  }
+  rpc GetAll(GetBunkerPriceStatuses) returns (BunkerPriceStatuses) {
+    option (google.api.http) = {
+      get: "/api/v1/bunker_price_statuses"
+    };
+  }
+  rpc Delete(DeleteBunkerPriceStatus) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/api/v1/bunker_price_statuses/{ID}"
+    };
+  }
+}

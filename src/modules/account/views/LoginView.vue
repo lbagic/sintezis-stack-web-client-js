@@ -42,7 +42,7 @@ async function onLogin() {
           name="password"
           autocomplete="password"
           v-model="form.model.password"
-          minlength="8"
+          minlength="6"
         />
         <button
           class="snt-button primary expand small"

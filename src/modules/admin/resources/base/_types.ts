@@ -10,8 +10,9 @@ type RpcMethod = {
   O: MessageType,
   kind: MethodKind,
 }
-export type RpcServiceKeys = ["add", "edit", "get", "getAll", "delete"]
-type RpcService = Record<RpcServiceKeys[number], RpcMethod>
+export type RpcServiceKeysList = ["add", "edit", "get", "getAll", "delete"]
+type RpcServiceKeys = ["add", "edit", "get", "getAll", "delete"][number]
+type RpcService = Record<RpcServiceKeys, RpcMethod>
 
 type ActionContextFactory<Method extends RpcMethod, T> = (data?: T) => {
   form?: ReturnType<import("@/components/base/input/_types").FormConfigFactory<T>>,

@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package pagination.proto;
+
+option go_package = "api-service-go/gen;gen";
+
+// Pagination is used in GetAll requests that have a large number of results.
+message Pagination {
+  int32 page = 1;
+  int32 page_size = 2;
+  string order_by_column = 3;
+  OrderByEnum order_by = 4;
+  int32 total = 5;
+  int32 total_pages = 6;
+  bool override_pagination = 7;
+}
+
+// Enum listing order by directions
+enum OrderByEnum {
+    DESC = 0;
+    ASC = 1;
+}
+

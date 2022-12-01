@@ -1,5 +1,5 @@
 // @ts-check
-import { Pagination } from "@/gen/proto/commons/pagination_pb";
+import { Pagination } from "@/gen/pagination_pb";
 import AdminIconFolder from "@/modules/admin/components/icons/AdminIconFolder.vue";
 import { ScalarType } from "@bufbuild/protobuf";
 import { compose, filter, map } from "ramda";
@@ -7,7 +7,7 @@ import { markRaw } from "vue";
 
 export const PaginationMessage = Pagination;
 
-/** @type { import("./_types").RpcServiceKeys } */
+/** @type { import("./_types").RpcServiceKeysList } */
 const serviceFunctionKeys = ["add", "edit", "get", "getAll", "delete"];
 const isFieldType = (entity) => (el) => entity.typeName === el.T.typeName;
 
@@ -27,8 +27,12 @@ export const createResource = (config) => {
 
     const responseFields = method.O.fields.list();
     const parserName = `parse${key.toPascalCase()}Data`;
-    const dataField = responseFields.find(isFieldType(config.Entity)).name;
-    serviceParsers[parserName] = (response) => response[dataField];
+    const dataField = responseFields.find(
+      isFieldType(config.Entity)
+    )?.localName;
+    serviceParsers[parserName] = dataField
+      ? (response) => response[dataField]
+      : (response) => response;
   });
 
   return {

@@ -1,5 +1,4 @@
-import { userResource } from "./resources/userResource.js";
-import { titleResource } from "./resources/titleResource.js";
-import { airlineResource } from "./resources/airlineResource.js";
+import { bunkerPriceResource } from "./resources/bunkerPriceResource";
+import { bunkerPriceStatusResource } from "./resources/bunkerPriceStatusResource";
 
-export const adminResources = [userResource, titleResource, airlineResource];
+export const adminResources = [bunkerPriceResource, bunkerPriceStatusResource];
