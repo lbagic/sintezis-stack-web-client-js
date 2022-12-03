@@ -1,6 +1,5 @@
 <script setup>
 import { _toastCtl } from "./toast.ctl.js";
-
 const data = _toastCtl.data;
 
 function onClick(toastList, toast) {
@@ -18,22 +17,25 @@ function onClick(toastList, toast) {
         ? `${$prefix}toast-transition-top`
         : `${$prefix}toast-transition-bottom`
     "
-    tag="div"
+    tag="section"
     :class="`${$prefix}toast-wrapper`"
     :key="position"
     :data-position="position"
   >
-    <div
+    <output
       v-for="toast in toastList"
-      :class="`${$prefix}toast`"
+      role="status"
+      :class="{
+        [`${$prefix}toast`]: true,
+        [`${$prefix}toast-closable`]: toast.closable,
+        [`${$prefix}toast-type-${toast.type}`]: true,
+      }"
       :key="toast.id"
-      :data-type="toast.type"
-      :data-closable="toast.closable"
       @click="onClick(toastList, toast)"
     >
-      {{ toast.message }}
-      <button :class="`${$prefix}close-icon`"></button>
-    </div>
+      <p style="display: inline">{{ toast.message }}</p>
+      <button :class="`${$prefix}close-icon`" aria-label="close"></button>
+    </output>
   </TransitionGroup>
 </template>
 
