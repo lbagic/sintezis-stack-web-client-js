@@ -154,7 +154,7 @@ if (props.name) {
 <template>
   <Teleport to="body" :disabled="props.local">
     <Transition :name="`${prefix}modal-transition`">
-      <div
+      <dialog
         :class="`${prefix}modal-wrapper`"
         ref="wrapperRef"
         :data-expand="props.expand"
@@ -165,6 +165,8 @@ if (props.name) {
         @keydown.esc="() => useClose.onEsc && close(false)"
         v-if="state.isOpen || props.keepAlive"
         v-show="state.isOpen || !props.keepAlive"
+        :aria-hidden="!state.isOpen"
+        role="dialog"
       >
         <div
           :class="`${prefix}modal`"
@@ -177,12 +179,13 @@ if (props.name) {
             @click="close(false)"
             :class="`${prefix}modal-close-button ${$prefix}button danger text`"
             :style="{ '--base-color': `var(--${prefix}color-grey-dark)` }"
+            aria-label="close"
           >
             <ModalIconClose style="width: inherit; height: inherit" />
           </button>
           <slot></slot>
         </div>
-      </div>
+      </dialog>
     </Transition>
   </Teleport>
 </template>

@@ -43,6 +43,9 @@ pre {
   font-size: 12px;
   font-family: monospace, monospace;
 }
+dialog {
+  border: none;
+}
 sub,
 sup {
   position: relative;
@@ -67,11 +70,6 @@ li {
   list-style: none;
   margin: 0;
   padding: 0;
-}
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
 }
 button,
 [type="checkbox"],
@@ -146,4 +144,9 @@ textarea[disabled] {
 }
 *::placeholder {
   opacity: 1;
+}
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
