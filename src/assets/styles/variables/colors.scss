@@ -57,13 +57,17 @@ $base-color-variants: (
   "darkest-2": (
     "lightness": -90%,
   ),
-  "opaque": (
-    "alpha": -0.66,
+  "soft": (
+    "saturation": 50%,
+    "lightness": 95%,
   ),
-  "opaque-light": (
-    "saturation": -20%,
-    "brightness": 20%,
-    "alpha": -0.75,
+  "opaque": (
+    "alpha": -50%,
+  ),
+  "opaque-soft": (
+    "saturation": 50%,
+    "lightness": 95%,
+    "alpha": -50%,
   ),
 );
 

@@ -6,22 +6,28 @@
       "contrast": color-contrast($base-value),
     );
     @each $variant-name, $map in $variants {
-      $variant-value: "";
-      @if str-index($variant-name, "opaque") {
-        $variant-value: adjust-color(
-          $base-value,
-          $lightness: map-get($map, "lightness") or 0%,
-          $saturation: map-get($map, "saturation") or 0%,
-          $alpha: map-get($map, "alpha") or 0%
-        );
-      } @else {
-        $variant-value: scale-color(
-          $base-value,
-          $lightness: map-get($map, "lightness") or 0%,
-          $saturation: map-get($map, "saturation") or 0%,
-          $alpha: map-get($map, "alpha") or 0%
-        );
-      }
+      // $variant-value: "";
+      // @if str-index($variant-name, "opaque") {
+      //   $variant-value: adjust-color(
+      //     $base-value,
+      //     $lightness: map-get($map, "lightness") or 0%,
+      //     $saturation: map-get($map, "saturation") or 0%,
+      //     $alpha: map-get($map, "alpha") or 0%
+      //   );
+      // } @else {
+      //   $variant-value: scale-color(
+      //     $base-value,
+      //     $lightness: map-get($map, "lightness") or 0%,
+      //     $saturation: map-get($map, "saturation") or 0%,
+      //     $alpha: map-get($map, "alpha") or 0%
+      //   );
+      // }
+      $variant-value: scale-color(
+        $color: $base-value,
+        $lightness: map-get($map, "lightness") or 0%,
+        $saturation: map-get($map, "saturation") or 0%,
+        $alpha: map-get($map, "alpha") or 0%,
+      );
       $color-map: map-merge(
         $color-map,
         (
