@@ -8,6 +8,8 @@ TODO:
 - components - a11y
 - rework colors
 - clickable styles ordering/adjustments (hover/focus/active/focus-active) for buttons and cards + disabled styles
+- toggle input component
+- input component slot for label
 
 # WebStack Documentation
 
