@@ -1,11 +1,9 @@
 <script>
-export default {
-  inheritAttrs: false,
-  components: { ModalIconClose },
-};
+export default { inheritAttrs: false };
 </script>
 
 <script setup>
+import BaseIconClose from "@/components/icons/BaseIconClose.vue";
 import { onClickOutside, useCssVar } from "@vueuse/core";
 import { useFocusTrap } from "@vueuse/integrations/useFocusTrap";
 import {
@@ -19,7 +17,6 @@ import {
 } from "vue";
 import { useRouter } from "vue-router";
 import { css } from "../../../utils/css.js";
-import ModalIconClose from "./icons/ModalIconClose.vue";
 import { _modalCtl } from "./modal.ctl.js";
 
 const router = useRouter();
@@ -181,7 +178,7 @@ if (props.name) {
             :style="{ '--base-color': `var(--${prefix}color-grey-dark)` }"
             aria-label="close"
           >
-            <ModalIconClose style="width: inherit; height: inherit" />
+            <BaseIconClose style="width: inherit; height: inherit" />
           </button>
           <slot></slot>
         </div>

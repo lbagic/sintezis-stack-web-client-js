@@ -4,15 +4,16 @@ export default { inheritAttrs: false };
 
 <script setup>
 import * as R from "ramda";
-import { onMounted, reactive, useAttrs, watch } from "vue";
-import TableIconDelete from "./icons/TableIconDelete.vue";
-import TableIconEdit from "./icons/TableIconEdit.vue";
-import TableIconInfo from "./icons/TableIconInfo.vue";
+import { onMounted, reactive, useAttrs, watch, watchEffect } from "vue";
+import BaseInput from "../input/BaseInput.vue";
+import BaseIconDelete from "@/components/icons/BaseIconDelete.vue";
+import BaseIconEdit from "@/components/icons/BaseIconEdit.vue";
+import BaseIconInfo from "@/components/icons/BaseIconInfo.vue";
 
 // TODO - pagination, select, search, sort
 // TODO - compose filtering > sorting > pagination
 const attrs = useAttrs();
-const emit = defineEmits(["edit", "delete", "info"]);
+const emit = defineEmits(["edit", "delete", "info", "update:search"]);
 const props = defineProps({
   data: Array,
   columns: Array,
@@ -22,6 +23,8 @@ const props = defineProps({
   useEdit: Boolean,
   useDelete: Boolean,
   useInfo: Boolean,
+  sticky: Boolean,
+  title: String,
 });
 const tableRef = $ref(null);
 const cssVars = reactive({
@@ -29,6 +32,10 @@ const cssVars = reactive({
   iconGap: 0,
   iconSize: 0,
 });
+
+let searchModel = $ref("");
+watchEffect(() => (searchModel = props.search));
+watchEffect(() => emit("update:search", searchModel));
 
 function getTableCssVar(name) {
   return getComputedStyle(tableRef).getPropertyValue(name);
@@ -61,7 +68,6 @@ const cfg = $computed(() => {
   return o;
 });
 const useSearch = $computed(() => !!cfg.searchableIndexes.length);
-const searchTerm = $computed(() => props.search.toLowerCase?.());
 const useSort = $computed(() => !!cfg.sortableLabels.length);
 const hasActiveSort = $computed(() => !!sortOrders.size);
 
@@ -80,10 +86,10 @@ const searchable = $computed(() =>
 );
 
 const filteredData = $computed(() => {
-  if (!useSearch || !searchTerm) return data;
+  if (!useSearch || !searchModel) return data;
   const filteredIndexes = [];
   searchable.forEach((row, index) => {
-    const isMatch = row.some((field) => field.indexOf(searchTerm) > -1);
+    const isMatch = row.some((field) => field.indexOf(searchModel) > -1);
     if (isMatch) filteredIndexes.push(index);
   });
   return filteredIndexes.map((index) => data[index]);
@@ -147,18 +153,47 @@ const delayMultiplier = $computed(() =>
 
 <template>
   <div>
-    <div v-if="useSort" style="margin-bottom: 4px">
-      <button
-        class="snt-button text primary underline"
-        :disabled="!hasActiveSort"
-        @click="sortOrders.clear"
+    <div
+      :style="{
+        'overflow-x': props.sticky ? 'initial' : 'auto',
+        'box-shadow': `var(--${$prefix}shadow-1)`,
+      }"
+    >
+      <table
+        :class="{
+          [`${$prefix}table`]: true,
+          [`${$prefix}table-sticky`]: props.sticky,
+        }"
+        ref="tableRef"
+        v-bind="attrs"
       >
-        Clear sort
-      </button>
-    </div>
-    <div :style="`overflow-x: auto; box-shadow: var(--${$prefix}shadow-3);`">
-      <table :class="`${$prefix}table`" ref="tableRef" v-bind="attrs">
         <thead>
+          <th
+            colspan="999"
+            :class="`${$prefix}table-meta`"
+            v-if="useSort || useSearch || props.title"
+          >
+            <div :class="`${$prefix}flex`">
+              <p v-if="props.title" :class="`${$prefix}table-meta-title`">
+                {{ props.title }}
+              </p>
+              <div :class="`${$prefix}flex`" style="margin-left: auto">
+                <button
+                  v-if="useSort"
+                  class="snt-button small light"
+                  @click="sortOrders.clear"
+                  :disabled="!hasActiveSort"
+                >
+                  Clear sort
+                </button>
+                <BaseInput
+                  v-if="useSearch"
+                  placeholder="Search"
+                  v-model="searchModel"
+                />
+              </div>
+            </div>
+          </th>
           <tr>
             <th
               v-if="useActions"
@@ -168,7 +203,12 @@ const delayMultiplier = $computed(() =>
               v-for="label in cfg.labels"
               :key="label"
               @click="cycleSort(label)"
-              style="white-space: nowrap"
+              :style="{
+                'white-space': 'nowrap',
+                cursor: cfg.sortableLabels.includes(label)
+                  ? 'pointer'
+                  : undefined,
+              }"
             >
               {{ label }}
               <span
@@ -198,21 +238,21 @@ const delayMultiplier = $computed(() =>
                   :class="`${$prefix}button text info action-button`"
                   @click="emit('info', raw)"
                 >
-                  <TableIconInfo :class="`${$prefix}table-icon`" />
+                  <BaseIconInfo :class="`${$prefix}table-icon`" />
                 </button>
                 <button
                   v-if="props.useEdit"
                   :class="`${$prefix}button text warning action-button`"
                   @click="emit('edit', raw)"
                 >
-                  <TableIconEdit :class="`${$prefix}table-icon`" />
+                  <BaseIconEdit :class="`${$prefix}table-icon`" />
                 </button>
                 <button
                   v-if="props.useDelete"
                   :class="`${$prefix}button text danger action-button`"
                   @click="emit('delete', raw)"
                 >
-                  <TableIconDelete :class="`${$prefix}table-icon`" />
+                  <BaseIconDelete :class="`${$prefix}table-icon`" />
                 </button>
               </div>
             </td>
@@ -225,10 +265,6 @@ const delayMultiplier = $computed(() =>
 </template>
 
 <style scoped lang="scss">
-th {
-  cursor: pointer;
-}
-
 .sort-arrow {
   display: inline-block;
   vertical-align: middle;

@@ -8,4 +8,5 @@ export const globalProperties = {
   $appName: appName,
   $prefix: prefix,
   $imagePlaceholder: imagePlaceholder,
+  $log: console.log,
 };

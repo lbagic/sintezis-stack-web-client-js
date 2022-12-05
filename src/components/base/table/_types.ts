@@ -1,4 +1,4 @@
-import { StrictPartial, UnwrapCtor } from '@/types/utilTypes'
+import { UnwrapCtor } from '@/utils/types'
 
 type TableColumns<T> = {
   label: string,
