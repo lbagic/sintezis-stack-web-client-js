@@ -1,8 +1,8 @@
-import type { StrictPartial, UnwrapCtor } from "@/types/utilTypes"
+import type { UnwrapCtor } from "@/utils/types"
 import { Options as FlatpickrOptions } from "flatpickr/dist/types/options"
 import DateInput from "./DateInput.vue"
 
-type ComponentNames = "text" | "email" | "password" | "search" | "tel" | "url" | "color" | "number" | "range" | "checkbox" | "radio" | "textarea" | "select" | "file" | "date" | "time" | "datetime-local"
+type ComponentNames = "text" | "email" | "password" | "search" | "tel" | "url" | "color" | "number" | "range" | "textarea" | "switch" | "checkbox" | "radio" | "select" | "file" | "date" | "time" | "datetime-local"
 
 type InputEvents = Partial<{
   onSearch: (value: any) => any,
@@ -55,17 +55,18 @@ type InputContext = {
 }
 
 type InputComponentConfig = {
-  attrs: InputAttrs,
+  attrs?: InputAttrs,
   attrsFactory?: <T>(ctx: InputContext) => T,
   component: "input" | "textarea" | "select" | typeof DateInput,
+  wrapperComponent?: any,
   eventsFactory?: (ctx: InputContext) => InputEvents,
-  labelPosition: InputProps['labelPosition'],
-  onExternalUpdate: (ctx: InputContext) => any,
+  labelPosition?: InputProps['labelPosition'],
+  onExternalUpdate?: (ctx: InputContext) => any,
   onInit?: (ctx: InputContext) => any,
-  onInternalUpdate: (ctx: InputContext) => any,
-  parseInputValue: (e: Event, ctx: InputContext) => any,
-  supportOptions: boolean,
-  supportDropzone: boolean,
+  onInternalUpdate?: (ctx: InputContext) => any,
+  parseInputValue?: (e: Event, ctx: InputContext) => any,
+  supportOptions?: boolean,
+  supportDropzone?: boolean,
 }
 
 export type FlatpickrConfigFactory = (ctx: InputContext, config?: FlatpickrOptions) => FlatpickrOptions

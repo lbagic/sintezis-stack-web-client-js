@@ -284,7 +284,7 @@ const infoAttributes = $computed(() => ({
 
 <template>
   <component
-    :is="type === 'file' ? 'label' : 'div'"
+    :is="cfg.wrapperComponent ?? 'div'"
     v-bind="rootAttributes"
     :ref="(el) => (state.rootRef = el)"
     :class="`${$prefix}input-root`"

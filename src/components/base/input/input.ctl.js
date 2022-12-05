@@ -2,6 +2,7 @@ import { computed, reactive } from "vue";
 import DateInput from "./DateInput.vue";
 import { inputUtils } from "./input.utils";
 import { inputValidation } from "./input.validation";
+import SwitchInput from "./SwitchInput.vue";
 
 const settings = {
   useErrorMessage: true,
@@ -76,6 +77,40 @@ const components = {
     attrs: { type: "range" },
     parseInputValue: (e) => e.target.valueAsNumber,
   },
+  switch: {
+    component: SwitchInput,
+    labelPosition: "right",
+    attrsFactory(ctx) {
+      return { inputRef: ctx.inputRef };
+    },
+    parseInputValue(e, { props, model }) {
+      const checked = e.target.checked;
+      const value = props.value ?? true;
+      if (Array.isArray(model.value)) {
+        const includes = model.value.includes(value);
+        return checked && !includes
+          ? [...model.value, value]
+          : !checked && includes
+          ? model.value.filter((el) => el !== value)
+          : model.value;
+      }
+      return checked ? value : typeof value === "boolean" ? false : "";
+    },
+    onInternalUpdate({ inputRef, props, model }) {
+      const value = props.value ?? true;
+      const isChecked = Array.isArray(model.value)
+        ? model.value.includes(value)
+        : model.value === value;
+      inputRef.checked = isChecked;
+    },
+    onExternalUpdate({ inputRef, props, model }) {
+      const value = props.value ?? true;
+      const isChecked = Array.isArray(model.value)
+        ? model.value.includes(value)
+        : model.value === value;
+      inputRef.checked = isChecked;
+    },
+  },
   checkbox: {
     component: "input",
     attrs: { type: "checkbox" },
@@ -100,6 +135,13 @@ const components = {
         : model.value === value;
       inputRef.checked = isChecked;
     },
+    onExternalUpdate({ inputRef, props, model }) {
+      const value = props.value ?? true;
+      const isChecked = Array.isArray(model.value)
+        ? model.value.includes(value)
+        : model.value === value;
+      inputRef.checked = isChecked;
+    },
   },
   radio: {
     component: "input",
@@ -111,6 +153,10 @@ const components = {
       return checked ? value : typeof value === "boolean" ? false : "";
     },
     onInternalUpdate({ inputRef, props, model }) {
+      const value = props.value ?? true;
+      inputRef.checked = model.value === value;
+    },
+    onExternalUpdate({ inputRef, props, model }) {
       const value = props.value ?? true;
       inputRef.checked = model.value === value;
     },
@@ -126,6 +172,7 @@ const components = {
   },
   file: {
     component: "input",
+    wrapperComponent: "label",
     supportDropzone: true,
     parseInputValue(e, ctx) {
       const fileList = e.target?.files ?? e.dataTransfer?.files;

@@ -11,7 +11,7 @@ import { reactive } from "vue";
 
 /** @type { Record<ToastType, ToastOptions> } */
 const settings = {
-  success: { position: "top right", duration: 5 * 1000 },
+  success: { position: "top right", duration: 5 * 1000, closable: true },
   danger: { position: "top right", duration: 10 * 1000, closable: true },
   notification: {
     position: "bottom right",
