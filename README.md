@@ -32,7 +32,7 @@ buf registry login
 
 Generate proto files:
 
-- add project dependancy under buf/buf.yaml `deps`
+- alter the `buf generate` command under proto script in Makefile to include project proto definitions from buf.build repository e.g. `buf generate buf.build/sintezis/project:development`
 - run the following command to generate proto files
 
 ```sh

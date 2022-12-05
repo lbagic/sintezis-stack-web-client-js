@@ -7,7 +7,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-package-lock.json
+# package-lock.json
 node_modules
 .DS_Store
 dist
@@ -37,5 +37,5 @@ coverage
 docs
 
 # proto files
-buf/buf.lock
+# buf.lock
 src/gen
