@@ -39,6 +39,7 @@ export const createResource = (config) => {
     ...config,
     ...serviceParsers,
     id,
+    getId: (data) => data["id"] ?? data["ID"],
     tableColumns:
       config.tableColumns ??
       compose(

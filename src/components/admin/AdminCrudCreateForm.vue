@@ -27,7 +27,7 @@ async function actionCreate() {
 
 <template>
   <BaseModal class="primary" name="createResource">
-    <form @submit.prevent :class="`${$prefix}grid`">
+    <form @submit.prevent :class="`${$prefix}grid small`">
       <p>Create {{ resource.name }}</p>
       <div :class="`${$prefix}grid`" style="--gtc: 1fr 1fr">
         <BaseInput
@@ -39,6 +39,7 @@ async function actionCreate() {
       </div>
       <button
         :class="`${$prefix}button small success expand`"
+        style="margin-top: 16px"
         :disabled="!ctx.form.isValid || call.isPending"
         @click="actionCreate"
       >

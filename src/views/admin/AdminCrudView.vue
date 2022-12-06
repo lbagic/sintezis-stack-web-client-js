@@ -12,10 +12,11 @@ const route = useRoute();
 const router = useRouter();
 const resourceId = route.params.resourceId;
 
-/** @type { ReturnType<import("../resources/base/_types").ResourceFactory> } */
-const resource = adminResources.find((el) => el.id === resourceId);
+/** @type { ReturnType<import("@/modules/admin/resources/base/_types").ResourceFactory> } */
+const resource = adminResources.find(({ id }) => id === resourceId);
 
 const getAll = resource.setupGetAllContext().call;
+const getId = resource.getId;
 
 const ctx = reactive({
   data: [],
@@ -34,7 +35,7 @@ async function actionGetAll() {
   if (response.pagination) ctx.pagination = response.pagination;
 }
 function actionDetails(item) {
-  router.push(route.fullPath + "/details/" + item.id);
+  router.push(route.fullPath + "/details/" + getId(item));
 }
 function initAddItem() {
   modal.createResource.open();
@@ -47,7 +48,7 @@ function initDeleteItem(item) {
   modal.deleteResource.open();
 }
 function onDeleteItem(item) {
-  const itemIndex = ctx.data.findIndex((el) => el.id === item.id);
+  const itemIndex = ctx.data.findIndex((el) => getId(el) === getId(item));
   ctx.data.splice(itemIndex, 1);
   ctx.toDelete = undefined;
 }
@@ -56,7 +57,7 @@ function initEditItem(item) {
   modal.editResource.open();
 }
 function onEditItem(item) {
-  const itemIndex = ctx.data.findIndex((el) => el.id === item.id);
+  const itemIndex = ctx.data.findIndex((el) => getId(el) === getId(item));
   ctx.data.splice(itemIndex, 1, item);
   ctx.toEdit = undefined;
 }
@@ -70,7 +71,7 @@ onMounted(() => {
   <div :class="`${$prefix}container`" style="overflow-y: auto">
     <template v-if="resource.setupAddContext">
       <button :class="`${$prefix}button success small`" @click="initAddItem">
-        Create {{ resource.name }}
+        Create
       </button>
       <AdminCrudCreateForm @add-item="onAddItem" :resource="resource" />
     </template>
@@ -92,7 +93,8 @@ onMounted(() => {
       :columns="resource.tableColumns"
       :data="ctx.data"
       use-sort
-      class="primary"
+      use-search
+      :title="resource.name.toCapitalCase()"
       :use-info="!!resource.useDetails"
       @info="actionDetails"
       :use-edit="!!resource.setupEditContext"

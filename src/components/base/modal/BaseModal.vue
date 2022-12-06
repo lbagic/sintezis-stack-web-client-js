@@ -1,5 +1,15 @@
 <script>
 export default { inheritAttrs: false };
+
+const prefix = useCssVar("--prefix").value;
+const focusableElements = [
+  "a",
+  `button:not(.${prefix}modal-close-button)`,
+  "input",
+  "textarea",
+  "select",
+  "summary",
+].join(", ");
 </script>
 
 <script setup>
@@ -41,7 +51,6 @@ if (!props.name && !props.hash && !props.query) {
   );
 }
 
-const prefix = useCssVar("--prefix").value;
 const colorNames = Object.keys(css.colors);
 const baseZIndex = Number(useCssVar(`--${prefix}z-index-modal`).value);
 
@@ -58,9 +67,7 @@ const util = {
   filterColorName: (name) => colorNames.includes(name),
   getFocusElement: () =>
     modalRef.value.querySelector("[autofocus]") ||
-    modalRef.value.querySelector(
-      `a, button:not(.${prefix}modal-close-button), input, textarea, select, summary`
-    ) ||
+    modalRef.value.querySelector(focusableElements) ||
     wrapperRef.value,
 };
 

@@ -23,7 +23,7 @@ const props = defineProps({
   useEdit: Boolean,
   useDelete: Boolean,
   useInfo: Boolean,
-  sticky: Boolean,
+  stickyHeaders: Boolean,
   title: String,
 });
 const tableRef = $ref(null);
@@ -175,14 +175,14 @@ const delayMultiplier = $computed(() =>
     </div>
     <div
       :style="{
-        'overflow-x': props.sticky ? 'initial' : 'auto',
+        'overflow-x': props.stickyHeaders ? 'initial' : 'auto',
         'box-shadow': `var(--${$prefix}shadow-1)`,
       }"
     >
       <table
         :class="{
           [`${$prefix}table`]: true,
-          [`${$prefix}table-sticky`]: props.sticky,
+          [`${$prefix}table-sticky`]: props.stickyHeaders,
         }"
         ref="tableRef"
         v-bind="attrs"

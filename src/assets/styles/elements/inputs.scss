@@ -11,7 +11,8 @@
   --input-text-color: var(--#{$prefix}color-text);
   --input-placeholder-color: var(--#{$prefix}color-grey);
   --input-background-color: var(--#{$prefix}color-light);
-  --input-disabled-color: var(--#{$prefix}color-muted-lighter);
+  --input-disabled-background: var(--#{$prefix}color-muted-lighter-2);
+  --input-disabled-color: var(--#{$prefix}color-muted-darker-2);
   --input-border-color: var(--#{$prefix}color-light-dark-2);
   --input-padding-x: 8px;
   --input-padding-y: calc(
@@ -41,7 +42,8 @@
   background-color: var(--input-background-color);
   &[readonly],
   &[disabled] {
-    background-color: var(--input-disabled-color);
+    background-color: var(--input-disabled-background);
+    color: var(--input-disabled-color);
   }
 }
 

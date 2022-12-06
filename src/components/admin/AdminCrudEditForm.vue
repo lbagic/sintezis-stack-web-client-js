@@ -29,7 +29,7 @@ async function actionEdit() {
 
 <template>
   <BaseModal class="primary" name="editResource">
-    <form @submit.prevent v-if="ctx" :class="`${$prefix}grid`">
+    <form @submit.prevent v-if="ctx" :class="`${$prefix}grid small`">
       <p>Edit {{ resource.name }}</p>
       <div :class="`${$prefix}grid`" style="--gtc: 1fr 1fr">
         <BaseInput

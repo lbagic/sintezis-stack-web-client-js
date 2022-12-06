@@ -3,7 +3,6 @@ export default { inheritAttrs: false };
 </script>
 
 <script setup>
-import { useDebounceFn } from "@vueuse/shared";
 import "flatpickr/dist/flatpickr.css";
 import {
   mergeProps,
@@ -47,7 +46,7 @@ const props = defineProps({
 });
 
 const attrs = useAttrs();
-const emit = defineEmits(["update:modelValue", "input", "search"]);
+const emit = defineEmits(["update:modelValue", "input"]);
 const cfg = $computed(() => ctl.components[props.type]);
 if (!cfg) throw new Error(`Input type "${props.type}" not supported.`);
 
@@ -158,13 +157,9 @@ function onExternalUpdate(payload = { forceUpdate: false }) {
   });
 }
 
-const search = useDebounceFn((e) => emit("search", e.target.value), 250, {
-  maxWait: 600,
-});
 function onInput(e) {
   onInternalUpdate(e);
   emit("input", e);
-  search(e);
 }
 function onFocus(e, mode) {
   if (mode === "alt") state.altFocused = true;
