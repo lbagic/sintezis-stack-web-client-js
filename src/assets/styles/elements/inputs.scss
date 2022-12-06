@@ -1,5 +1,4 @@
 .#{$prefix}input-root {
-  // display: inline-block;
   display: block;
 }
 .#{$prefix}input {
@@ -132,7 +131,7 @@
 
 // Input label styles
 .#{$prefix}input-label {
-  display: inline-block;
+  white-space: nowrap;
   --label-margin: 0.25rem;
 
   // input label required styles

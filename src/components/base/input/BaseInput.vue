@@ -99,11 +99,12 @@ const hasDropdownPicker = $computed(() => hasOptions && type !== "range");
 const hasSelectPlaceholder = $computed(
   () => type === "select" && attrs.placeholder && !isSelected
 );
-const labelPos =
+const labelPosition =
   props.labelPosition || cfg.labelPosition || ctl.settings.labelPosition;
-const labelBefore = props.label && (labelPos === "top" || labelPos === "left");
+const labelBefore =
+  props.label && (labelPosition === "top" || labelPosition === "left");
 const labelAfter =
-  props.label && (labelPos === "bottom" || labelPos === "right");
+  props.label && (labelPosition === "bottom" || labelPosition === "right");
 const infoSpacing = type !== "radio" && type !== "checkbox" && type !== "range";
 
 const ctx = $computed(() => ({
@@ -264,7 +265,7 @@ const altInputAttributes = $computed(() => {
 });
 
 const labelAttributes = $computed(() => ({
-  position: labelPos,
+  position: labelPosition,
   for: state.id.input,
   requiredAsterisk: props.useRequiredAsterisk && isRequired,
 }));
