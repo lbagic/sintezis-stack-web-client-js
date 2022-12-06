@@ -50,7 +50,7 @@ export const createResource = (config) => {
         filter((el) => typeof el.T === "number" && el.T !== ScalarType.BYTES)
       )(fields),
     icon: config.icon ?? markRaw(AdminIconFolder),
-    name: config.name ?? config.Entity.name,
+    name: config.name ?? config.Entity.name.toCapitalCase(),
     useDetails: !!config.useDetails,
     usePagination: !!config.usePagination,
     hasPagination: requestFields.some(isFieldType(PaginationMessage)),

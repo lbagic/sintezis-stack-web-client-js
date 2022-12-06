@@ -13,7 +13,7 @@ const adminStore = useAdminStore();
           <RouterLink
             :to="`/crud/${resource.id}`"
             class="snt-flex snt-button text dark underline"
-            style="display: inline-flex"
+            style="display: inline-flex; --gap: 4px"
           >
             <component height="100%" width="20px" :is="resource.icon" />
             <p>{{ resource.name }}</p>
@@ -26,7 +26,7 @@ const adminStore = useAdminStore();
 
 <style scoped lang="scss">
 .admin-side-nav {
-  width: 150px;
+  max-width: 250px;
   overflow-y: auto;
   background: linear-gradient(
     120deg,
@@ -38,7 +38,7 @@ const adminStore = useAdminStore();
 .transition {
   @include transition(all 0.4s cubic-bezier(0.8, 0.4, 0.2, 0.8)) {
     opacity: 0;
-    width: 0px;
+    max-width: 0px;
   }
 }
 </style>

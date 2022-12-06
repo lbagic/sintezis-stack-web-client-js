@@ -63,7 +63,7 @@ const isSmallScreen = breakpoint.smaller("s");
   background: linear-gradient(
     150deg,
     var(--snt-color-primary-dark) 0%,
-    var(--snt-color-primary-light) 100%
+    var(--snt-color-primary-dark-2) 100%
   );
   box-shadow: var(--snt-shadow-3);
 }

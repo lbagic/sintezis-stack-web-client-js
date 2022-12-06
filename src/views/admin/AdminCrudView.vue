@@ -4,6 +4,7 @@ import AdminCrudDeleteForm from "@/components/admin/AdminCrudDeleteForm.vue";
 import AdminCrudEditForm from "@/components/admin/AdminCrudEditForm.vue";
 import { modal } from "@/components/base/modal/modal.ctl";
 import BaseTable from "@/components/base/table/BaseTable.vue";
+import BaseIconAdd from "@/components/icons/BaseIconAdd.vue";
 import { adminResources } from "@/modules/admin/adminResources";
 import { onMounted, reactive } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -70,8 +71,12 @@ onMounted(() => {
 <template>
   <div :class="`${$prefix}container`" style="overflow-y: auto">
     <template v-if="resource.setupAddContext">
-      <button :class="`${$prefix}button success small`" @click="initAddItem">
-        Create
+      <button
+        :class="`${$prefix}button primary large bold`"
+        @click="initAddItem"
+      >
+        <BaseIconAdd width="25px" height="100%" />
+        <p style="padding: 0 4px">Create</p>
       </button>
       <AdminCrudCreateForm @add-item="onAddItem" :resource="resource" />
     </template>
@@ -94,7 +99,6 @@ onMounted(() => {
       :data="ctx.data"
       use-sort
       use-search
-      :title="resource.name.toCapitalCase()"
       :use-info="!!resource.useDetails"
       @info="actionDetails"
       :use-edit="!!resource.setupEditContext"

@@ -3,18 +3,18 @@ import BaseModal from "@/components/base/modal/BaseModal.vue";
 import { modal } from "@/components/base/modal/modal.ctl";
 import BaseTable from "@/components/base/table/BaseTable.vue";
 import { toast } from "@/components/base/toast/toast.ctl";
-import { usePromise } from "@/utils/usePromise";
 
 const props = defineProps({ resource: undefined, item: undefined });
 const emit = defineEmits(["deleteItem"]);
-
 /** @type { ReturnType<import("@/modules/admin/resources/base/_types").ResourceFactory> } */
 const resource = props.resource;
-const ctx = resource.setupDeleteContext();
-const call = usePromise(ctx.call);
+let isPending = $ref(false);
+
 async function actionDelete() {
   try {
-    await call.execute(props.item);
+    isPending = true;
+    await resource.setupDeleteContext(props.item).call();
+    isPending = false;
     modal.deleteResource.close();
     emit("deleteItem", props.item);
     toast.success(`${resource.id} deleted.`);
@@ -27,7 +27,7 @@ const data = $computed(() => (props.item ? [props.item] : []));
 </script>
 
 <template>
-  <BaseModal class="primary" name="deleteResource">
+  <BaseModal class="danger" name="deleteResource">
     <div :class="`${$prefix}grid`">
       <p>
         Are you sure you want to delete the following {{ resource.id }} items?
@@ -37,7 +37,7 @@ const data = $computed(() => (props.item ? [props.item] : []));
         <button
           :class="`${$prefix}button text danger underline small`"
           @click="actionDelete"
-          :disabled="call.isPending"
+          :disabled="isPending"
         >
           Yes, delete please!
         </button>
