@@ -53,7 +53,9 @@ const errorMap = {
   },
   valueMissing: {
     message: translate(messages.formErrors.valueMissing),
-    check: (ctx) => ctx.isRequired && !ctx.model.value,
+    check: (ctx) =>
+      ctx.isRequired &&
+      (ctx.model.value === "" || ctx.model.value === undefined),
   },
 };
 const errorKeys = Object.keys(errorMap);

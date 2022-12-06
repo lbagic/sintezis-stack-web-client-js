@@ -8,7 +8,7 @@ import { usePromise } from "@/utils/usePromise";
 const props = defineProps({ resource: undefined, item: undefined });
 const emit = defineEmits(["deleteItem"]);
 
-/** @type { ReturnType<import("../resources/base/_types").ResourceFactory> } */
+/** @type { ReturnType<import("@/modules/admin/resources/base/_types").ResourceFactory> } */
 const resource = props.resource;
 const ctx = resource.setupDeleteContext();
 const call = usePromise(ctx.call);
@@ -19,7 +19,7 @@ async function actionDelete() {
     emit("deleteItem", props.item);
     toast.success(`${resource.id} deleted.`);
   } catch {
-    toast.warning(`Failed to delete ${resource.id}.`);
+    toast.danger(`Failed to delete ${resource.id}.`);
   }
 }
 

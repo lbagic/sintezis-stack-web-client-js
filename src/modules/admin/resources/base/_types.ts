@@ -1,5 +1,5 @@
 import { TableColumnsFactory } from "@/components/base/table/_types"
-import { StrictPartial, UnwrapCtor } from "@/types/utilTypes"
+import { StrictPartial, UnwrapCtor } from "@/utils/types"
 import { MessageType, MethodKind } from "@bufbuild/protobuf"
 import { Raw } from "vue"
 import { PaginationMessage } from "./resourceFactory"
@@ -41,6 +41,7 @@ export type ResourceFactory = <
   Partial<ActionContextFactoryMap<Service, Entity>>
 ) => {
   Entity: Entity,
+  getId: (data: Entity) => number,
   Pagination: typeof PaginationMessage,
   rpc: Service,
   name: string,

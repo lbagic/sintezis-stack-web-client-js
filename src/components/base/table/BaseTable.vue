@@ -152,7 +152,27 @@ const delayMultiplier = $computed(() =>
 </script>
 
 <template>
-  <div>
+  <div :class="`${$prefix}grid small`">
+    <div :class="`${$prefix}flex`">
+      <p v-if="props.title" :class="`${$prefix}table-meta-title`">
+        {{ props.title }}
+      </p>
+      <div :class="`${$prefix}flex`" style="margin-left: auto">
+        <button
+          v-if="useSort"
+          class="snt-button small light"
+          @click="sortOrders.clear"
+          :disabled="!hasActiveSort"
+        >
+          Clear sort
+        </button>
+        <BaseInput
+          v-if="useSearch"
+          placeholder="Search"
+          v-model="searchModel"
+        />
+      </div>
+    </div>
     <div
       :style="{
         'overflow-x': props.sticky ? 'initial' : 'auto',
@@ -168,32 +188,6 @@ const delayMultiplier = $computed(() =>
         v-bind="attrs"
       >
         <thead>
-          <th
-            colspan="999"
-            :class="`${$prefix}table-meta`"
-            v-if="useSort || useSearch || props.title"
-          >
-            <div :class="`${$prefix}flex`">
-              <p v-if="props.title" :class="`${$prefix}table-meta-title`">
-                {{ props.title }}
-              </p>
-              <div :class="`${$prefix}flex`" style="margin-left: auto">
-                <button
-                  v-if="useSort"
-                  class="snt-button small light"
-                  @click="sortOrders.clear"
-                  :disabled="!hasActiveSort"
-                >
-                  Clear sort
-                </button>
-                <BaseInput
-                  v-if="useSearch"
-                  placeholder="Search"
-                  v-model="searchModel"
-                />
-              </div>
-            </div>
-          </th>
           <tr>
             <th
               v-if="useActions"
@@ -237,6 +231,7 @@ const delayMultiplier = $computed(() =>
                   v-if="props.useInfo"
                   :class="`${$prefix}button text info action-button`"
                   @click="emit('info', raw)"
+                  title="Info"
                 >
                   <BaseIconInfo :class="`${$prefix}table-icon`" />
                 </button>
@@ -244,6 +239,7 @@ const delayMultiplier = $computed(() =>
                   v-if="props.useEdit"
                   :class="`${$prefix}button text warning action-button`"
                   @click="emit('edit', raw)"
+                  title="Edit"
                 >
                   <BaseIconEdit :class="`${$prefix}table-icon`" />
                 </button>
@@ -251,6 +247,7 @@ const delayMultiplier = $computed(() =>
                   v-if="props.useDelete"
                   :class="`${$prefix}button text danger action-button`"
                   @click="emit('delete', raw)"
+                  title="Delete"
                 >
                   <BaseIconDelete :class="`${$prefix}table-icon`" />
                 </button>

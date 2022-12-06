@@ -34,7 +34,7 @@ function onClick(toastList, toast) {
       @click="onClick(toastList, toast)"
     >
       <p style="display: inline">{{ toast.message }}</p>
-      <button :class="`${$prefix}close-icon`" aria-label="close"></button>
+      <!-- <button :class="`${$prefix}close-icon`" aria-label="close"></button> -->
     </output>
   </TransitionGroup>
 </template>

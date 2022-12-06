@@ -45,16 +45,20 @@
  * @param { GrpcRequestObject } request
  * @returns { RequestContext }
  */
-const grpcRequestContext = (request) => ({
-  type: "grpc",
-  data: request.message,
-  headers: Object.fromEntries(request.header.entries()),
-  method: request.init.method,
-  name: request.method.name,
-  query: "",
-  stream: request.stream,
-  url: request.url,
-});
+const grpcRequestContext = (request) => {
+  const serviceName = request.service.typeName.split(".").at(-1);
+  const methodName = request.method.name;
+  return {
+    type: "grpc",
+    data: request.message,
+    headers: Object.fromEntries(request.header.entries()),
+    method: request.init.method,
+    name: serviceName + methodName,
+    query: "",
+    stream: request.stream,
+    url: request.url,
+  };
+};
 
 /**
  * Create response context for grpc response

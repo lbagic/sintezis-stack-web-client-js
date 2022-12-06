@@ -8,7 +8,7 @@ import { usePromise } from "@/utils/usePromise";
 const props = defineProps({ resource: undefined, item: undefined });
 const emit = defineEmits(["editItem"]);
 
-/** @type { ReturnType<import("../resources/base/_types").ResourceFactory> } */
+/** @type { ReturnType<import("@/modules/admin/resources/base/_types").ResourceFactory> } */
 const resource = props.resource;
 const ctx = $computed(() =>
   props.item ? resource.setupEditContext(props.item) : {}
@@ -22,7 +22,7 @@ async function actionEdit() {
     emit("editItem", item);
     toast.success(`${resource.id} edited.`);
   } catch {
-    toast.warning(`Failed to edit ${resource.id}.`);
+    toast.danger(`Failed to edit ${resource.id}.`);
   }
 }
 </script>
@@ -40,12 +40,12 @@ async function actionEdit() {
         />
       </div>
       <button
-        :class="`${$prefix}button small success expand`"
+        :class="`${$prefix}button small warning expand`"
         style="margin-top: 16px"
         :disabled="!ctx.form.isValid || call.isPending"
         @click="actionEdit"
       >
-        Save
+        Edit
       </button>
     </form>
   </BaseModal>

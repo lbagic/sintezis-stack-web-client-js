@@ -8,7 +8,7 @@ import { usePromise } from "@/utils/usePromise";
 const props = defineProps({ resource: undefined });
 const emit = defineEmits(["addItem"]);
 
-/** @type { ReturnType<import("../resources/base/_types").ResourceFactory> } */
+/** @type { ReturnType<import("@/modules/admin/resources/base/_types").ResourceFactory> } */
 const resource = props.resource;
 const ctx = resource.setupAddContext();
 const call = usePromise(ctx.call);

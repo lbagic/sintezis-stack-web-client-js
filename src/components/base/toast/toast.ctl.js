@@ -11,15 +11,15 @@ import { reactive } from "vue";
 
 /** @type { Record<ToastType, ToastOptions> } */
 const settings = {
-  success: { position: "top right", duration: 5 * 1000, closable: true },
-  danger: { position: "top right", duration: 10 * 1000, closable: true },
+  success: { position: "top right", duration: 5 * 1000 },
+  danger: { position: "top right", duration: 5 * 1000 },
+  warning: { position: "top right", duration: 20 * 1000, closable: true },
+  info: { position: "bottom right", duration: 20 * 1000, closable: true },
   notification: {
     position: "bottom right",
     duration: 20 * 1000,
     closable: true,
   },
-  warning: { position: "bottom right", duration: 20 * 1000, closable: true },
-  info: { position: "bottom right", duration: 20 * 1000, closable: true },
 };
 
 export const _toastCtl = {
@@ -37,9 +37,11 @@ export const _toastCtl = {
   types: ["success", "danger", "info", "warning", "notification"],
 };
 
+let _id = 1;
+
 /** @type { (type: ToastType) => CreateToastFunction } */
 const createToast = (type) => (message, options) => {
-  const id = Date.now();
+  const id = _id++;
   const cfg = settings[type];
   const position = options?.position ?? cfg.position;
   const duration = options?.duration ?? cfg.duration;
