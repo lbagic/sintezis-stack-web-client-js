@@ -43,7 +43,7 @@
 }
 
 .#{$prefix}button[disabled] {
-  opacity: 0.66 !important;
+  opacity: 0.5 !important;
   cursor: default !important;
   pointer-events: none !important;
 }

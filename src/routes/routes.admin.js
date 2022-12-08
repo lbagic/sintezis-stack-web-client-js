@@ -66,7 +66,11 @@ export const routes = [
         meta: {
           breadcrumbs: (params) => [
             { name: "Dashboard", routeName: "dashboard" },
-            { name: params.resourceId, routeName: "crud-resource" },
+            {
+              name: adminResources.find((el) => el.id === params.resourceId)
+                .name,
+              routeName: "crud-resource",
+            },
           ],
         },
       },

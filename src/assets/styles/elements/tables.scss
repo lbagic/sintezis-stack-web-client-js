@@ -1,5 +1,6 @@
 @mixin generate-table-colors($color) {
-  --table-base-color: var(--#{$prefix}color-#{$color});
+  --table-base-background: var(--#{$prefix}color-#{$color});
+  --table-base-contrast: var(--#{$prefix}color-#{$color}-contrast);
   --table-background: var(--#{$prefix}color-#{$color}-lighter);
   --table-header-background: var(--#{$prefix}color-#{$color}-lighter-2);
   --table-header-color: var(--#{$prefix}color-#{$color}-lighter-2-contrast);
@@ -8,7 +9,7 @@
   --table-cell-color: var(--#{$prefix}color-#{$color}-darkest);
 }
 
-.#{$prefix}table {
+.#{$prefix}table-wrapper {
   --table-icon-size: 24px;
   --table-icon-gap: 5px;
   --table-header-padding-y: 6px;
@@ -24,7 +25,9 @@
       @include generate-table-colors($color);
     }
   }
+}
 
+.#{$prefix}table {
   font-size: var(--table-font-size);
   background: var(--table-background);
   position: relative;
@@ -82,16 +85,13 @@
   bottom: 0px;
 }
 
-// .table-transition-move,
-.table-transition-enter-active {
-  transition: transform 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+.table-transition {
+  &-move,
+  &-enter-active {
+    transition: transform 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+  }
+  &-enter-from {
+    transform: scaleY(0.01) translate(30px, 10px);
+    opacity: 0;
+  }
 }
-
-.table-transition-enter-from {
-  transform: scaleY(0.01) translate(30px, 0);
-}
-
-// .table-transition-leave-active {
-//   position: absolute;
-//   opacity: 0;
-// }
