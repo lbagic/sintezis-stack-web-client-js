@@ -1,8 +1,7 @@
 // @ts-check
 import AdminIconFolder from "@/components/admin/icons/AdminIconFolder.vue";
 import { Pagination } from "@/gen/pagination_pb";
-import { ScalarType } from "@bufbuild/protobuf";
-import { compose, filter, map } from "ramda";
+import { isPrimitiveScalar } from "@/utils/grpcUtils";
 import { markRaw } from "vue";
 
 export const PaginationMessage = Pagination;
@@ -10,11 +9,13 @@ export const PaginationMessage = Pagination;
 /** @type { import("./_types").RpcServiceKeysList } */
 const serviceFunctionKeys = ["add", "edit", "get", "getAll", "delete"];
 const isFieldType = (entity) => (el) => entity.typeName === el.T.typeName;
+const isPrimitiveField = (field) => isPrimitiveScalar(field.T);
 
 /** @type { import("./_types").ResourceFactory } */
 export const createResource = (config) => {
   const id = config.Entity.name;
   const fields = config.Entity.fields.list();
+  const primitiveFields = fields.filter(isPrimitiveField);
   const requestFields = config.rpc.getAll?.["I"].fields.list();
 
   if (!config.rpc.getAll)
@@ -42,13 +43,10 @@ export const createResource = (config) => {
     getId: (data) => data["id"] ?? data["ID"],
     tableColumns:
       config.tableColumns ??
-      compose(
-        map((el) => ({
-          label: el.localName.toSentenceCase(),
-          field: el.localName,
-        })),
-        filter((el) => typeof el.T === "number" && el.T !== ScalarType.BYTES)
-      )(fields),
+      primitiveFields.map((el) => ({
+        label: el.localName.toSentenceCase(),
+        field: el.localName,
+      })),
     icon: config.icon ?? markRaw(AdminIconFolder),
     name: config.name ?? config.Entity.name.toCapitalCase(),
     useDetails: !!config.useDetails,

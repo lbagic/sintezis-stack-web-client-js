@@ -9,169 +9,259 @@ import BaseInput from "../input/BaseInput.vue";
 import BaseIconDelete from "@/components/icons/BaseIconDelete.vue";
 import BaseIconEdit from "@/components/icons/BaseIconEdit.vue";
 import BaseIconInfo from "@/components/icons/BaseIconInfo.vue";
+import { _tableCtl } from "./table.ctl";
+
+function getTableCssVar(name) {
+  return getComputedStyle(tableRef).getPropertyValue(name);
+}
+function optInState(colState, propState) {
+  return colState || (propState && colState === undefined) ? true : false;
+}
+function cycleSort(index) {
+  if (!cfg.sortables.includes(index)) return;
+  const current = sortMap.get(index);
+  sortMap.delete(index);
+  const next = !current ? "desc" : current === "desc" ? "asc" : undefined;
+  if (next) sortMap.set(index, next);
+}
 
 // TODO - pagination, select, search, sort
-// TODO - compose filtering > sorting > pagination
+// TODO - compose filtering > sorting > pagination if possible
+
 const attrs = useAttrs();
-const emit = defineEmits(["edit", "delete", "info", "update:search"]);
+const emit = defineEmits([
+  "edit",
+  "delete",
+  "info",
+  "update:search",
+  "update:pagination",
+]);
 const props = defineProps({
   data: Array,
   columns: Array,
   search: String,
+  pagination: Object,
   useSearch: Boolean,
   useSort: Boolean,
   useEdit: Boolean,
   useDelete: Boolean,
   useInfo: Boolean,
+  usePagination: Boolean,
+  usePaginationExternal: Boolean,
   stickyHeaders: Boolean,
   title: String,
 });
+
+if (!props.columns) throw new Error('Prop "columns" must be provided.');
+const sortMap = $ref(new Map());
 const tableRef = $ref(null);
 const cssVars = reactive({
   cellPaddingX: 0,
   iconGap: 0,
   iconSize: 0,
 });
+const ctx = reactive({
+  search: "",
+  pagination: _tableCtl.createTablePagination(),
+});
 
-let searchModel = $ref("");
-watchEffect(() => (searchModel = props.search));
-watchEffect(() => emit("update:search", searchModel));
+// Search v-model
+watchEffect(() => {
+  ctx.search = props.search ?? "";
+});
+watch(
+  () => ctx.search,
+  (search) => emit("update:search", search)
+);
 
-function getTableCssVar(name) {
-  return getComputedStyle(tableRef).getPropertyValue(name);
+// Pagination v-model & handlers
+watchEffect(() => {
+  if (props.pagination) Object.assign(ctx.pagination, props.pagination);
+});
+watch(
+  () => ctx.pagination,
+  (pagination) => {
+    if (ctx.pagination === props.pagination) return;
+    emit("update:pagination", pagination);
+  },
+  { deep: true }
+);
+
+if (props.usePagination) {
+  if (!props.usePaginationExternal)
+    watchEffect(() => (ctx.pagination.total = props.data.length));
+  watchEffect(() => {
+    ctx.pagination.totalPages = Math.ceil(
+      ctx.pagination.total / ctx.pagination.pageSize
+    );
+  });
+  watch(
+    () => ctx.pagination,
+    (pagination) => {
+      if (pagination.totalPages && pagination.page > pagination.totalPages)
+        pagination.page = pagination.totalPages;
+    },
+    { deep: true }
+  );
 }
 
-if (!props.columns) throw new Error('Prop "columns" must be provided.');
-const optInState = (colState, propState) =>
-  colState || (propState && colState === undefined) ? true : false;
-
-const sortOrders = $ref(new Map());
-const activeLabel = $computed(() => [...sortOrders.keys()].at(-1));
+const paginationButtons = $computed(() => {
+  const { totalPages, page } = ctx.pagination;
+  const min = Math.max(Math.min(totalPages - 4, page - 2), 1);
+  const max = Math.min(min + 4, totalPages);
+  const list = [...Array(max - min + 1)].map((_, index) => index + min);
+  return { list, isLast: page >= max, isFirst: page <= min };
+});
 
 const cfg = $computed(() => {
-  /** @type {{ labels: string[], fields: ((item: object) => any)[], searchableIndexes: number[], sortableLabels: string[] }} */
-  const o = {
-    labels: [],
-    fields: [],
-    searchableIndexes: [],
-    sortableLabels: [],
-  };
-  props.columns.forEach(({ label, field, search, sort }, index) => {
-    o.labels.push(label);
-    o.fields.push(typeof field === "function" ? field : (o) => o[field]);
-    if (optInState(search, props.useSearch)) o.searchableIndexes.push(index);
-    if (optInState(sort, props.useSort)) {
-      o.sortableLabels.push(label);
-      if (typeof sort === "string") sortOrders.set(label, sort);
-    }
+  const sortables = [];
+  const searchables = [];
+  props.columns.forEach(({ sort, search }, index) => {
+    if (optInState(sort, props.useSort)) sortables.push(index);
+    if (optInState(search, props.useSearch)) searchables.push(index);
   });
-  return o;
-});
-const useSearch = $computed(() => !!cfg.searchableIndexes.length);
-const useSort = $computed(() => !!cfg.sortableLabels.length);
-const hasActiveSort = $computed(() => !!sortOrders.size);
-
-const data = $computed(() =>
-  props.data.map((el, index) => ({
-    raw: el,
-    row: cfg.fields.map((field) => {
-      const item = field(el);
-      return item?.trim ? item.trim() : item;
-    }),
-    id: index,
-  }))
-);
-const searchable = $computed(() =>
-  data.map(({ row }) => cfg.searchableIndexes.map((index) => row[index] + ""))
-);
-
-const filteredData = $computed(() => {
-  if (!useSearch || !searchModel) return data;
-  const filteredIndexes = [];
-  searchable.forEach((row, index) => {
-    const isMatch = row.some((field) => field.indexOf(searchModel) > -1);
-    if (isMatch) filteredIndexes.push(index);
-  });
-  return filteredIndexes.map((index) => data[index]);
+  return { sortables, searchables };
 });
 
-function cycleSort(label) {
-  if (!cfg.sortableLabels.includes(label)) return;
-  const current = sortOrders.get(label);
-  sortOrders.delete(label);
-  const next = !current ? "desc" : current === "desc" ? "asc" : undefined;
-  if (next) sortOrders.set(label, next);
-}
-
-const composeSortFunctions = R.compose(
-  R.reverse,
-  R.map(([label, sort]) => {
-    const index = props.columns.findIndex((el) => el.label === label);
-    const sortMultiplier = sort === "asc" ? 1 : -1;
-    const sortFunction = R.sort(
-      (a, b) => (a.row[index] > b.row[index] ? -1 : 1) * sortMultiplier
-    );
-    return R.compose(sortFunction, sortMultiplier < 0 ? R.reverse : (i) => i);
-  })
-);
-
-const sortedData = $computed(() => {
-  if (!hasActiveSort) return filteredData;
-  const sortFunctions = composeSortFunctions([...sortOrders.entries()]);
-  return R.compose(...sortFunctions)(filteredData);
-});
-
-const numberOfActions = $computed(
+const activeSortIndex = $computed(() => [...sortMap.keys()].at(-1));
+const isSearchable = $computed(() => !!cfg.searchables.length);
+const isSortable = $computed(() => !!cfg.sortables.length);
+const isSorted = $computed(() => !!sortMap.size);
+const actionCount = $computed(
   () =>
     [props.useInfo, props.useEdit, props.useDelete].filter((el) => !!el).length
 );
-const useActions = $computed(() => !!numberOfActions);
 const actionColumnSize = $computed(
   () =>
     cssVars.cellPaddingX * 2 +
-    cssVars.iconSize * numberOfActions +
-    cssVars.iconGap * (numberOfActions - 1)
+    cssVars.iconSize * actionCount +
+    cssVars.iconGap * (actionCount - 1)
 );
 
-let items = $ref([]);
+// Data prepartaion
+const data = $computed(() =>
+  props.data.map((item, index) => {
+    const id = index;
+    const row = props.columns.map(({ field }) => {
+      const parsedField = typeof field === "string" ? item[field] : field(item);
+      return typeof parsedField === "string" ? parsedField.trim() : parsedField;
+    });
+    const searchable = cfg.searchables.map((index) => row[index] + "");
+    return { id, item, row, searchable };
+  })
+);
+
+// Data searching
+const searchedData = $computed(() =>
+  !isSearchable || !ctx.search
+    ? data
+    : data.filter(({ searchable }) =>
+        searchable.some((field) => field.indexOf(ctx.search) > -1)
+      )
+);
+
+// Data sorting
+const sortedData = $computed(() => {
+  if (!isSorted) return searchedData;
+  const sortFunctions = _tableCtl.composeSortFunctions([...sortMap.entries()]);
+  return R.compose(...sortFunctions)(searchedData);
+});
+
+// Data pagination
+const paginatedData = $computed(() => {
+  if (!props.usePagination) return sortedData;
+  const { page, pageSize } = ctx.pagination;
+  const start = (page - 1) * pageSize;
+  const end = page * pageSize;
+  return sortedData.slice(start, end);
+});
+
+// Final datalist
+const datalist = $computed(() => paginatedData);
 
 onMounted(() => {
   cssVars.cellPaddingX = parseInt(getTableCssVar("--table-cell-padding-x"));
   cssVars.iconGap = parseInt(getTableCssVar("--table-icon-gap"));
   cssVars.iconSize = parseInt(getTableCssVar("--table-icon-size"));
-  watch(
-    () => sortedData,
-    (value) => (items = value),
-    { immediate: true }
-  );
 });
-
-const delayMultiplier = $computed(() =>
-  items.length > 20 ? 1 / items.length : 0.05
-);
 </script>
 
 <template>
-  <div :class="`${$prefix}grid small`">
+  <div :class="`${$prefix}table-wrapper ${$prefix}grid small`">
     <div :class="`${$prefix}flex`">
       <p v-if="props.title" :class="`${$prefix}table-meta-title`">
         {{ props.title }}
       </p>
       <div :class="`${$prefix}flex`" style="margin-left: auto">
         <button
-          v-if="useSort"
-          class="snt-button small light"
-          @click="sortOrders.clear"
-          :disabled="!hasActiveSort"
+          v-if="isSortable"
+          :class="`${$prefix}button small light`"
+          @click="sortMap.clear"
+          :disabled="!isSorted"
         >
           Clear sort
         </button>
         <BaseInput
-          v-if="useSearch"
+          v-if="isSearchable"
           placeholder="Search"
-          v-model="searchModel"
+          v-model="ctx.search"
         />
       </div>
+    </div>
+    <div
+      :class="`${$prefix}flex`"
+      style="--gap: 4px; justify-content: flex-end; font-family: RobotoMono"
+      v-if="props.usePagination"
+    >
+      <BaseInput
+        label="Page size:"
+        label-position="left"
+        type="select"
+        :options="[10, 20, 50, 100]"
+        style="width: fit-content"
+        required
+        v-model="ctx.pagination.pageSize"
+        :use-required-asterisk="false"
+      />
+      <button
+        :class="`${$prefix}button small muted`"
+        :disabled="paginationButtons.isFirst"
+        @click="ctx.pagination.page = 1"
+      >
+        &lt;&lt;
+      </button>
+      <button
+        :class="`${$prefix}button small muted`"
+        :disabled="paginationButtons.isFirst"
+        @click="ctx.pagination.page -= 1"
+      >
+        &lt;
+      </button>
+      <button
+        v-for="i in paginationButtons.list"
+        :class="{
+          [`${$prefix}button small`]: true,
+          muted: i !== ctx.pagination.page,
+          primary: i === ctx.pagination.page,
+        }"
+        @click="ctx.pagination.page = i"
+      >
+        {{ i }}
+      </button>
+      <button
+        :class="`${$prefix}button small muted`"
+        :disabled="paginationButtons.isLast"
+        @click="ctx.pagination.page += 1"
+      >
+        &gt;
+      </button>
+      <button
+        :class="`${$prefix}button small muted`"
+        :disabled="paginationButtons.isLast"
+        @click="ctx.pagination.page = ctx.pagination.totalPages"
+      >
+        &gt;&gt; {{ ctx.pagination.totalPages }}
+      </button>
     </div>
     <div
       :style="{
@@ -190,39 +280,34 @@ const delayMultiplier = $computed(() =>
         <thead>
           <tr>
             <th
-              v-if="useActions"
+              v-if="actionCount"
               :style="{ width: `${actionColumnSize}px` }"
             ></th>
             <th
-              v-for="label in cfg.labels"
+              v-for="({ label }, index) in props.columns"
               :key="label"
-              @click="cycleSort(label)"
+              @click="cycleSort(index)"
               :style="{
                 'white-space': 'nowrap',
-                cursor: cfg.sortableLabels.includes(label)
-                  ? 'pointer'
-                  : undefined,
+                cursor: cfg.sortables.includes(index) ? 'pointer' : undefined,
               }"
             >
               {{ label }}
               <span
                 class="sort-arrow"
                 :class="[
-                  sortOrders.get(label) ?? 'initial',
-                  activeLabel === label && 'active',
+                  sortMap.get(index) ?? 'initial',
+                  activeSortIndex === index && 'active',
                 ]"
-                v-if="cfg.sortableLabels.includes(label)"
+                v-if="cfg.sortables.includes(index)"
               ></span>
             </th>
           </tr>
         </thead>
-        <TransitionGroup name="table-transition" tag="tbody">
-          <tr
-            v-for="{ row, raw, id } in items"
-            :key="id"
-            :style="`transition-delay: ${id * delayMultiplier}s`"
-          >
-            <td v-if="useActions">
+        <!-- <TransitionGroup name="table-transition" tag="tbody"> -->
+        <tbody>
+          <tr v-for="{ id, item, row } in datalist" :key="id">
+            <td v-if="actionCount">
               <div
                 :class="`${$prefix}flex`"
                 style="--gap: var(--table-icon-gap)"
@@ -230,7 +315,7 @@ const delayMultiplier = $computed(() =>
                 <button
                   v-if="props.useInfo"
                   :class="`${$prefix}button text info action-button`"
-                  @click="emit('info', raw)"
+                  @click="emit('info', item)"
                   title="Info"
                 >
                   <BaseIconInfo :class="`${$prefix}table-icon`" />
@@ -238,7 +323,7 @@ const delayMultiplier = $computed(() =>
                 <button
                   v-if="props.useEdit"
                   :class="`${$prefix}button text warning action-button`"
-                  @click="emit('edit', raw)"
+                  @click="emit('edit', item)"
                   title="Edit"
                 >
                   <BaseIconEdit :class="`${$prefix}table-icon`" />
@@ -246,7 +331,7 @@ const delayMultiplier = $computed(() =>
                 <button
                   v-if="props.useDelete"
                   :class="`${$prefix}button text danger action-button`"
-                  @click="emit('delete', raw)"
+                  @click="emit('delete', item)"
                   title="Delete"
                 >
                   <BaseIconDelete :class="`${$prefix}table-icon`" />
@@ -255,7 +340,8 @@ const delayMultiplier = $computed(() =>
             </td>
             <td v-for="field in row">{{ field }}</td>
           </tr>
-        </TransitionGroup>
+        </tbody>
+        <!-- </TransitionGroup> -->
       </table>
     </div>
   </div>

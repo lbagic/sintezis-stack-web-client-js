@@ -4,7 +4,7 @@ type TableColumns<T> = {
   label: string,
   field: keyof T | ((item: Partial<T>) => any),
   search?: boolean,
-  sort?: boolean | 'asc' | 'desc'
+  sort?: boolean
 }
 
 export type TableColumnsFactory<Schema = any> = <

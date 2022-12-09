@@ -55,3 +55,11 @@ export type ResourceFactory = <
 } &
   Partial<ActionContextFactoryMap<Service, Entity>> &
   Partial<ActionParserMap>
+
+
+
+// type X = UnwrapCtor<Order>
+
+// type FilterMap<U, PK = never> = {[K in keyof Required<UnwrapCtor<U>> as `${PK extends never ? Capitalize<K & string> : Capitalize<K & string>}`]: UnwrapCtor<U>[K] extends Message<any> ? FilterMap<UnwrapCtor<U>[K]> : UnwrapCtor<U>[K]}
+// type A = FilterMap<Order>
+// type B = User extends Message<any> ? string : never

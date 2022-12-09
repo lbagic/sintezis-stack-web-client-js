@@ -6,7 +6,7 @@ import { modal } from "@/components/base/modal/modal.ctl";
 import BaseTable from "@/components/base/table/BaseTable.vue";
 import BaseIconAdd from "@/components/icons/BaseIconAdd.vue";
 import { adminResources } from "@/modules/admin/adminResources";
-import { onMounted, reactive } from "vue";
+import { onMounted, reactive, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 const route = useRoute();
@@ -18,12 +18,15 @@ const resource = adminResources.find(({ id }) => id === resourceId);
 
 const getAll = resource.setupGetAllContext().call;
 const getId = resource.getId;
-
 const ctx = reactive({
   data: [],
   toDelete: undefined,
   toEdit: undefined,
   pagination: new resource.Pagination({
+    page: 1,
+    pageSize: 20,
+    totalPages: 0,
+    total: 0,
     overridePagination: !resource.usePagination,
   }),
 });
@@ -34,6 +37,10 @@ async function actionGetAll() {
   const response = await getAll(payload);
   ctx.data = resource.parseGetAllData(response);
   if (response.pagination) ctx.pagination = response.pagination;
+}
+if (resource.hasPagination && resource.usePagination) {
+  watch(() => ctx.pagination.page, actionGetAll);
+  watch(() => ctx.pagination.pageSize, actionGetAll);
 }
 function actionDetails(item) {
   router.push(route.fullPath + "/details/" + getId(item));
@@ -97,14 +104,19 @@ onMounted(() => {
     <BaseTable
       :columns="resource.tableColumns"
       :data="ctx.data"
-      use-sort
-      use-search
-      :use-info="!!resource.useDetails"
-      @info="actionDetails"
-      :use-edit="!!resource.setupEditContext"
-      @edit="initEditItem"
       :use-delete="!!resource.setupDeleteContext"
+      :use-edit="!!resource.setupEditContext"
+      :use-info="!!resource.useDetails"
       @delete="initDeleteItem"
+      @edit="initEditItem"
+      @info="actionDetails"
+      v-model:pagination="ctx.pagination"
+      use-pagination
+      :use-pagination-external="
+        resource.usePagination && resource.hasPagination
+      "
+      use-search
+      use-sort
     />
   </div>
 </template>
