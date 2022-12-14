@@ -1,59 +1,97 @@
-.#{$prefix}table {
-  --#{$prefix}table-padding: 0.5rem;
-  --#{$prefix}table-background-color: var(--#{$prefix}color-light);
+@mixin generate-table-colors($color) {
+  --table-base-background: var(--#{$prefix}color-#{$color});
+  --table-base-contrast: var(--#{$prefix}color-#{$color}-contrast);
+  --table-background: var(--#{$prefix}color-#{$color}-lighter);
+  --table-header-background: var(--#{$prefix}color-#{$color}-lighter-2);
+  --table-header-color: var(--#{$prefix}color-#{$color}-lighter-2-contrast);
+  --table-cell-background-alt: white;
+  --table-cell-background: var(--#{$prefix}color-#{$color}-lightest-2);
+  --table-cell-color: var(--#{$prefix}color-#{$color}-darkest);
+}
 
-  border-spacing: 0px;
-  position: relative;
-  width: 100%;
+.#{$prefix}table-wrapper {
+  --table-icon-size: 24px;
+  --table-icon-gap: 5px;
+  --table-header-padding-y: 6px;
+  --table-header-padding-x: 6px;
+  --table-cell-padding-y: 6px;
+  --table-cell-padding-x: 6px;
+  --table-cell-spacing: 1px;
+  --table-font-size: 16px;
 
+  @include generate-table-colors("muted");
   @each $color, $value in $base-colors {
     &.#{$color} {
-      --#{$prefix}table-color: var(--#{$prefix}color-#{$color});
-      --#{$prefix}table-text-color: var(--#{$prefix}color-#{$color}-contrast);
-      --#{$prefix}table-alt-color: var(--#{$prefix}color-#{$color}-lightest);
-      --#{$prefix}table-border-color: var(--#{$prefix}color-#{$color}-darker);
+      @include generate-table-colors($color);
     }
   }
 }
-.#{$prefix}table td,
-.#{$prefix}table th {
-  background: var(--#{$prefix}table-background-color);
-  padding: var(--#{$prefix}table-padding);
-  text-align: left;
+
+.#{$prefix}table {
+  font-size: var(--table-font-size);
+  background: var(--table-background);
+  position: relative;
+  width: 100%;
+
+  border-radius: 2px;
+  border-spacing: var(--table-cell-spacing);
+
+  & th {
+    background: var(--table-header-background);
+    color: var(--table-header-color);
+    padding: var(--table-header-padding-y) var(--table-header-padding-x);
+    text-align: left;
+  }
+  & td {
+    color: var(--table-cell-color);
+    padding: var(--table-cell-padding-y) var(--table-cell-padding-x);
+    text-align: left;
+  }
+
+  & > tr:nth-child(2n-1) > td,
+  & > tbody > tr:nth-child(2n-1) > td {
+    background: var(--table-cell-background);
+  }
+  & > tr:nth-child(2n) > td,
+  & > tbody > tr:nth-child(2n) > td {
+    background: var(--table-cell-background-alt);
+  }
+
+  &-icon {
+    min-width: var(--table-icon-size);
+    min-height: var(--table-icon-size);
+    max-width: var(--table-icon-size);
+    max-height: var(--table-icon-size);
+  }
+}
+
+// meta row
+.#{$prefix}table-meta {
+  &-title {
+    font-size: 20px;
+  }
 }
 
 // sticky header styles
-
-.#{$prefix}table tr > th {
+.#{$prefix}table-sticky tr > th {
   position: sticky;
 }
-.#{$prefix}table thead > tr > th,
-.#{$prefix}table > tr:not(:last-child) > th {
-  top: 0;
+.#{$prefix}table-sticky thead > tr > th,
+.#{$prefix}table-sticky > tr:not(:last-child) > th {
+  top: 0px;
 }
-.#{$prefix}table tfoot > tr > th,
-.#{$prefix}table > tr:last-child > th {
-  bottom: 0;
+.#{$prefix}table-sticky tfoot > tr > th,
+.#{$prefix}table-sticky > tr:last-child > th {
+  bottom: 0px;
 }
 
-// table color styles
-
-.#{$prefix}table th {
-  background: var(--#{$prefix}table-color);
-  color: var(--#{$prefix}table-text-color);
-}
-.#{$prefix}table > tr:nth-child(2n-1) > td,
-.#{$prefix}table > tbody > tr:nth-child(2n-1) > td {
-  background: var(--#{$prefix}table-alt-color);
-}
-// .#{$prefix}table  > tr:nth-child(2n) > td,
-// .#{$prefix}table  > tbody > tr:nth-child(2n) > td {
-//   background: var(--#{$prefix}table-alt-color-2);
-// }
-
-// table border styles
-
-.#{$prefix}table {
-  border-spacing: 1px;
-  background: var(--#{$prefix}table-border-color);
+.table-transition {
+  &-move,
+  &-enter-active {
+    transition: transform 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+  }
+  &-enter-from {
+    transform: scaleY(0.01) translate(30px, 10px);
+    opacity: 0;
+  }
 }

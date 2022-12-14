@@ -4,7 +4,7 @@ import axios from "axios";
 /**
  * @typedef { import("axios").AxiosRequestConfig<any> & { interceptors: import("./interceptorFactory").RestInterceptor[] } } RestPromiseClientOptions
  * @typedef { import("axios").AxiosInstance } RestPromiseClient
- * */
+ */
 
 /** @type { (options: RestPromiseClientOptions) => RestPromiseClient } */
 export function createRestPromiseClient(options) {

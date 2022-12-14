@@ -43,6 +43,9 @@ pre {
   font-size: 12px;
   font-family: monospace, monospace;
 }
+dialog {
+  border: none;
+}
 sub,
 sup {
   position: relative;
@@ -68,11 +71,6 @@ li {
   margin: 0;
   padding: 0;
 }
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
 button,
 [type="checkbox"],
 [type="radio"],
@@ -88,10 +86,10 @@ button {
   background: transparent;
   color: inherit;
   font: inherit;
-  line-height: normal;
   -webkit-font-smoothing: inherit;
   -moz-osx-font-smoothing: inherit;
-  -webkit-appearance: none;
+  appearance: none;
+  /* line-height: normal; */
   /* text-align: inherit; */
 }
 fieldset {
@@ -146,4 +144,9 @@ textarea[disabled] {
 }
 *::placeholder {
   opacity: 1;
+}
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }

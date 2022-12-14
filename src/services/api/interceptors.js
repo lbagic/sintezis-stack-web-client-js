@@ -1,7 +1,11 @@
+import { useAccountStore } from "@/modules/account/accountStore";
 import { createInterceptor } from "./base/interceptorFactory";
-import { useAuthStore } from "@/modules/auth/authStore";
 
 const loggingInterceptor = createInterceptor({
+  // onRequest: ({ requestContext }) =>
+  //   console.log(`%c${requestContext.name}`, "font-size: 10px", {
+  //     request: requestContext,
+  //   }),
   onResponse: ({ requestContext, responseContext }) =>
     console.log(
       `%c${requestContext.name}`,
@@ -22,14 +26,28 @@ const loggingInterceptor = createInterceptor({
 
 const authInterceptor = createInterceptor({
   onRequest({ setHeader }) {
-    const token = useAuthStore().token;
-    if (token) setHeader("Authorization", `Bearer ${token}`);
+    const accountStore = useAccountStore();
+    if (accountStore.token)
+      setHeader("Authorization", `Bearer ${accountStore.token}`);
   },
 });
 
-const transformErrorInterceptor = createInterceptor({
+const transformInterceptor = createInterceptor({
+  onRequest: ({ request, requestContext }) => {
+    if (requestContext.type === "grpc") {
+      const fields = request.method.I.fields.list();
+      const pagination = fields.find((el) => el.name === "pagination");
+      if (pagination && !request.message.pagination)
+        request.message.pagination = new pagination.T();
+    }
+  },
   onResponseError: ({ error, errorContext }) => {
     Object.assign(error, { meta: errorContext });
+  },
+  onResponse: ({ response, requestContext }) => {
+    if (requestContext.type === "grpc") {
+      response.message = response.message.toJson();
+    }
   },
 });
 
@@ -37,7 +55,7 @@ const transformErrorInterceptor = createInterceptor({
 const interceptors = [
   authInterceptor,
   loggingInterceptor,
-  transformErrorInterceptor,
+  transformInterceptor,
 ];
 
 export const grpcInterceptors = interceptors.map((el) => el.grpc);

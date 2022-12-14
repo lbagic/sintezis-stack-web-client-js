@@ -1,13 +1,13 @@
 %focus-styles {
   --outline-width: 1px;
   --outline-style: solid;
-  --outline-color: var(--#{$prefix}color-light-dark);
+  --outline-color: var(--#{$prefix}color-grey);
 
   outline: var(--outline-width) var(--outline-style) var(--outline-color);
   outline-offset: 1px;
 }
 
-:is(a, button, input, textarea, select, summary, [tabindex]) {
+:is(a, button, input, textarea, select, label, summary, [tabindex]) {
   &[data-show-focus="true"],
   &:focus,
   &:focus-visible {

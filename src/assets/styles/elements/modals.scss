@@ -1,11 +1,10 @@
 .#{$prefix}modal-wrapper {
-  --modal-background-color: var(--#{$prefix}color-background);
-  --modal-border-color: var(--#{$prefix}color-grey-lighter);
-  --modal-overlay-color: var(--#{$prefix}color-grey-opaque);
-  --modal-shadow-color: var(--#{$prefix}color-grey-opaque);
-  --modal-border-radius: 3px;
-  --modal-padding: 16px;
-  --modal-width: 600px;
+  --#{$prefix}modal-background-color: var(--#{$prefix}color-background);
+  --#{$prefix}modal-border-color: var(--#{$prefix}color-grey-lighter);
+  --#{$prefix}modal-overlay-color: var(--#{$prefix}color-grey-opaque);
+  --#{$prefix}modal-border-radius: 2px;
+  --#{$prefix}modal-padding: 16px;
+  --#{$prefix}modal-width: 600px;
 
   transition: background 0.3s cubic-bezier(0.8, 0.4, 0.2, 0.8);
 
@@ -21,18 +20,18 @@
     position: fixed;
   }
   &[data-expand="true"][data-paused="false"] {
-    background: var(--modal-background-color);
+    background: var(--#{$prefix}modal-background-color);
   }
   &[data-expand="false"] {
     display: flex;
     align-items: center;
     justify-content: center;
     &[data-paused="false"] {
-      background: var(--modal-overlay-color);
+      background: var(--#{$prefix}modal-overlay-color);
       backdrop-filter: blur(1px);
       @each $color, $value in $base-colors {
         &.#{$color} {
-          background: var(--#{$prefix}color-#{$color}-opaque-light);
+          background: var(--#{$prefix}color-#{$color}-opaque-soft);
         }
       }
     }
@@ -45,46 +44,45 @@
 .#{$prefix}modal {
   position: relative;
   overflow-y: auto;
-  padding: var(--modal-padding);
-  background: var(--modal-background-color);
+  padding: var(--#{$prefix}modal-padding);
+  background: var(--#{$prefix}modal-background-color);
   &[data-expand="true"] {
     max-height: 100%;
   }
   &[data-expand="false"] {
     width: 100%;
-    max-width: min(var(--modal-width), 100% - var(--modal-padding));
+    max-width: min(
+      var(--#{$prefix}modal-width),
+      100% - var(--#{$prefix}modal-padding)
+    );
     @each $container, $size in $containers {
       &.#{$prefix}container-#{$container} {
-        max-width: min($size, 100% - var(--modal-padding));
+        max-width: min($size, 100% - var(--#{$prefix}modal-padding));
       }
     }
-    min-height: 300px;
     max-height: calc(100% - 32px);
-    border-width: 1px;
+    border-width: 0.5px;
     border-style: solid;
-    border-radius: var(--modal-border-radius);
-    border-color: var(--modal-border-color);
-    box-shadow: 0 0 2px var(--modal-shadow-color);
+    border-radius: var(--#{$prefix}modal-border-radius);
+    border-color: var(--#{$prefix}modal-border-color);
+    box-shadow: var(--#{$prefix}shadow-1);
     @each $color, $value in $base-colors {
       &.#{$color} {
-        border-color: var(--#{$prefix}color-#{$color}-lighter);
-        box-shadow: 0 0 2px var(--#{$prefix}color-#{$color}-opaque);
+        border-color: var(--#{$prefix}color-#{$color}-lighter-2);
       }
     }
   }
 }
 
 .#{$prefix}modal-close-button {
+  --size: 24px;
+  cursor: pointer;
   position: sticky;
   float: right;
-  top: 0;
-  margin: calc(-0.5 * var(--modal-padding));
-  cursor: pointer;
-  &::after {
-    font-size: 24px;
-    padding: 0 5px;
-    content: "\2715";
-  }
+  top: calc(-0.8 * var(--#{$prefix}modal-padding));
+  margin: calc(-0.8 * var(--#{$prefix}modal-padding));
+  width: var(--size);
+  height: var(--size);
 }
 
 .#{$prefix}modal-transition-enter-active,

@@ -1,47 +1,48 @@
 import { reactive } from "vue";
 
 /**
- * @type { <T extends PromiseLike<any>>(promise: T) => T & {
- *  data: Awaited<T>
+ * @type { <T>(call: T) => {
+ *  data: Awaited<ReturnType<T>>
  *  error: any
  *  isFulfilled: boolean
  *  isPending: boolean
  *  isRejected: boolean
  *  isSettled: boolean
+ *  execute: T
  * }}
- * */
-export function usePromise(promise) {
+ */
+export function usePromise(call) {
   const state = reactive({
     data: undefined,
     error: undefined,
-    isFulfilled: false,
-    isPending: true,
-    isRejected: false,
+    isPending: false,
     isSettled: false,
+    isFulfilled: false,
+    isRejected: false,
   });
-  Object.keys(state).forEach((prop) =>
-    Object.defineProperty(promise, prop, {
-      get() {
-        return state[prop];
-      },
-      set(value) {
-        state[prop] = value;
-      },
-    })
-  );
 
-  promise
-    .then((res) => {
-      state.data = res;
-      state.isFulfilled = true;
-      state.isPending = false;
-      state.isSettled = true;
-    })
-    .catch((err) => {
-      state.error = err;
-      state.isRejected = true;
-      state.isPending = false;
-      state.isSettled = true;
-    });
-  return promise;
+  function onSettled({ data, error }) {
+    state.data = data;
+    state.error = error;
+    state.isPending = false;
+    state.isSettled = true;
+    state.isFulfilled = !error;
+    state.isRejected = !!error;
+  }
+
+  async function onExecute(...args) {
+    state.isPending = true;
+    state.isSettled = false;
+    try {
+      const data = await call(...args);
+      onSettled({ data });
+      return data;
+    } catch (error) {
+      onSettled({ error });
+      throw error;
+    }
+  }
+
+  Object.assign(state, { execute: onExecute });
+  return state;
 }

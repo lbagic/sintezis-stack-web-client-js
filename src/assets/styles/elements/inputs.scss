@@ -1,17 +1,18 @@
 .#{$prefix}input-root {
-  // display: inline-block;
   display: block;
 }
 .#{$prefix}input {
-  --input-height: 36px;
+  --input-height: 34px;
   --input-width: 100%;
-  --input-min-width: 100px;
+  --input-min-width: 60px;
   --input-font-size: 16px;
   --input-line-height: 1.5;
   --input-text-color: var(--#{$prefix}color-text);
   --input-placeholder-color: var(--#{$prefix}color-grey);
   --input-background-color: var(--#{$prefix}color-light);
-  --input-border-color: var(--#{$prefix}color-light-darker);
+  --input-disabled-background: var(--#{$prefix}color-muted-lighter-2);
+  --input-disabled-color: var(--#{$prefix}color-muted-darker-2);
+  --input-border-color: var(--#{$prefix}color-light-dark-2);
   --input-padding-x: 8px;
   --input-padding-y: calc(
     (var(--input-height) - var(--input-font-size) * var(--input-line-height)) /
@@ -35,8 +36,14 @@
   padding: var(--input-padding-y) var(--input-padding-x);
   border-width: 1px;
   border-style: solid;
+  border-radius: 2px;
   border-color: var(--input-border-color);
   background-color: var(--input-background-color);
+  &[readonly],
+  &[disabled] {
+    background-color: var(--input-disabled-background);
+    color: var(--input-disabled-color);
+  }
 }
 
 .#{$prefix}input-text,
@@ -124,7 +131,7 @@
 
 // Input label styles
 .#{$prefix}input-label {
-  display: inline-block;
+  white-space: nowrap;
   --label-margin: 0.25rem;
 
   // input label required styles

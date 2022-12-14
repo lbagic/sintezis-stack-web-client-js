@@ -1,5 +1,6 @@
 const salt = window.atob(import.meta.env.VITE_SNT_HASH);
 
+/** @type { (string: string) => Promise<string> } */
 export const createHash = async (string) => {
   if (!salt) return string;
   const enc = new TextEncoder("utf-8");

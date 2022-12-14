@@ -6,9 +6,12 @@ $base-colors: (
   "info": #0dcaf0,
   "warning": #ffc107,
   "danger": #dc3545,
-  "light": #f8f9fa,
-  "grey": #888,
+  "black": #000000,
   "dark": #212529,
+  "grey": #888,
+  "muted": #ddd,
+  "light": #f8f9fa,
+  "white": #ffffff,
 );
 
 // colors without variants
@@ -18,37 +21,53 @@ $solid-colors: (
 );
 
 $base-color-variants: (
-  "max-light": (
+  "lightest-2": (
     "lightness": 95%,
   ),
   "lightest": (
-    "lightness": 80%,
+    "lightness": 90%,
   ),
-  "lighter": (
+  "lighter-2": (
     "lightness": 50%,
   ),
+  "lighter": (
+    "lightness": 40%,
+  ),
+  "light-2": (
+    "lightness": 16%,
+  ),
   "light": (
-    "lightness": 20%,
+    "lightness": 8%,
   ),
   "dark": (
-    "lightness": -15%,
+    "lightness": -8%,
+  ),
+  "dark-2": (
+    "lightness": -16%,
   ),
   "darker": (
-    "lightness": -30%,
+    "lightness": -40%,
+  ),
+  "darker-2": (
+    "lightness": -50%,
   ),
   "darkest": (
-    "lightness": -45%,
+    "lightness": -80%,
   ),
-  "max-dark": (
-    "lightness": -75%,
+  "darkest-2": (
+    "lightness": -90%,
+  ),
+  "soft": (
+    "saturation": 50%,
+    "lightness": 95%,
   ),
   "opaque": (
-    "alpha": -0.66%,
+    "alpha": -50%,
   ),
-  "opaque-light": (
-    "saturation": -20%,
-    "brightness": 20%,
-    "alpha": -0.66%,
+  "opaque-soft": (
+    "saturation": 50%,
+    "lightness": 95%,
+    "alpha": -50%,
   ),
 );
 

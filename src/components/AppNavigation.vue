@@ -1,10 +1,17 @@
 <script setup></script>
 
 <template>
-  <nav class="app-navigation-wrapper">
-    <RouterLink class="snt-link primary" to="/">Home</RouterLink>
-    <RouterLink class="snt-link primary" to="/test">Test</RouterLink>
-    <RouterLink class="snt-link danger" style="margin-left: auto" to="/login"
+  <nav :class="`app-navigation-wrapper ${$prefix}container ${$prefix}flex`">
+    <RouterLink :class="`${$prefix}button text white underline`" to="/"
+      >Home</RouterLink
+    >
+    <RouterLink :class="`${$prefix}button text white underline`" to="/test"
+      >Test</RouterLink
+    >
+    <RouterLink
+      :class="`${$prefix}button text white underline`"
+      style="margin-left: auto"
+      to="/login"
       >Login</RouterLink
     >
   </nav>
@@ -12,13 +19,12 @@
 
 <style scoped lang="scss">
 .app-navigation-wrapper {
-  background: var(--#{$prefix}color-light-dark);
-  height: 50px;
-  display: flex;
-  align-items: center;
-  padding: 1rem;
-  & > * + * {
-    margin-left: 0.5rem;
-  }
+  background: linear-gradient(
+    150deg,
+    var(--#{$prefix}color-primary-dark) 0%,
+    var(--#{$prefix}color-primary-light) 100%
+  );
+  box-shadow: var(--#{$prefix}shadow-3);
+  color: white;
 }
 </style>

@@ -19,7 +19,21 @@ Install dependencies:
 brew install bufbuild/buf/buf
 ```
 
+Log in to buf.build:
+
+- create account on https://buf.build/
+- request sintezis organization permissions
+- create api token on https://buf.build/settings/user > `Create new token`
+- copy token to use in the following command
+
+```sh
+buf registry login
+```
+
 Generate proto files:
+
+- alter the `buf generate` command under proto script in Makefile to include project proto definitions from buf.build repository e.g. `buf generate buf.build/sintezis/project:development`
+- run the following command to generate proto files
 
 ```sh
 make proto
