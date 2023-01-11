@@ -1,4 +1,4 @@
-const salt = window.atob(import.meta.env.VITE_SNT_HASH);
+const salt = window.atob(import.meta.env.VITE_SNT_HASH ?? "");
 
 export const createHash = async (string?: string) => {
   if (!salt || !string) return string ?? "";
