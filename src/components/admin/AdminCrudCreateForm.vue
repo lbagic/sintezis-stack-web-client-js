@@ -1,26 +1,27 @@
 <script setup>
 import BaseInput from "@/components/base/input/BaseInput.vue";
 import BaseModal from "@/components/base/modal/BaseModal.vue";
-import { modal } from "@/components/base/modal/modal.ctl";
-import { toast } from "@/components/base/toast/toast.ctl";
+import { modalController } from "@/components/base/modal/modalController";
+import { toastController } from "@/components/base/toast/toastController";
 import { usePromise } from "@/utils/usePromise";
 
 const props = defineProps({ resource: undefined });
 const emit = defineEmits(["addItem"]);
 
 /** @type { ReturnType<import("@/modules/admin/resources/base/_types").ResourceFactory> } */
+// eslint-disable-next-line vue/no-setup-props-destructure
 const resource = props.resource;
 const ctx = resource.setupAddContext();
 const call = usePromise(ctx.call);
 async function actionCreate() {
   try {
     const response = await call.execute();
-    modal.createResource.close();
+    modalController.createResource.close();
     const item = resource.parseAddData(response);
     emit("addItem", item);
-    toast.success(`${resource.id} created.`);
+    toastController.success(`${resource.id} created.`);
   } catch {
-    toast.warning(`Failed to create ${resource.id}.`);
+    toastController.warning(`Failed to create ${resource.id}.`);
   }
 }
 </script>

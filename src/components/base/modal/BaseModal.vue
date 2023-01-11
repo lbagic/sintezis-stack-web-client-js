@@ -1,10 +1,10 @@
-<script>
+<script lang="ts">
+import { modalProps } from "./modal.types";
 export default { inheritAttrs: false };
 
-const prefix = useCssVar("--prefix").value;
 const focusableElements = [
   "a",
-  `button:not(.${prefix}modal-close-button)`,
+  `button:not(.${css.prefix}modal-close-button)`,
   "input",
   "textarea",
   "select",
@@ -12,107 +12,82 @@ const focusableElements = [
 ].join(", ");
 </script>
 
-<script setup>
+<script setup lang="ts">
 import BaseIconClose from "@/components/icons/BaseIconClose.vue";
-import { onClickOutside, useCssVar } from "@vueuse/core";
+import { css, isColorName } from "@/utils/css";
+import { onClickOutside } from "@vueuse/core";
 import { useFocusTrap } from "@vueuse/integrations/useFocusTrap";
-import {
-  getCurrentInstance,
-  nextTick,
-  onMounted,
-  onUnmounted,
-  reactive,
-  ref,
-  watch,
-} from "vue";
+import { nextTick, onMounted, onUnmounted, reactive, ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import { css } from "../../../utils/css.js";
-import { _modalCtl } from "./modal.ctl.js";
+import { ModalInternals } from "./modalController";
+import type { Modal } from "./modal.types";
 
 const router = useRouter();
+const props = defineProps(modalProps);
+
 const emit = defineEmits(["close", "open"]);
-const props = defineProps({
-  name: String,
-  hash: String,
-  query: String,
-  local: Boolean,
-  expand: Boolean,
-  keepAlive: Boolean,
-  disableCloseOnClickOutside: Boolean,
-  disableCloseOnButton: Boolean,
-  disableCloseOnEsc: Boolean,
-  disableClose: Boolean,
-});
 
-if (!props.name && !props.hash && !props.query) {
-  const instance = getCurrentInstance();
+if (!props.name && !props.hash && !props.query)
   throw new Error(
-    `${instance.type.__name} in "${instance.parent.type.__name}" must have at least one identifier prop: "name", "hash" or "query".`
+    `Modal must have at least one identifier prop: "name", "hash" or "query".`
   );
-}
 
-const colorNames = Object.keys(css.colors);
-const baseZIndex = Number(useCssVar(`--${prefix}z-index-modal`).value);
-
-const modalRef = ref(null);
-const wrapperRef = ref(null);
-
-const state = reactive({
+const modalRef = ref<HTMLElement | null>(null);
+const wrapperRef = ref<HTMLElement | null>(null);
+const state: Modal.State = reactive({
   isOpen: false,
   isPaused: false,
-  zIndex: baseZIndex,
+  isStackable: props.placement !== "contained",
+  zIndex: css.zIndex.modal,
 });
 
-const util = {
-  filterColorName: (name) => colorNames.includes(name),
-  getFocusElement: () =>
-    modalRef.value.querySelector("[autofocus]") ||
-    modalRef.value.querySelector(focusableElements) ||
-    wrapperRef.value,
-};
-
 const useClose = {
-  onClickOutside: !(
-    props.disableClose ||
-    props.disableCloseOnClickOutside ||
-    props.local
-  ),
-  onButton: !(props.disableClose || props.disableCloseOnButton),
-  onEsc: !(props.disableClose || props.disableCloseOnEsc),
+  onClickOutside:
+    !props.disableClose &&
+    !props.disableCloseOnClickOutside &&
+    state.isStackable,
+  onButton: !props.disableClose && !props.disableCloseOnButton,
+  onEsc: !props.disableClose && !props.disableCloseOnEsc,
 };
 
-const focusTrap = props.local
-  ? { activate: () => util.getFocusElement()?.focus?.(), deactivate: () => {} }
-  : useFocusTrap(wrapperRef, {
-      initialFocus: util.getFocusElement,
-      allowOutsideClick: true,
-    });
+const focusTrap = useFocusTrap(wrapperRef, {
+  initialFocus: getFocusElement,
+  allowOutsideClick: true,
+});
 
+function getFocusElement() {
+  const element =
+    modalRef.value?.querySelector("[autofocus]") ||
+    modalRef.value?.querySelector(focusableElements) ||
+    wrapperRef.value;
+  return element as unknown as HTMLElement;
+}
 function initColor() {
   if (!modalRef.value) return;
-  const color = [...modalRef.value.classList].find(util.filterColorName);
-  if (color) wrapperRef.value.classList.add(color);
+  const color = [...modalRef.value.classList].find(isColorName);
+  if (color) wrapperRef.value?.classList.add(color);
 }
 
 if (useClose.onClickOutside)
-  onClickOutside(modalRef, (e) => {
-    const className = e.target.className;
-    const clickOutside = className.includes(`${prefix}modal-wrapper`);
+  onClickOutside(modalRef, (e: any) => {
+    const className = e.target?.className;
+    const clickOutside = className.includes(`${css.prefix}modal-wrapper`);
     if (clickOutside) close(false);
   });
 
 function open() {
-  const isOpened = _modalCtl.open({ state, props, baseZIndex });
+  const isOpened = ModalInternals.open({ state, props, open, close });
   if (!isOpened) return;
   nextTick(() => {
     initColor();
-    focusTrap.activate();
+    if (state.isStackable) focusTrap.activate();
+    else getFocusElement()?.focus();
+    emit("open");
   });
-  emit("open");
 }
-function close(forceClose = true) {
-  const isClosed = _modalCtl.close({ state, props, forceClose });
-  if (!isClosed) return;
+function close(force = true) {
+  const wasClosed = ModalInternals.close({ state, props, open, close }, force);
+  if (!wasClosed) return;
   if (props.hash || props.query) {
     const route = { ...router.currentRoute.value };
     if (props.hash) route.hash = props.hash === route.hash ? "" : route.hash;
@@ -122,17 +97,15 @@ function close(forceClose = true) {
       );
     router.replace(route);
   }
-  focusTrap.deactivate();
+  if (state.isStackable) focusTrap.deactivate();
   emit("close");
 }
 
-watch(
-  () => state.isPaused,
-  (isPaused) => {
-    if (isPaused) focusTrap.pause();
-    else focusTrap.unpause();
-  }
-);
+if (state.isStackable)
+  watch(
+    () => state.isPaused,
+    (isPaused) => (isPaused ? focusTrap.pause() : focusTrap.unpause())
+  );
 
 if (props.hash) {
   watch(
@@ -145,27 +118,29 @@ if (props.query) {
   watch(
     () => router.currentRoute.value.query,
     (query) =>
-      Object.keys(query).includes(props.query) ? open() : close(false),
+      Object.keys(query).includes(props.query as string)
+        ? open()
+        : close(false),
     { immediate: true }
   );
 }
 if (props.name) {
-  onMounted(() => _modalCtl.mount({ state, props, open, close }));
-  onUnmounted(() => _modalCtl.unmount({ props }));
+  onMounted(() => ModalInternals.mount({ state, props, open, close }));
+  onUnmounted(() => ModalInternals.unmount({ state, props, open, close }));
 }
 </script>
 
 <template>
-  <Teleport to="body" :disabled="props.local">
-    <Transition :name="`${prefix}modal-transition`">
-      <dialog
-        :class="`${prefix}modal-wrapper`"
+  <Teleport to="body" :disabled="props.placement === 'contained'">
+    <Transition :name="`${$prefix}modal-transition`">
+      <div
+        :class="`${$prefix}modal-wrapper`"
         ref="wrapperRef"
-        :data-expand="props.expand"
-        :data-local="props.local"
+        :data-fullscreen="props.placement === 'fullscreen'"
+        :data-contained="props.placement === 'contained'"
         :data-paused="state.isPaused"
-        tabindex="-1"
         :style="{ zIndex: state.zIndex }"
+        tabindex="-1"
         @keydown.esc="() => useClose.onEsc && close(false)"
         v-if="state.isOpen || props.keepAlive"
         v-show="state.isOpen || !props.keepAlive"
@@ -173,25 +148,27 @@ if (props.name) {
         role="dialog"
       >
         <div
-          :class="`${prefix}modal`"
+          :class="`${$prefix}modal`"
           v-bind="$attrs"
-          :data-expand="props.expand"
+          :data-fullscreen="props.placement === 'fullscreen'"
           ref="modalRef"
         >
           <button
             v-if="useClose.onButton"
             @click="close(false)"
-            :class="`${prefix}modal-close-button ${$prefix}button danger text`"
-            :style="{ '--base-color': `var(--${prefix}color-grey-dark)` }"
+            :class="`${$prefix}modal-close-button ${$prefix}button error text`"
+            :style="{ '--base-color': `var(--${$prefix}color-grey-dark)` }"
             aria-label="close"
           >
             <BaseIconClose style="width: inherit; height: inherit" />
           </button>
           <slot></slot>
         </div>
-      </dialog>
+      </div>
     </Transition>
   </Teleport>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+@import "./modals.scss";
+</style>

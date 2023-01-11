@@ -49,7 +49,7 @@
 }
 
 .#{$prefix}button {
-  @each $color, $value in $base-colors {
+  @each $color, $value in $palette-colors {
     &.#{$color} {
       --base-color: var(--#{$prefix}color-#{$color});
       --accent-color: var(--#{$prefix}color-#{$color}-light);
@@ -59,7 +59,7 @@
   }
 
   &:not(.text):not(.outline) {
-    @each $color, $value in $base-colors {
+    @each $color, $value in $palette-colors {
       &.#{$color} {
         color: var(--contrast-color);
         background: var(--base-color);
@@ -88,7 +88,7 @@
     box-sizing: border-box;
     border: 1.5px solid transparent;
     background-color: transparent;
-    @each $color, $value in $base-colors {
+    @each $color, $value in $palette-colors {
       &.#{$color} {
         color: var(--base-color);
         border-color: var(--base-color);
@@ -120,7 +120,7 @@
   }
   &.text {
     background-color: transparent;
-    @each $color, $value in $base-colors {
+    @each $color, $value in $palette-colors {
       &.#{$color} {
         color: var(--base-color);
         &:active {

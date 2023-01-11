@@ -5,7 +5,7 @@ export default { inheritAttrs: false };
 <script setup>
 import * as R from "ramda";
 import { onMounted, reactive, useAttrs, watch, watchEffect } from "vue";
-import BaseInput from "../input/BaseInput.vue";
+import BaseInput from "../input-old/BaseInput.vue";
 import BaseIconDelete from "@/components/icons/BaseIconDelete.vue";
 import BaseIconEdit from "@/components/icons/BaseIconEdit.vue";
 import BaseIconInfo from "@/components/icons/BaseIconInfo.vue";
@@ -25,7 +25,6 @@ function cycleSort(index) {
   if (next) sortMap.set(index, next);
 }
 
-// TODO - pagination, select, search, sort
 // TODO - compose filtering > sorting > pagination if possible
 
 const attrs = useAttrs();
@@ -330,7 +329,7 @@ onMounted(() => {
                 </button>
                 <button
                   v-if="props.useDelete"
-                  :class="`${$prefix}button text danger action-button`"
+                  :class="`${$prefix}button text error action-button`"
                   @click="emit('delete', item)"
                   title="Delete"
                 >

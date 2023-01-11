@@ -1,7 +1,7 @@
 <script setup>
 import AppBreadcrumbs from "@/components/AppBreadcrumbs.vue";
 import BaseModal from "@/components/base/modal/BaseModal.vue";
-import { modal } from "@/components/base/modal/modal.ctl";
+import { modalController } from "@/components/base/modal/modalController";
 import { useAccountStore } from "@/modules/account/accountStore";
 import { useAdminStore } from "@/modules/admin/adminStore";
 import { breakpoint } from "@/utils/breakpoint";
@@ -31,7 +31,7 @@ const isSmallScreen = breakpoint.smaller("s");
       }"
       class="snt-button white"
       style="margin-left: auto"
-      @click="modal.logout.open"
+      @click="modalController.logout.open"
     >
       <AdminIconPower width="24px" height="100%" v-if="isSmallScreen" />
       <span v-else>Logout</span>
@@ -40,14 +40,14 @@ const isSmallScreen = breakpoint.smaller("s");
       <p>Are you sure you want to log out?</p>
       <div class="snt-flex equals" style="margin-top: 16px">
         <button
-          class="snt-button text danger underline small"
+          class="snt-button text error underline small"
           @click="accountStore.logout"
         >
           Yes, logout
         </button>
         <button
           class="snt-button text primary underline small"
-          @click="modal.logout.close"
+          @click="modalController.logout.close"
         >
           No
         </button>

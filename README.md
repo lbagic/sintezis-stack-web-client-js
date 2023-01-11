@@ -1,77 +1,46 @@
-# Sintezis Web Client
+# web-stack-ts
 
 This template should help get you started developing with Vue 3 in Vite.
 
-## Setup new project
+## Recommended IDE Setup
 
-```sh
-git clone ssh://git@gitlab.sintezis.co:8022/sintezis/stacks/js/web.stack.js.git PROJECT_NAME
-cd PROJECT_NAME
-git remote rename origin upstream
-git remote add origin PROJECT_URL
-```
+[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
 
-## Working with protos
+## Type Support for `.vue` Imports in TS
 
-Install dependencies:
+TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
 
-```sh
-brew install bufbuild/buf/buf
-```
+If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
 
-Log in to buf.build:
+1. Disable the built-in TypeScript Extension
+    1) Run `Extensions: Show Built-in Extensions` from VSCode's command palette
+    2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
+2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
 
-- create account on https://buf.build/
-- request sintezis organization permissions
-- create api token on https://buf.build/settings/user > `Create new token`
-- copy token to use in the following command
+## Customize configuration
 
-```sh
-buf registry login
-```
+See [Vite Configuration Reference](https://vitejs.dev/config/).
 
-Generate proto files:
-
-- alter the `buf generate` command under proto script in Makefile to include project proto definitions from buf.build repository e.g. `buf generate buf.build/sintezis/project:development`
-- run the following command to generate proto files
-
-```sh
-make proto
-```
-
-## Setup local development
-
-Install required extensions:
-
-- volar: https://marketplace.visualstudio.com/items?itemName=Vue.volar
-- type support: https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin
-- prettier: https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode
-- eslint: https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
-
-Install dependencies:
+## Project Setup
 
 ```sh
 npm install
 ```
 
-Create .env file:
-
-```sh
-cp .env.example .env
-```
-
-Run development server:
+### Compile and Hot-Reload for Development
 
 ```sh
 npm run dev
 ```
 
-## Compile and Minify for Production
+### Type-Check, Compile and Minify for Production
 
 ```sh
 npm run build
 ```
 
-## Customize configuration
+### Lint with [ESLint](https://eslint.org/)
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+```sh
+npm run lint
+```

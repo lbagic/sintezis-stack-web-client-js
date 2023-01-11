@@ -1,4 +1,3 @@
-// @ts-check
 import AdminIconFolder from "@/components/admin/icons/AdminIconFolder.vue";
 import { Pagination } from "@/gen/pagination_pb";
 import { isPrimitiveScalar } from "@/utils/grpcUtils";

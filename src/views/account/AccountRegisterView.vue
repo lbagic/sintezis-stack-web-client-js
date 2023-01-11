@@ -1,8 +1,8 @@
-<script setup></script>
+<script setup lang="ts"></script>
 
 <template>
   <div>
-    <p>RegisterView</p>
+    <p>AccountRegisterView</p>
   </div>
 </template>
 

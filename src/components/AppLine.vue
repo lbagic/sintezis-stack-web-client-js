@@ -1,7 +1,11 @@
-<script setup>
-defineProps({
-  direction: { type: String, default: "horizontal" },
-  type: { type: String, default: "solid" },
+<script setup lang="ts">
+type Props = {
+  direction: "horizontal" | "vertical";
+  type: "solid" | "dashed" | "dotted";
+};
+withDefaults(defineProps<Props>(), {
+  direction: "horizontal",
+  type: "solid",
 });
 </script>
 

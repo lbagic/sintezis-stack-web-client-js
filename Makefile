@@ -3,5 +3,5 @@ deps:
 
 proto: 
 	rm -rf ./src/gen
-	cd ./buf; buf mod update
+	# cd ./buf; buf mod update
 	buf generate buf.build/sintezis/fuel-and-more:development

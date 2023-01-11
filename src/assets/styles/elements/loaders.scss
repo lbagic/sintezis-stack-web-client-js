@@ -10,7 +10,7 @@
     border: 6px solid #fff;
     border-color: #fff transparent #fff transparent;
     animation: loader-animation 1.2s linear infinite;
-    // @each $color, $value in $base-colors {}
+    // @each $color, $value in $palette-colors {}
   }
 }
 @keyframes loader-animation {

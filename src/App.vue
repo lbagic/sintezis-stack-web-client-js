@@ -1,16 +1,16 @@
-<script setup>
-import { lifecycleHooks } from "@/app/hooks";
-import BaseToast from "@/components/base/toast/BaseToast.vue";
+<script setup lang="ts">
+import { lifecycleHooks } from "@/hooks";
+import { NConfigProvider } from "naive-ui";
+import { theme } from "./app/theme";
 
-lifecycleHooks.onApplicationOpened();
-window.addEventListener("beforeunload", () =>
-  lifecycleHooks.onApplicationClosed()
-);
+lifecycleHooks.onOpened();
+window.addEventListener("beforeunload", lifecycleHooks.onClosed);
 </script>
 
 <template>
-  <RouterView />
-  <BaseToast />
+  <NConfigProvider :theme-overrides="theme" style="height: 100%">
+    <RouterView />
+  </NConfigProvider>
 </template>
 
 <style lang="scss">

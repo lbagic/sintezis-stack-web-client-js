@@ -1,12 +1,13 @@
 <script setup>
 import BaseModal from "@/components/base/modal/BaseModal.vue";
-import { modal } from "@/components/base/modal/modal.ctl";
+import { modalController } from "@/components/base/modal/modalController";
 import BaseTable from "@/components/base/table/BaseTable.vue";
-import { toast } from "@/components/base/toast/toast.ctl";
+import { toastController } from "@/components/base/toast/toastController";
 
 const props = defineProps({ resource: undefined, item: undefined });
 const emit = defineEmits(["deleteItem"]);
 /** @type { ReturnType<import("@/modules/admin/resources/base/_types").ResourceFactory> } */
+// eslint-disable-next-line vue/no-setup-props-destructure
 const resource = props.resource;
 let isPending = $ref(false);
 
@@ -15,11 +16,11 @@ async function actionDelete() {
     isPending = true;
     await resource.setupDeleteContext(props.item).call();
     isPending = false;
-    modal.deleteResource.close();
+    modalController.deleteResource.close();
     emit("deleteItem", props.item);
-    toast.success(`${resource.id} deleted.`);
+    toastController.success(`${resource.id} deleted.`);
   } catch {
-    toast.danger(`Failed to delete ${resource.id}.`);
+    toastController.error(`Failed to delete ${resource.id}.`);
   }
 }
 
@@ -27,15 +28,15 @@ const data = $computed(() => (props.item ? [props.item] : []));
 </script>
 
 <template>
-  <BaseModal class="danger" name="deleteResource">
+  <BaseModal class="error" name="deleteResource">
     <div :class="`${$prefix}grid`">
       <p>
         Are you sure you want to delete the following {{ resource.id }} items?
       </p>
-      <BaseTable :data="data" :columns="resource.tableColumns" class="danger" />
+      <BaseTable :data="data" :columns="resource.tableColumns" class="error" />
       <div :class="`${$prefix}flex equals`">
         <button
-          :class="`${$prefix}button text danger underline small`"
+          :class="`${$prefix}button text error underline small`"
           @click="actionDelete"
           :disabled="isPending"
         >
@@ -43,7 +44,7 @@ const data = $computed(() => (props.item ? [props.item] : []));
         </button>
         <button
           :class="`${$prefix}button text grey underline small`"
-          @click="modal.deleteResource.close"
+          @click="modalController.deleteResource.close"
         >
           No, not yet...
         </button>

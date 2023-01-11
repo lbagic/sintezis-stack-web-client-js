@@ -1,10 +1,12 @@
 <script setup>
-import { watchEffect } from "vue";
+import { ref, watchEffect } from "vue";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
-let breadcrumbs = $ref([]);
-watchEffect(() => (breadcrumbs = route.meta.breadcrumbs?.(route.params) ?? []));
+const breadcrumbs = ref([]);
+watchEffect(
+  () => (breadcrumbs.value = route.meta.breadcrumbs?.(route.params) ?? [])
+);
 </script>
 
 <template>

@@ -7,14 +7,14 @@
   outline-offset: 1px;
 }
 
-:is(a, button, input, textarea, select, label, summary, [tabindex]) {
-  &[data-show-focus="true"],
-  &:focus,
-  &:focus-visible {
-    @extend %focus-styles;
-    transform: translateZ(0);
-  }
-  &:focus:not(:focus-visible) {
-    outline: none;
-  }
-}
+// :is(a, button, input, textarea, select, label, summary, [tabindex]) {
+//   &[data-show-focus="true"],
+//   &:focus,
+//   &:focus-visible {
+//     @extend %focus-styles;
+//     transform: translateZ(0);
+//   }
+//   &:focus:not(:focus-visible) {
+//     outline: none;
+//   }
+// }

@@ -1,11 +1,11 @@
 // colors with variants
-$base-colors: (
-  "primary": #0d6efd,
-  "secondary": #ffc107,
-  "success": #198754,
-  "info": #0dcaf0,
+$palette-colors: (
+  "primary": #007bff,
+  "secondary": #6c757d,
+  "success": #28a745,
+  "info": #17a2b8,
   "warning": #ffc107,
-  "danger": #dc3545,
+  "error": #dc3545,
   "black": #000000,
   "dark": #212529,
   "grey": #888,
@@ -15,12 +15,12 @@ $base-colors: (
 );
 
 // colors without variants
-$solid-colors: (
+$base-colors: (
   "text": #212121,
   "background": #fff,
 );
 
-$base-color-variants: (
+$palette-variants: (
   "lightest-2": (
     "lightness": 95%,
   ),
@@ -71,4 +71,4 @@ $base-color-variants: (
   ),
 );
 
-$colors: generate-color-palette($base-colors, $base-color-variants);
+$colors: generate-color-palette($palette-colors, $palette-variants);

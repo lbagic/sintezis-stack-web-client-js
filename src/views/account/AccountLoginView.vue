@@ -1,9 +1,10 @@
 <script setup>
 import BaseInput from "@/components/base/input/BaseInput.vue";
-import { useFormData } from "@/components/base/input/input.ctl";
-import { toast } from "@/components/base/toast/toast.ctl";
+import { useFormData } from "@/components/base/input/inputController";
 import { useAccountStore } from "@/modules/account/accountStore";
+import { feedback } from "@/utils/feedback";
 import { usePromise } from "@/utils/usePromise";
+import { NButton } from "naive-ui";
 
 const form = useFormData({
   email: "",
@@ -15,43 +16,42 @@ const login = usePromise(accountStore.login);
 async function onLogin() {
   try {
     await login.execute(form.data);
-    toast.success("Logged in");
+    feedback.message.success("Logged in");
   } catch {
-    toast.danger("Failed to log in");
+    feedback.message.error("Failed to log in");
   }
 }
 </script>
 
 <template>
-  <div class="snt-container snt-flex center h-full">
+  <div class="snt-container snt-flex center h-expand">
     <form @submit.prevent class="snt-container-s">
-      <fieldset class="snt-card primary snt-grid">
+      <fieldset class="snt-card primary">
         <legend>Login</legend>
         <BaseInput
-          required
-          type="email"
+          :constraint="{ required: true, type: 'email' }"
+          :input-props="{ name: 'username', autocomplete: 'username' }"
           label="Email"
-          name="username"
-          autocomplete="username"
+          placeholder="john.doe@mail.com"
           v-model="form.model.email"
         />
         <BaseInput
-          required
-          type="password"
+          :constraint="{ required: true, minlength: 6 }"
+          :input-props="{ name: 'password', autocomplete: 'password' }"
           label="Password"
-          name="password"
-          autocomplete="password"
+          type="password"
           v-model="form.model.password"
-          minlength="6"
         />
-        <button
-          class="snt-button primary expand small"
-          style="margin-top: 1rem"
-          @click="onLogin"
+        <NButton
+          attr-type="submit"
+          type="primary"
+          size="large"
+          class="w-expand"
           :disabled="!form.isValid || login.isPending"
+          @click="onLogin"
         >
           Submit
-        </button>
+        </NButton>
       </fieldset>
     </form>
   </div>

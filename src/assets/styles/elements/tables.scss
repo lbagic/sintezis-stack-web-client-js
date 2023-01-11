@@ -20,7 +20,7 @@
   --table-font-size: 16px;
 
   @include generate-table-colors("muted");
-  @each $color, $value in $base-colors {
+  @each $color, $value in $palette-colors {
     &.#{$color} {
       @include generate-table-colors($color);
     }

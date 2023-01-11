@@ -5,7 +5,7 @@
   border: 0.5px solid;
   border-radius: 2px;
   box-shadow: var(--card-box-shadow);
-  @each $color, $value in $base-colors {
+  @each $color, $value in $palette-colors {
     &.#{$color} {
       background: linear-gradient(
         150deg,

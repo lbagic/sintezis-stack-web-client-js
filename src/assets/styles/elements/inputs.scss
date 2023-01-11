@@ -1,3 +1,6 @@
+@import "./inputs-range.scss";
+@import "./inputs-toggle.scss";
+
 .#{$prefix}input-root {
   display: block;
 }
@@ -92,7 +95,7 @@
 // Specific state styles
 .#{$prefix}input {
   &[data-error-border="true"] {
-    border-color: var(--#{$prefix}color-danger);
+    border-color: var(--#{$prefix}color-error);
   }
   &[data-placeholder-color="true"] {
     color: var(--input-placeholder-color);
@@ -122,83 +125,11 @@
 
 // Alt input styles
 .#{$prefix}alt-input {
-  width: 0px;
-  height: 0px;
   position: absolute;
+  width: 0;
+  height: 0;
   opacity: 0;
-  pointer-events: none;
-}
-
-// Input label styles
-.#{$prefix}input-label {
-  white-space: nowrap;
-  --label-margin: 0.25rem;
-
-  // input label required styles
-  &[data-label-asterisk="true"]::after {
-    content: "*";
-    color: var(--#{$prefix}color-danger);
-  }
-  // input label placement
-  &[data-label-position="left"],
-  &[data-label-position="right"] {
-    display: inline;
-  }
-  &[data-label-position="left"] {
-    margin-right: var(--label-margin);
-  }
-  &[data-label-position="right"] {
-    margin-left: var(--label-margin);
-  }
-  &[data-label-position="top"] {
-    margin-bottom: var(--label-margin);
-  }
-  &[data-label-position="bottom"] {
-    margin-top: var(--label-margin);
-  }
-}
-
-// Input info styles
-.#{$prefix}input-info {
-  --info-line-height: 1.25;
-  --info-font-size: 12px;
-  --info-max-height: calc(var(--info-line-height) * var(--info-font-size));
-  &-hint,
-  &-error {
-    line-height: var(--info-line-height);
-    font-size: var(--info-font-size);
-    margin-left: 4px;
-  }
-  &-hint {
-    color: var(--#{$prefix}color-grey);
-  }
-  &-error {
-    color: var(--#{$prefix}color-danger);
-  }
-  &-spacing {
-    height: 3px;
-  }
-  &-spacing-transition {
-    @include transition(all 0.3s ease) {
-      height: 0px;
-    }
-  }
-  &-error-transition {
-    &-enter-active,
-    &-leave-active {
-      transition: all 0.3s var(--#{$prefix}bezier-1);
-    }
-    &-enter-from,
-    &-leave-to {
-      transform: translateY(-3px);
-      opacity: 0;
-      max-height: 0px;
-    }
-    &-leave-from,
-    &-enter-to {
-      max-height: var(--info-max-height);
-    }
-  }
+  margin: 0;
 }
 
 // Date input focus styles

@@ -1,5 +1,4 @@
 import * as changeCase from "change-case";
-
 String.prototype.toCamelCase = function () {
   return changeCase.camelCase(this);
 };

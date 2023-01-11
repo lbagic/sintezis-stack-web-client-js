@@ -2,18 +2,17 @@
 import AdminCrudCreateForm from "@/components/admin/AdminCrudCreateForm.vue";
 import AdminCrudDeleteForm from "@/components/admin/AdminCrudDeleteForm.vue";
 import AdminCrudEditForm from "@/components/admin/AdminCrudEditForm.vue";
-import { modal } from "@/components/base/modal/modal.ctl";
-import BaseTable from "@/components/base/table/BaseTable.vue";
+import { modalController } from "@/components/base/modal/modalController";
 import BaseIconAdd from "@/components/icons/BaseIconAdd.vue";
 import { adminResources } from "@/modules/admin/adminResources";
 import { onMounted, reactive, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import BaseTable from "@/components/base/table/BaseTable.vue";
 
 const route = useRoute();
 const router = useRouter();
 const resourceId = route.params.resourceId;
 
-/** @type { ReturnType<import("@/modules/admin/resources/base/_types").ResourceFactory> } */
 const resource = adminResources.find(({ id }) => id === resourceId);
 
 const getAll = resource.setupGetAllContext().call;
@@ -46,14 +45,14 @@ function actionDetails(item) {
   router.push(route.fullPath + "/details/" + getId(item));
 }
 function initAddItem() {
-  modal.createResource.open();
+  modalController.createResource.open();
 }
 function onAddItem(item) {
   ctx.data.push(item);
 }
 function initDeleteItem(item) {
   ctx.toDelete = item;
-  modal.deleteResource.open();
+  modalController.deleteResource.open();
 }
 function onDeleteItem(item) {
   const itemIndex = ctx.data.findIndex((el) => getId(el) === getId(item));
@@ -62,7 +61,7 @@ function onDeleteItem(item) {
 }
 function initEditItem(item) {
   ctx.toEdit = item;
-  modal.editResource.open();
+  modalController.editResource.open();
 }
 function onEditItem(item) {
   const itemIndex = ctx.data.findIndex((el) => getId(el) === getId(item));

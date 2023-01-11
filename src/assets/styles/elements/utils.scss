@@ -1,3 +1,12 @@
+// display
+.hidden {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  margin: 0;
+}
+
 // position
 .relative {
   position: relative;
@@ -59,11 +68,17 @@
 }
 
 // sizes
-.w-full {
+.w-expand {
   width: 100%;
 }
-.h-full {
+.w-viewport {
+  width: 100vw;
+}
+.h-expand {
   height: 100%;
+}
+.h-viewport {
+  height: 100vh;
 }
 
 // text
