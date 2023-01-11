@@ -31,4 +31,7 @@ export const theme: GlobalThemeOverrides = {
     errorColorPressed: css.colors.error.dark,
     errorColorSuppl: css.colors.error["light-2"],
   },
+  Divider: {
+    color: css.colors.muted.base,
+  },
 };

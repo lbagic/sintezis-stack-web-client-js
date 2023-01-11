@@ -5,7 +5,7 @@ import type {
 } from "naive-ui/es/discrete/src/interface";
 
 // Supported types: "message", "dialog", "notification"
-const types = ["dialog"] satisfies DiscreteApiType[];
+const types = ["message", "dialog", "notification"] satisfies DiscreteApiType[];
 
 export const feedback = createDiscreteApi(types) as Pick<
   DiscreteApi,

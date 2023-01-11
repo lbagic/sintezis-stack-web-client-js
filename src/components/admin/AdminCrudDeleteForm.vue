@@ -2,7 +2,7 @@
 import BaseModal from "@/components/base/modal/BaseModal.vue";
 import { modalController } from "@/components/base/modal/modalController";
 import BaseTable from "@/components/base/table/BaseTable.vue";
-import { toastController } from "@/components/base/toast/toastController";
+import { feedback } from "@/utils/feedback";
 
 const props = defineProps({ resource: undefined, item: undefined });
 const emit = defineEmits(["deleteItem"]);
@@ -18,9 +18,9 @@ async function actionDelete() {
     isPending = false;
     modalController.deleteResource.close();
     emit("deleteItem", props.item);
-    toastController.success(`${resource.id} deleted.`);
+    feedback.message.success(`${resource.id} deleted.`);
   } catch {
-    toastController.error(`Failed to delete ${resource.id}.`);
+    feedback.message.error(`Failed to delete ${resource.id}.`);
   }
 }
 

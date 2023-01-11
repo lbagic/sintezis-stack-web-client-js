@@ -2,7 +2,7 @@
 import BaseInput from "@/components/base/input/BaseInput.vue";
 import BaseModal from "@/components/base/modal/BaseModal.vue";
 import { modalController } from "@/components/base/modal/modalController";
-import { toastController } from "@/components/base/toast/toastController";
+import { feedback } from "@/utils/feedback";
 import { usePromise } from "@/utils/usePromise";
 
 const props = defineProps({ resource: undefined, item: undefined });
@@ -21,9 +21,9 @@ async function actionEdit() {
     modalController.editResource.close();
     const item = resource.parseEditData(response);
     emit("editItem", item);
-    toastController.success(`${resource.id} edited.`);
+    feedback.message.success(`${resource.id} edited.`);
   } catch {
-    toastController.error(`Failed to edit ${resource.id}.`);
+    feedback.message.error(`Failed to edit ${resource.id}.`);
   }
 }
 </script>

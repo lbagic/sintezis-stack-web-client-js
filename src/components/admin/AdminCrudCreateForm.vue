@@ -2,7 +2,7 @@
 import BaseInput from "@/components/base/input/BaseInput.vue";
 import BaseModal from "@/components/base/modal/BaseModal.vue";
 import { modalController } from "@/components/base/modal/modalController";
-import { toastController } from "@/components/base/toast/toastController";
+import { feedback } from "@/utils/feedback";
 import { usePromise } from "@/utils/usePromise";
 
 const props = defineProps({ resource: undefined });
@@ -19,9 +19,9 @@ async function actionCreate() {
     modalController.createResource.close();
     const item = resource.parseAddData(response);
     emit("addItem", item);
-    toastController.success(`${resource.id} created.`);
+    feedback.message.success(`${resource.id} created.`);
   } catch {
-    toastController.warning(`Failed to create ${resource.id}.`);
+    feedback.message.warning(`Failed to create ${resource.id}.`);
   }
 }
 </script>

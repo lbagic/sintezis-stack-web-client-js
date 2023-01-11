@@ -1,7 +1,9 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div></div>
+  <div>
+    <p>TestView</p>
+  </div>
 </template>
 
 <style scoped lang="scss"></style>

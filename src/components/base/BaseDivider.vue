@@ -1,11 +1,23 @@
 <script setup lang="ts">
-type Props = {
-  direction: "horizontal" | "vertical";
-  type: "solid" | "dashed" | "dotted";
-};
-withDefaults(defineProps<Props>(), {
-  direction: "horizontal",
-  type: "solid",
+import type { PropType } from "vue";
+
+// type Props = {
+//   direction: "horizontal" | "vertical";
+//   type: "solid" | "dashed" | "dotted";
+// };
+// withDefaults(defineProps<Props>(), {
+//   direction: "horizontal",
+//   type: "solid",
+// });
+defineProps({
+  direction: {
+    type: String as PropType<"horizontal" | "vertical">,
+    default: "horizontal",
+  },
+  type: {
+    type: String as PropType<"solid" | "dashed" | "dotted">,
+    default: "solid",
+  },
 });
 </script>
 
