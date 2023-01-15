@@ -19,17 +19,17 @@ export namespace CSS {
     | "white";
   export type PaletteVariants =
     | "dark"
-    | "dark2"
+    | "dark-2"
     | "darker"
-    | "darker2"
+    | "darker-2"
     | "darkest"
-    | "darkest2"
+    | "darkest-2"
     | "light"
-    | "light2"
+    | "light-2"
     | "lighter"
-    | "lighter2"
+    | "lighter-2"
     | "lightest"
-    | "lightest2"
+    | "lightest-2"
     | "opaque"
     | "opaque-soft"
     | "soft";
@@ -57,7 +57,6 @@ export namespace CSS {
 
 const parsed: CSS.Parsed = JSON.parse(rawCSS.JSON.slice(1, -1));
 
-console.log(parsed);
 export const css = {
   prefix: parsed.prefix,
   colors: parsed.colors,
@@ -70,5 +69,3 @@ const paletteColorNames = Object.keys(css.colors);
 export function isColorName(name: string) {
   return paletteColorNames.includes(name);
 }
-
-console.log(css);

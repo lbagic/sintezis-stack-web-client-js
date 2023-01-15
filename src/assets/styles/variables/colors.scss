@@ -21,19 +21,19 @@ $base-colors: (
 );
 
 $palette-variants: (
-  "lightest2": (
+  "lightest-2": (
     "lightness": 95%,
   ),
   "lightest": (
     "lightness": 90%,
   ),
-  "lighter2": (
+  "lighter-2": (
     "lightness": 50%,
   ),
   "lighter": (
     "lightness": 40%,
   ),
-  "light2": (
+  "light-2": (
     "lightness": 16%,
   ),
   "light": (
@@ -42,19 +42,19 @@ $palette-variants: (
   "dark": (
     "lightness": -8%,
   ),
-  "dark2": (
+  "dark-2": (
     "lightness": -20%,
   ),
   "darker": (
     "lightness": -40%,
   ),
-  "darker2": (
+  "darker-2": (
     "lightness": -50%,
   ),
   "darkest": (
     "lightness": -80%,
   ),
-  "darkest2": (
+  "darkest-2": (
     "lightness": -90%,
   ),
   "soft": (

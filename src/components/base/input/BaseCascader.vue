@@ -19,7 +19,6 @@ const { model, context, formItemContext } = ctl.setup({
   inputRef,
   validationRef,
 });
-console.log(context.value);
 </script>
 
 <template>

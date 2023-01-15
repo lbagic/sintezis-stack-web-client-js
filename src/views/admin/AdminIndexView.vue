@@ -95,7 +95,7 @@ function confirmLogout() {
         title="logout"
         aria-label="logout"
       >
-        <PowerSettingsNewOutlined width="28" height="28" />
+        <PowerSettingsNewOutlined width="22" height="22" />
       </button>
     </nav>
     <NLayout has-sider style="height: 100%">
@@ -137,7 +137,7 @@ function confirmLogout() {
   background: linear-gradient(
     150deg,
     var(--snt-color-primary-dark) 0%,
-    var(--snt-color-primary-dark2) 100%
+    var(--snt-color-primary-dark-2) 100%
   );
   display: grid;
   grid-template-columns: auto 1fr auto;
