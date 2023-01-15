@@ -14,10 +14,7 @@ export const router = createRouter({
   routes,
 });
 
-const fallback = {
-  user: "/",
-  visitor: "/login",
-};
+const fallback = { user: "/", visitor: "/login" };
 
 const createAuthorization =
   (roles: string[], isLoggedIn: boolean) =>
@@ -28,12 +25,13 @@ router.beforeEach((to, from, next) => {
   const { roles, isLoggedIn } = useAccountStore();
   const authorize = createAuthorization(roles, isLoggedIn);
   const referrer = router.referrer;
-
   router.referrer = from;
-  document.title = to.matched.reduce(
-    (a, c) => c.meta.title ?? a,
-    applicationTitle
-  );
+
+  document.title = to.matched.reduce((a, c) => {
+    if (typeof c.meta.title === "function") return c.meta.title(to);
+    else if (typeof c.meta.title === "string") return c.meta.title;
+    else return a;
+  }, applicationTitle);
 
   const isFound = !!to.matched.length;
   const isAuthorized = to.matched.every(authorize);
@@ -48,19 +46,20 @@ router.beforeEach((to, from, next) => {
     : next(isLoggedIn ? fallback.user : fallback.visitor);
 });
 
-// Type definitions for routes & router
+export type RouteBreadcrumb = {
+  label: string;
+  to: { name: string };
+};
 declare module "vue-router" {
   interface RouteMeta {
-    title?: string;
+    title?: string | ((route: RouteLocationNormalized) => string);
     authorize?: (options: {
       roles: typeof ROLES.values | string[];
       isLoggedIn: boolean;
     }) => boolean;
-    breadcrumbs?: (
-      params: Record<string, any>
-    ) => { name: string; routeName: string }[];
+    breadcrumbs?: (route: RouteLocationNormalized) => RouteBreadcrumb[];
   }
   interface Router {
-    referrer?: RouteLocationNormalizedLoaded;
+    referrer?: RouteLocationNormalized;
   }
 }

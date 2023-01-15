@@ -1,7 +1,7 @@
 <script setup>
 import BaseModal from "@/components/base/modal/BaseModal.vue";
 import { modalController } from "@/components/base/modal/modalController";
-import BaseTable from "@/components/base/table/BaseTable.vue";
+// import STable from "@/components/base/table/STable.vue";
 import { feedback } from "@/utils/feedback";
 
 const props = defineProps({ resource: undefined, item: undefined });
@@ -24,7 +24,7 @@ async function actionDelete() {
   }
 }
 
-const data = $computed(() => (props.item ? [props.item] : []));
+// const data = $computed(() => (props.item ? [props.item] : []));
 </script>
 
 <template>
@@ -33,7 +33,7 @@ const data = $computed(() => (props.item ? [props.item] : []));
       <p>
         Are you sure you want to delete the following {{ resource.id }} items?
       </p>
-      <BaseTable :data="data" :columns="resource.tableColumns" class="error" />
+      <!-- <STable :data="data" :columns="resource.tableColumns" class="error" /> -->
       <div :class="`${$prefix}flex equals`">
         <button
           :class="`${$prefix}button text error underline small`"

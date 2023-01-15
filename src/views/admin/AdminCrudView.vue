@@ -6,11 +6,11 @@ import { modalController } from "@/components/base/modal/modalController";
 import BaseIconAdd from "@/components/icons/BaseIconAdd.vue";
 import { adminResources } from "@/modules/admin/adminResources";
 import { onMounted, reactive, watch } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import BaseTable from "@/components/base/table/BaseTable.vue";
+import { useRoute } from "vue-router";
+// import BaseTable from "@/components/base/table/BaseTable.vue";
 
 const route = useRoute();
-const router = useRouter();
+// const router = useRouter();
 const resourceId = route.params.resourceId;
 
 const resource = adminResources.find(({ id }) => id === resourceId);
@@ -41,28 +41,28 @@ if (resource.hasPagination && resource.usePagination) {
   watch(() => ctx.pagination.page, actionGetAll);
   watch(() => ctx.pagination.pageSize, actionGetAll);
 }
-function actionDetails(item) {
-  router.push(route.fullPath + "/details/" + getId(item));
-}
+// function actionDetails(item) {
+//   router.push(route.fullPath + "/details/" + getId(item));
+// }
 function initAddItem() {
   modalController.createResource.open();
 }
 function onAddItem(item) {
   ctx.data.push(item);
 }
-function initDeleteItem(item) {
-  ctx.toDelete = item;
-  modalController.deleteResource.open();
-}
+// function initDeleteItem(item) {
+//   ctx.toDelete = item;
+//   modalController.deleteResource.open();
+// }
 function onDeleteItem(item) {
   const itemIndex = ctx.data.findIndex((el) => getId(el) === getId(item));
   ctx.data.splice(itemIndex, 1);
   ctx.toDelete = undefined;
 }
-function initEditItem(item) {
-  ctx.toEdit = item;
-  modalController.editResource.open();
-}
+// function initEditItem(item) {
+//   ctx.toEdit = item;
+//   modalController.editResource.open();
+// }
 function onEditItem(item) {
   const itemIndex = ctx.data.findIndex((el) => getId(el) === getId(item));
   ctx.data.splice(itemIndex, 1, item);
@@ -100,7 +100,7 @@ onMounted(() => {
         :resource="resource"
       />
     </template>
-    <BaseTable
+    <!-- <BaseTable
       :columns="resource.tableColumns"
       :data="ctx.data"
       :use-delete="!!resource.setupDeleteContext"
@@ -116,7 +116,7 @@ onMounted(() => {
       "
       use-search
       use-sort
-    />
+    /> -->
   </div>
 </template>
 

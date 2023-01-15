@@ -1,147 +1,228 @@
+%btn-unset-background {
+  --background: initial;
+  --background-hover: initial;
+  --background-active: initial;
+}
+%btn-unset-border {
+  --border: initial;
+  --border-hover: initial;
+  --border-active: initial;
+}
+
 .#{$prefix}button {
+  outline: none !important;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
-  font-size: 16px;
   font-weight: 400;
-  min-height: var(--height);
-  padding: var(--padding-y) var(--padding-x);
-  // line-height: calc(var(--font-size) + var(--height) - var(--padding-y) / 2);
-
+  border-radius: 3px;
   cursor: pointer;
-  border-radius: 2px;
-  user-select: none;
-  opacity: 1;
-  transition: all 0.15s ease-in-out;
-  background-color: transparent;
 
+  --padding: 14px;
+  --font-size: 14px;
+  --height: 34px;
+  --text: var(--snt-color-text);
+  --text-hover: var(--snt-color-primary);
+  --text-active: var(--snt-color-primary-darker);
+  --background: initial;
+  --background-hover: initial;
+  --background-active: initial;
+  --border: 1px solid var(--snt-color-muted);
+  --border-hover: 1px solid var(--snt-color-primary);
+  --border-active: 1px solid var(--snt-color-primary-darker);
+  --ripple: var(--snt-color-primary-opaque);
+
+  font-size: var(--font-size);
+  min-height: var(--height);
+  padding: 0px var(--padding);
+  color: var(--text);
+  background: var(--background);
+  border: var(--border);
+  box-shadow: 0 0 0 0 #fff0;
+
+  transition: color 0.2s ease-in-out, background 0.2s ease-in-out,
+    border 0.2s ease-in-out, box-shadow 0.3s ease;
+
+  &:hover,
+  &:focus {
+    color: var(--text-hover);
+    background: var(--background-hover);
+    border: var(--border-hover);
+  }
+  &:active {
+    color: var(--text-active);
+    background: var(--background-active);
+    border: var(--border-active);
+    box-shadow: 0 0 0 0.12rem var(--ripple);
+  }
+  &[disabled],
+  &.disabled {
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+    opacity: 0.5;
+  }
+
+  // sizes
+  &.tiny {
+    --font-size: 12px;
+    --padding: 6px;
+    --height: 22px;
+  }
   &.small {
-    --height: 34px;
-    --padding-y: 4px;
-    --padding-x: 8px;
+    --font-size: 14px;
+    --padding: 10px;
+    --height: 28px;
   }
   &.medium {
-    --height: 42px;
-    --padding-y: 6px;
-    --padding-x: 18px;
+    --font-size: 14px;
+    --padding: 14px;
+    --height: 34px;
   }
   &.large {
-    --height: 50px;
-    --padding-y: 8px;
-    --padding-x: 24px;
+    --font-size: 15px;
+    --padding: 18px;
+    --height: 40px;
   }
-  &.expand {
-    width: 100%;
+
+  // types
+  &.secondary {
+    --text: var(--snt-color-text);
+    --text-hover: var(--snt-color-dark);
+    --text-active: var(--snt-color-dark-darker);
+    --background: #2e33380d;
+    --background-hover: #2e333817;
+    --background-active: #2e333821;
+    --ripple: #fff0;
+    @extend %btn-unset-border;
   }
-  &.rounded {
-    border-radius: 6px;
+  &.tertiary {
+    --text: var(--snt-color-text);
+    --text-hover: var(--snt-color-dark);
+    --text-active: var(--snt-color-dark-darker);
+    --background: #2e33380d;
+    --background-hover: #2e333817;
+    --background-active: #2e333821;
+    --ripple: #fff0;
+    @extend %btn-unset-border;
   }
+  &.quaternary {
+    --text: var(--snt-color-text);
+    --text-hover: var(--snt-color-dark);
+    --text-active: var(--snt-color-dark-darker);
+    --background: initial;
+    --background-hover: #2e333817;
+    --background-active: #2e333821;
+    --ripple: #fff0;
+    @extend %btn-unset-border;
+  }
+  &.text {
+    --height: initial;
+    --padding: initial;
+    --ripple: #fff0;
+    @extend %btn-unset-background;
+    @extend %btn-unset-border;
+  }
+  &.dashed {
+    --border: 1px dashed var(--snt-color-muted);
+    --border-hover: 1px dashed var(--snt-color-primary);
+    --border-active: 1px dashed var(--snt-color-primary-darker);
+    @extend %btn-unset-background;
+  }
+  &.outlined {
+    --border: 1px solid var(--snt-color-muted);
+    --border-hover: 1px solid var(--snt-color-primary);
+    --border-active: 1px solid var(--snt-color-primary-darker);
+    @extend %btn-unset-background;
+  }
+  &.ghost {
+    @extend %btn-unset-border;
+    @extend %btn-unset-background;
+  }
+
+  // colors
+  @each $color, $color-map in $colors {
+    $base-color: map-get($color-map, "base");
+    &.#{$color} {
+      @extend %btn-unset-border;
+      --text: var(--#{$prefix}color-#{$color}-contrast);
+      --text-hover: var(--#{$prefix}color-#{$color}-contrast);
+      --text-active: var(--#{$prefix}color-#{$color}-contrast);
+      --background: var(--#{$prefix}color-#{$color});
+      --background-hover: var(--#{$prefix}color-#{$color}-light);
+      --background-active: var(--#{$prefix}color-#{$color}-dark);
+      --ripple: var(--#{$prefix}color-#{$color}-opaque);
+      &.secondary {
+        --text: var(--#{$prefix}color-#{$color});
+        --text-hover: var(--#{$prefix}color-#{$color});
+        --text-active: var(--#{$prefix}color-#{$color});
+        --background: #{scale-color($base-color, $alpha: -84%)};
+        --background-hover: #{scale-color($base-color, $alpha: -79%)};
+        --background-active: #{scale-color($base-color, $alpha: -72%)};
+        --ripple: #fff0;
+      }
+      &.tertiary {
+        --text: var(--#{$prefix}color-#{$color});
+        --text-hover: var(--#{$prefix}color-#{$color});
+        --text-active: var(--#{$prefix}color-#{$color});
+        --background: #2e33380d;
+        --background-hover: #2e333817;
+        --background-active: #2e333821;
+        --ripple: #fff0;
+      }
+      &.quaternary {
+        --text: var(--#{$prefix}color-#{$color});
+        --text-hover: var(--#{$prefix}color-#{$color});
+        --text-active: var(--#{$prefix}color-#{$color});
+        --background: none;
+        --background-hover: #2e333817;
+        --background-active: #2e333821;
+        --ripple: #fff0;
+      }
+      &.text {
+        @extend %btn-unset-background;
+        --text: var(--#{$prefix}color-#{$color});
+        --text-hover: var(--#{$prefix}color-#{$color}-light2);
+        --text-active: var(--#{$prefix}color-#{$color}-dark);
+        --ripple: #fff0;
+      }
+      &.dashed {
+        @extend %btn-unset-background;
+        --text: var(--#{$prefix}color-#{$color});
+        --text-hover: var(--#{$prefix}color-#{$color}-light2);
+        --text-active: var(--#{$prefix}color-#{$color}-dark);
+        --border: 1px dashed var(--#{$prefix}color-#{$color});
+        --border-hover: 1px dashed var(--#{$prefix}color-#{$color}-light2);
+        --border-active: 1px dashed var(--#{$prefix}color-#{$color}-dark);
+        --ripple: var(--#{$prefix}color-#{$color}-opaque);
+      }
+      &.outlined {
+        @extend %btn-unset-background;
+        --text: var(--#{$prefix}color-#{$color});
+        --text-hover: var(--#{$prefix}color-#{$color}-light2);
+        --text-active: var(--#{$prefix}color-#{$color}-dark);
+        --border: 1px solid var(--#{$prefix}color-#{$color});
+        --border-hover: 1px solid var(--#{$prefix}color-#{$color}-light2);
+        --border-active: 1px solid var(--#{$prefix}color-#{$color}-dark);
+        --ripple: var(--#{$prefix}color-#{$color}-opaque);
+      }
+      &.ghost {
+        @extend %btn-unset-background;
+        --text: var(--#{$prefix}color-#{$color});
+        --text-hover: var(--#{$prefix}color-#{$color}-light2);
+        --text-active: var(--#{$prefix}color-#{$color}-dark);
+        --ripple: var(--#{$prefix}color-#{$color}-opaque);
+      }
+    }
+  }
+
+  // misc
   &.underline {
     @extend %#{$prefix}animate-underline;
   }
-}
-
-.#{$prefix}button[disabled] {
-  opacity: 0.5 !important;
-  cursor: default !important;
-  pointer-events: none !important;
-}
-
-.#{$prefix}button {
-  @each $color, $value in $palette-colors {
-    &.#{$color} {
-      --base-color: var(--#{$prefix}color-#{$color});
-      --accent-color: var(--#{$prefix}color-#{$color}-light);
-      --focus-color: var(--#{$prefix}color-#{$color}-dark);
-      --contrast-color: var(--#{$prefix}color-#{$color}-contrast);
-    }
+  &.round {
+    border-radius: var(--height);
   }
-
-  &:not(.text):not(.outline) {
-    @each $color, $value in $palette-colors {
-      &.#{$color} {
-        color: var(--contrast-color);
-        background: var(--base-color);
-        &:active {
-          background: var(--accent-color);
-        }
-        @media (hover: hover) {
-          &:focus,
-          &:focus-visible {
-            background: var(--focus-color);
-          }
-          &:focus:not(:focus-visible) {
-            background: var(--base-color);
-          }
-          &:hover:nth-child(n) {
-            background: var(--accent-color);
-          }
-          &:active:nth-child(n) {
-            background: var(--base-color);
-          }
-        }
-      }
-    }
-  }
-  &.outline {
-    box-sizing: border-box;
-    border: 1.5px solid transparent;
-    background-color: transparent;
-    @each $color, $value in $palette-colors {
-      &.#{$color} {
-        color: var(--base-color);
-        border-color: var(--base-color);
-        &:active {
-          color: var(--accent-color);
-          border-color: var(--accent-color);
-        }
-        @media (hover: hover) {
-          &:focus,
-          &:focus-visible {
-            color: var(--focus-color);
-            border-color: var(--focus-color);
-          }
-          &:focus:not(:focus-visible) {
-            color: var(--base-color);
-            border-color: var(--base-color);
-          }
-          &:hover:nth-child(n) {
-            color: var(--accent-color);
-            border-color: var(--accent-color);
-          }
-          &:active:nth-child(n) {
-            color: var(--base-color);
-            border-color: var(--base-color);
-          }
-        }
-      }
-    }
-  }
-  &.text {
-    background-color: transparent;
-    @each $color, $value in $palette-colors {
-      &.#{$color} {
-        color: var(--base-color);
-        &:active {
-          color: var(--focus-color);
-        }
-        @media (hover: hover) {
-          &:focus,
-          &:focus-visible {
-            color: var(--focus-color);
-          }
-          &:focus:not(:focus-visible) {
-            color: var(--base-color);
-          }
-          &:hover:nth-child(n) {
-            color: var(--focus-color);
-          }
-          &:active:nth-child(n) {
-            color: var(--base-color);
-          }
-        }
-      }
-    }
+  &.expand {
+    width: 100%;
   }
 }

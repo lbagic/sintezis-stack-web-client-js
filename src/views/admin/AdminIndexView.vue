@@ -1,16 +1,113 @@
-<script setup>
-import AdminNavigation from "@/components/admin/AdminNavigation.vue";
-import AdminSideNavigation from "@/components/admin/AdminSideNavigation.vue";
-import { useRoute } from "vue-router";
+<script setup lang="ts">
+import { useAccountStore } from "@/modules/account/accountStore";
+import { adminResources } from "@/modules/admin/adminResources";
+import { useAdminStore } from "@/modules/admin/adminStore";
+import { css } from "@/utils/css";
+import { feedback } from "@/utils/feedback";
+import { useRouteBreadcrumbs } from "@/utils/routeBreadcrumbs";
+import {
+  PowerSettingsNewOutlined,
+  SpaceDashboardOutlined,
+} from "@vicons/material";
+import {
+  NBreadcrumb,
+  NBreadcrumbItem,
+  NIcon,
+  NLayout,
+  NLayoutSider,
+  NMenu,
+  type MenuOption,
+} from "naive-ui";
+import { computed, h } from "vue";
+import { RouterLink, useRoute } from "vue-router";
 
 const route = useRoute();
+const adminStore = useAdminStore();
+const accountStore = useAccountStore();
+
+const breadcrumbs = useRouteBreadcrumbs();
+const activePath = computed(() => route.fullPath);
+const sideMenuOptions = adminResources.map(
+  (resource): MenuOption => ({
+    key: `/crud/${resource.id}`,
+    label: () =>
+      h(
+        RouterLink,
+        { to: `/crud/${resource.id}` },
+        { default: () => resource.name }
+      ),
+    icon: () => h(NIcon, null, { default: () => h(resource.icon) }),
+  })
+);
+function confirmLogout() {
+  feedback.dialog.warning({
+    content: "Are you sure you want to logout?",
+    title: "Logout",
+    positiveText: "Yes",
+    negativeText: "No, not yet",
+    onPositiveClick: accountStore.logout,
+  });
+}
 </script>
 
 <template>
   <div class="admin-index">
-    <AdminNavigation style="grid-area: nav" />
-    <AdminSideNavigation style="grid-area: side-nav" />
-    <RouterView style="grid-area: main" :key="route.path"></RouterView>
+    <nav class="admin-nav-main snt-container">
+      <RouterLink class="snt-button text white" to="/">
+        <SpaceDashboardOutlined width="28" height="28" />
+      </RouterLink>
+      <NBreadcrumb
+        :theme-overrides="{
+          itemTextColor: css.colors.white.base,
+          separatorColor: css.colors.white.base,
+          itemTextColorActive: css.colors.white.base,
+        }"
+      >
+        <NBreadcrumbItem
+          v-for="breadcrumb in breadcrumbs"
+          :key="breadcrumb.label"
+        >
+          <RouterLink
+            class="snt-button text white underline"
+            :to="breadcrumb.to"
+          >
+            {{ breadcrumb.label }}
+          </RouterLink>
+        </NBreadcrumbItem>
+      </NBreadcrumb>
+      <button
+        class="snt-button text white"
+        style="justify-self: flex-end"
+        @click="confirmLogout"
+      >
+        <PowerSettingsNewOutlined width="28" height="28" />
+      </button>
+    </nav>
+    <NLayout has-sider style="height: 100%">
+      <NLayoutSider
+        trigger-style="top: 10%;"
+        collapsed-trigger-style="top: 10%;"
+        bordered
+        collapse-mode="width"
+        :collapsed-width="64"
+        :width="240"
+        :collapsed="!adminStore.showSideNav"
+        show-trigger
+        @collapse="adminStore.showSideNav = false"
+        @expand="adminStore.showSideNav = true"
+      >
+        <NMenu
+          :options="sideMenuOptions"
+          :value="activePath"
+          :collapsed="!adminStore.showSideNav"
+          :collapsed-width="64"
+          :collapsed-icon-size="22"
+        />
+      </NLayoutSider>
+      <NLayout>
+        <RouterView :key="route.path"></RouterView>
+      </NLayout>
+    </NLayout>
   </div>
 </template>
 
@@ -18,8 +115,18 @@ const route = useRoute();
 .admin-index {
   display: grid;
   height: 100%;
-  grid-template-columns: auto 1fr;
   grid-template-rows: auto 1fr;
-  grid-template-areas: "nav nav" "side-nav main";
+}
+.admin-nav-main {
+  color: white;
+  background: linear-gradient(
+    150deg,
+    var(--snt-color-primary-dark) 0%,
+    var(--snt-color-primary-dark2) 100%
+  );
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1rem;
+  align-items: center;
 }
 </style>

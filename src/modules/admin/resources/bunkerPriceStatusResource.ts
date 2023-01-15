@@ -9,10 +9,10 @@ export const bunkerPriceStatusResource = createResource({
   rpc: BunkerPriceStatusService.methods,
   usePagination: false,
   useDetails: true,
-  tableColumns: [
-    { label: "Identifier", field: "ID" },
-    { label: "Price Status Name", field: (o) => o.priceStatus },
-  ],
+  // tableColumns: [
+  //   { label: "Identifier", field: "ID" },
+  //   { label: "Price Status Name", field: (o) => o.priceStatus },
+  // ],
   setupGetAllContext() {
     return { call: grpc.BunkerPriceStatusService.getAll };
   },

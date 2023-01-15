@@ -1,7 +1,7 @@
 import rawCSS from "@/assets/styles/export.module.scss";
 import { mapObjIndexed } from "ramda";
 
-namespace CSS {
+export namespace CSS {
   export type Breakpoints = "s" | "m" | "l" | "xl" | "xxl";
   export type Containers = "s" | "m" | "l" | "xl" | "expand";
   export type PaletteColors =
@@ -13,23 +13,23 @@ namespace CSS {
     | "light"
     | "muted"
     | "primary"
-    | "secondary"
+    | "accent"
     | "success"
     | "warning"
     | "white";
   export type PaletteVariants =
     | "dark"
-    | "dark-2"
+    | "dark2"
     | "darker"
-    | "darker-2"
+    | "darker2"
     | "darkest"
-    | "darkest-2"
+    | "darkest2"
     | "light"
-    | "light-2"
+    | "light2"
     | "lighter"
-    | "lighter-2"
+    | "lighter2"
     | "lightest"
-    | "lightest-2"
+    | "lightest2"
     | "opaque"
     | "opaque-soft"
     | "soft";
@@ -57,6 +57,7 @@ namespace CSS {
 
 const parsed: CSS.Parsed = JSON.parse(rawCSS.JSON.slice(1, -1));
 
+console.log(parsed);
 export const css = {
   prefix: parsed.prefix,
   colors: parsed.colors,
@@ -69,3 +70,5 @@ const paletteColorNames = Object.keys(css.colors);
 export function isColorName(name: string) {
   return paletteColorNames.includes(name);
 }
+
+console.log(css);

@@ -1,6 +1,6 @@
-import AdminIconFolder from "@/components/admin/icons/AdminIconFolder.vue";
 import { Pagination } from "@/gen/pagination_pb";
 import { isPrimitiveScalar } from "@/utils/grpcUtils";
+import { FolderOutlined } from "@vicons/material";
 import { markRaw } from "vue";
 
 export const PaginationMessage = Pagination;
@@ -46,7 +46,7 @@ export const createResource = (config) => {
         label: el.localName.toSentenceCase(),
         field: el.localName,
       })),
-    icon: config.icon ?? markRaw(AdminIconFolder),
+    icon: config.icon ?? markRaw(FolderOutlined),
     name: config.name ?? config.Entity.name.toCapitalCase(),
     useDetails: !!config.useDetails,
     usePagination: !!config.usePagination,

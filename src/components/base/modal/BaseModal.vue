@@ -1,4 +1,5 @@
 <script lang="ts">
+// TODO Migrate to NModal
 import { modalProps } from "./modal.types";
 export default { inheritAttrs: false };
 

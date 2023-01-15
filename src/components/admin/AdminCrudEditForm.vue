@@ -29,7 +29,7 @@ async function actionEdit() {
 </script>
 
 <template>
-  <BaseModal class="secondary" name="editResource">
+  <BaseModal class="accent" name="editResource">
     <form @submit.prevent v-if="ctx" :class="`${$prefix}grid small`">
       <p>Edit {{ resource.name }}</p>
       <div :class="`${$prefix}grid`" style="--gtc: 1fr 1fr">
@@ -41,7 +41,7 @@ async function actionEdit() {
         />
       </div>
       <button
-        :class="`${$prefix}button small secondary expand`"
+        :class="`${$prefix}button small accent expand`"
         style="margin-top: 16px"
         :disabled="!ctx.form.isValid || call.isPending"
         @click="actionEdit"

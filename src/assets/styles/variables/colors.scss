@@ -1,10 +1,10 @@
 // colors with variants
 $palette-colors: (
   "primary": #007bff,
-  "secondary": #6c757d,
+  "accent": #f92f80,
   "success": #28a745,
   "info": #17a2b8,
-  "warning": #ffc107,
+  "warning": #fcb040,
   "error": #dc3545,
   "black": #000000,
   "dark": #212529,
@@ -21,19 +21,19 @@ $base-colors: (
 );
 
 $palette-variants: (
-  "lightest-2": (
+  "lightest2": (
     "lightness": 95%,
   ),
   "lightest": (
     "lightness": 90%,
   ),
-  "lighter-2": (
+  "lighter2": (
     "lightness": 50%,
   ),
   "lighter": (
     "lightness": 40%,
   ),
-  "light-2": (
+  "light2": (
     "lightness": 16%,
   ),
   "light": (
@@ -42,19 +42,19 @@ $palette-variants: (
   "dark": (
     "lightness": -8%,
   ),
-  "dark-2": (
-    "lightness": -16%,
+  "dark2": (
+    "lightness": -20%,
   ),
   "darker": (
     "lightness": -40%,
   ),
-  "darker-2": (
+  "darker2": (
     "lightness": -50%,
   ),
   "darkest": (
     "lightness": -80%,
   ),
-  "darkest-2": (
+  "darkest2": (
     "lightness": -90%,
   ),
   "soft": (
@@ -62,7 +62,7 @@ $palette-variants: (
     "lightness": 95%,
   ),
   "opaque": (
-    "alpha": -50%,
+    "alpha": -70%,
   ),
   "opaque-soft": (
     "saturation": 50%,

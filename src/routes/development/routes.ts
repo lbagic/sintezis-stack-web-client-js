@@ -11,4 +11,9 @@ export const routes: RouteRecordRaw[] = [
     component: () => import("@/views/dev/TestInputsView.vue"),
     meta: { title: "Test Inputs" },
   },
+  {
+    path: "/test-buttons",
+    component: () => import("@/views/dev/TestButtonsView.vue"),
+    meta: { title: "Test Buttons" },
+  },
 ];

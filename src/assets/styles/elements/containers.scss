@@ -17,12 +17,18 @@
 }
 
 %#{$prefix}flexbox-gap-sizes {
-  --gap: 12px;
+  --gap: 8px;
+  &.tiny {
+    --gap: 2px;
+  }
   &.small {
+    --gap: 4px;
+  }
+  &.medium {
     --gap: 8px;
   }
   &.large {
-    --gap: 32px;
+    --gap: 24px;
   }
 }
 

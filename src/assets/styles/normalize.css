@@ -130,15 +130,15 @@ textarea {
   padding: 0;
   text-transform: none;
 }
-fieldset[disabled] input,
-fieldset[disabled] select,
-fieldset[disabled] textarea,
-fieldset[disabled] button,
-a[disabled],
+/* a[disabled], */
 button[disabled],
 input[disabled],
 select[disabled],
-textarea[disabled] {
+textarea[disabled],
+fieldset[disabled] input,
+fieldset[disabled] select,
+fieldset[disabled] textarea,
+fieldset[disabled] button {
   cursor: default !important;
   pointer-events: none !important;
 }

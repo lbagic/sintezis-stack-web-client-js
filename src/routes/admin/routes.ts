@@ -1,6 +1,12 @@
 import { adminResources } from "@/modules/admin/adminResources";
 import type { RouteRecordRaw } from "vue-router";
 
+function getResourceName(route: any) {
+  return (
+    adminResources.find((el) => el.id === route.params.resourceId)?.name ?? ""
+  );
+}
+
 export const routes: RouteRecordRaw[] = [
   {
     path: "/login",
@@ -24,7 +30,9 @@ export const routes: RouteRecordRaw[] = [
         component: () => import("@/views/admin/AdminDashboardView.vue"),
         meta: {
           title: "Dashboard",
-          breadcrumbs: () => [{ name: "Dashboard", routeName: "dashboard" }],
+          breadcrumbs: () => [
+            { label: "Dashboard", to: { name: "dashboard" } },
+          ],
         },
       },
       {
@@ -32,20 +40,20 @@ export const routes: RouteRecordRaw[] = [
         path: "crud/:resourceId/details/:entityId",
         component: () => import("@/views/admin/AdminCrudDetailsView.vue"),
         beforeEnter(to, from, next) {
-          const resource = adminResources.find(
-            (el) => el.id === to.params.resourceId
-          );
-          if (!resource) return next("/");
-          if (!resource.useDetails)
-            return next(`/crud/${resource.id}/${to.params.entityId}`);
-          document.title = resource.name + " details";
-          return next();
+          const id = to.params.resourceId;
+          const resource = adminResources.find((el) => el.id === id);
+          return !resource
+            ? next("/")
+            : !resource.useDetails
+            ? next(`/crud/${resource.id}`)
+            : next();
         },
         meta: {
-          breadcrumbs: (params) => [
-            { name: "Dashboard", routeName: "dashboard" },
-            { name: params.resourceId, routeName: "crud-resource" },
-            { name: "Details", routeName: "crud-resource-details" },
+          title: (route) => getResourceName(route) + " details",
+          breadcrumbs: (route) => [
+            { label: "Dashboard", to: { name: "dashboard" } },
+            { label: getResourceName(route), to: { name: "crud-resource" } },
+            { label: "Details", to: { name: "crud-resource-details" } },
           ],
         },
       },
@@ -54,21 +62,15 @@ export const routes: RouteRecordRaw[] = [
         path: "crud/:resourceId",
         component: () => import("@/views/admin/AdminCrudView.vue"),
         beforeEnter(to, from, next) {
-          const resource = adminResources.find(
-            ({ id }) => id === to.params.resourceId
-          );
-          if (!resource) return next("/");
-          document.title = resource.name;
-          return next();
+          const id = to.params.resourceId;
+          const resource = adminResources.find((el) => el.id === id);
+          return !resource ? next("/") : next();
         },
         meta: {
-          breadcrumbs: (params) => [
-            { name: "Dashboard", routeName: "dashboard" },
-            {
-              name: adminResources.find(({ id }) => id === params.resourceId)
-                ?.name,
-              routeName: "crud-resource",
-            },
+          title: (route) => getResourceName(route),
+          breadcrumbs: (route) => [
+            { label: "Dashboard", to: { name: "dashboard" } },
+            { label: getResourceName(route), to: { name: "crud-resource" } },
           ],
         },
       },

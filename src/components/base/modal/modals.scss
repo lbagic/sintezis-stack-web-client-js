@@ -68,7 +68,7 @@
     box-shadow: var(--#{$prefix}shadow-1);
     @each $color, $value in $palette-colors {
       &.#{$color} {
-        border-color: var(--#{$prefix}color-#{$color}-lighter-2);
+        border-color: var(--#{$prefix}color-#{$color}-lighter2);
       }
     }
   }

@@ -1,4 +1,4 @@
-import type { TableColumnsFactory } from "@/components/base/table/_types";
+// import type { TableColumnsFactory } from "@/components/base/table/_types";
 import type { StrictPartial, UnwrapCtor } from "@/utils/types";
 import type { MessageType, MethodKind } from "@bufbuild/protobuf";
 import type { Raw } from "vue";
@@ -48,7 +48,7 @@ export type ResourceFactory = <
     icon?: Raw<object>;
     usePagination?: boolean;
     useDetails?: boolean;
-    tableColumns?: ReturnType<TableColumnsFactory<Entity>>;
+    // tableColumns?: ReturnType<TableColumnsFactory<Entity>>;
   } & Partial<ActionContextFactoryMap<Service, Entity>>
 ) => {
   Entity: Entity;
@@ -59,7 +59,7 @@ export type ResourceFactory = <
   icon: Raw<object>;
   usePagination: boolean;
   useDetails: boolean;
-  tableColumns: ReturnType<TableColumnsFactory<Entity>>;
+  // tableColumns: ReturnType<TableColumnsFactory<Entity>>;
   id: string;
   hasPagination?: boolean;
   hasSearch?: boolean;

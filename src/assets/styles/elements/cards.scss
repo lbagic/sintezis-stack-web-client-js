@@ -1,35 +1,29 @@
 .#{$prefix}card {
-  --card-box-shadow: var(--#{$prefix}shadow-2);
-  --card-box-shadow-active: var(--#{$prefix}shadow-1);
+  --shadow: var(--#{$prefix}shadow-2);
+  --shadow-active: var(--#{$prefix}shadow-1);
   padding: 16px;
   border: 0.5px solid;
   border-radius: 2px;
-  box-shadow: var(--card-box-shadow);
+  box-shadow: var(--shadow);
   @each $color, $value in $palette-colors {
     &.#{$color} {
       background: linear-gradient(
         150deg,
-        var(--#{$prefix}color-#{$color}-lightest-2) 0%,
+        var(--#{$prefix}color-#{$color}-lightest2) 0%,
         var(--#{$prefix}color-#{$color}-lightest) 100%
       );
       border-color: var(--#{$prefix}color-#{$color}-lighter);
     }
   }
 
-  @media (hover: hover) {
-    &.clickable {
-      transition: box-shadow 0.2s ease;
-      &:not([disabled]) {
-        cursor: pointer;
-      }
-      &:focus,
-      &:focus-visible,
-      &:hover {
-        box-shadow: var(--card-box-shadow-active);
-      }
-      &:focus:not(:focus-visible) {
-        box-shadow: var(--card-box-shadow);
-      }
+  &.clickable {
+    transition: box-shadow 0.2s ease;
+    &:not([disabled]) {
+      cursor: pointer;
+    }
+    &:focus,
+    &:hover {
+      box-shadow: var(--shadow-active);
     }
   }
 }

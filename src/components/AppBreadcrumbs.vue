@@ -1,25 +1,16 @@
-<script setup>
-import { ref, watchEffect } from "vue";
-import { useRoute } from "vue-router";
+<script setup lang="ts">
+import { useRouteBreadcrumbs } from "@/utils/routeBreadcrumbs";
 
-const route = useRoute();
-const breadcrumbs = ref([]);
-watchEffect(
-  () => (breadcrumbs.value = route.meta.breadcrumbs?.(route.params) ?? [])
-);
+const breadcrumbs = useRouteBreadcrumbs();
 </script>
 
 <template>
-  <template
-    v-for="({ name, routeName }, index) in breadcrumbs"
-    :key="routeName"
-  >
+  <template v-for="({ label, to }, index) in breadcrumbs" :key="to">
+    <slot></slot>
     <p v-if="index !== 0">&middot;</p>
-    <RouterLink
-      :class="`${$prefix}button text white underline`"
-      :to="{ name: routeName }"
-      >{{ name }}</RouterLink
-    >
+    <RouterLink :class="`${$prefix}button text white underline`" :to="to">{{
+      label
+    }}</RouterLink>
   </template>
 </template>
 
