@@ -52,8 +52,13 @@ function confirmLogout() {
 
 <template>
   <div class="admin-index">
-    <nav class="admin-nav-main snt-container">
-      <RouterLink class="snt-button text white" to="/">
+    <nav class="admin-nav-main snt-container small">
+      <RouterLink
+        class="snt-button text white"
+        to="/"
+        title="dashboard"
+        aria-label="dashboard"
+      >
         <SpaceDashboardOutlined width="28" height="28" />
       </RouterLink>
       <NBreadcrumb
@@ -61,9 +66,16 @@ function confirmLogout() {
           itemTextColor: css.colors.white.base,
           separatorColor: css.colors.white.base,
           itemTextColorActive: css.colors.white.base,
+          itemTextColorHover: css.colors.white.base,
         }"
       >
+        <NBreadcrumbItem v-if="!breadcrumbs.length">
+          <RouterLink class="snt-button text white underline" to="/">
+            Dashboard
+          </RouterLink>
+        </NBreadcrumbItem>
         <NBreadcrumbItem
+          v-else
           v-for="breadcrumb in breadcrumbs"
           :key="breadcrumb.label"
         >
@@ -75,10 +87,13 @@ function confirmLogout() {
           </RouterLink>
         </NBreadcrumbItem>
       </NBreadcrumb>
+
       <button
         class="snt-button text white"
         style="justify-self: flex-end"
         @click="confirmLogout"
+        title="logout"
+        aria-label="logout"
       >
         <PowerSettingsNewOutlined width="28" height="28" />
       </button>
@@ -128,5 +143,6 @@ function confirmLogout() {
   grid-template-columns: auto 1fr auto;
   gap: 1rem;
   align-items: center;
+  justify-items: flex-start;
 }
 </style>

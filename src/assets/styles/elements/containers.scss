@@ -6,17 +6,23 @@
   margin-right: auto;
 }
 
-.#{$prefix}container {
-  padding: 16px;
-}
-@each $container, $size in $containers {
-  .#{$prefix}container-#{$container} {
-    @extend %#{$prefix}container-base;
-    max-width: $size;
+%#{$prefix}container-sizes {
+  --padding: 12px;
+  &.tiny {
+    --padding: 4px;
+  }
+  &.small {
+    --padding: 8px;
+  }
+  &.medium {
+    --padding: 12px;
+  }
+  &.large {
+    --padding: 16px;
   }
 }
 
-%#{$prefix}flexbox-gap-sizes {
+%#{$prefix}flexbox-sizes {
   --gap: 8px;
   &.tiny {
     --gap: 2px;
@@ -32,8 +38,19 @@
   }
 }
 
+.#{$prefix}container {
+  @extend %#{$prefix}container-sizes;
+  padding: var(--padding);
+}
+@each $container, $size in $containers {
+  .#{$prefix}container-#{$container} {
+    @extend %#{$prefix}container-base;
+    max-width: $size;
+  }
+}
+
 .#{$prefix}grid {
-  @extend %#{$prefix}flexbox-gap-sizes;
+  @extend %#{$prefix}flexbox-sizes;
   --gtc: initial;
   --gtr: initial;
   --gta: initial;
@@ -51,14 +68,14 @@
 
 .#{$prefix}grid-fill {
   --width: 200px;
-  @extend %#{$prefix}flexbox-gap-sizes;
+  @extend %#{$prefix}flexbox-sizes;
   display: grid;
   align-content: flex-start;
   grid-template-columns: repeat(auto-fill, minmax(var(--width), 1fr));
   gap: var(--gap);
 }
 .#{$prefix}flex {
-  @extend %#{$prefix}flexbox-gap-sizes;
+  @extend %#{$prefix}flexbox-sizes;
   display: flex;
   align-items: center;
   & > * + * {
@@ -76,7 +93,7 @@
   }
 }
 .#{$prefix}flex-wrap {
-  @extend %#{$prefix}flexbox-gap-sizes;
+  @extend %#{$prefix}flexbox-sizes;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
