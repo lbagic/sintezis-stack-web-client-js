@@ -27,12 +27,6 @@ router.beforeEach((to, from, next) => {
   const referrer = router.referrer;
   router.referrer = from;
 
-  document.title = to.matched.reduce((a, c) => {
-    if (typeof c.meta.title === "function") return c.meta.title(to);
-    else if (typeof c.meta.title === "string") return c.meta.title;
-    else return a;
-  }, applicationTitle);
-
   const isFound = !!to.matched.length;
   const isAuthorized = to.matched.every(authorize);
   const isValid = isFound && isAuthorized;
@@ -46,9 +40,17 @@ router.beforeEach((to, from, next) => {
     : next(isLoggedIn ? fallback.user : fallback.visitor);
 });
 
+router.afterEach((to) => {
+  document.title = to.matched.reduce((a, c) => {
+    if (typeof c.meta.title === "function") return c.meta.title(to);
+    else if (typeof c.meta.title === "string") return c.meta.title;
+    else return a;
+  }, applicationTitle);
+});
+
 export type RouteBreadcrumb = {
   label: string;
-  to: { name: string };
+  to: { name: string } | { path: string };
 };
 declare module "vue-router" {
   interface RouteMeta {
