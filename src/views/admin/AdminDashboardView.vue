@@ -20,11 +20,12 @@ const data = {
     <div class="snt-flex-wrap">
       <RouterLink
         class="snt-button text primary underline"
-        v-for="resource in adminResources"
-        :key="resource.id"
-        :to="`/crud/${resource.id}`"
-        >{{ resource.name }}</RouterLink
+        v-for="(_, id) in adminResources"
+        :key="id"
+        :to="`/resource/${id}`"
       >
+        {{ id }}
+      </RouterLink>
     </div>
   </div>
 </template>

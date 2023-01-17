@@ -1,6 +1,8 @@
 import { reactive } from "vue";
 
-export function usePromise<T extends () => Promise<any>>(call: T) {
+export function usePromise<T extends (...args: any[]) => Promise<any>>(
+  call: T
+) {
   const state = reactive({
     data: undefined,
     error: undefined,

@@ -48,6 +48,11 @@
     max-width: $size;
   }
 }
+@each $width, $size in $widths {
+  .#{$prefix}width-#{$width} {
+    width: $size;
+  }
+}
 
 .#{$prefix}grid {
   @extend %#{$prefix}flexbox-sizes;

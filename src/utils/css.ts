@@ -4,6 +4,7 @@ import { mapObjIndexed } from "ramda";
 export namespace CSS {
   export type Breakpoints = "s" | "m" | "l" | "xl" | "xxl";
   export type Containers = "s" | "m" | "l" | "xl" | "expand";
+  export type Widths = "s" | "m" | "l" | "xl";
   export type PaletteColors =
     | "black"
     | "error"
@@ -33,25 +34,26 @@ export namespace CSS {
     | "opaque"
     | "opaque-soft"
     | "soft";
-  export type baseColors = "text" | "background";
+  export type BaseColors = "text" | "background";
   export type ZIndexes = "toast" | "modal";
   export type Parsed = {
-    breakpoints: Record<CSS.Breakpoints, string>;
+    breakpoints: Record<Breakpoints, string>;
     colors: Record<
-      CSS.PaletteColors,
+      PaletteColors,
       {
         base: string;
         contrast: string;
       } & {
-        [K in CSS.PaletteVariants]: string;
+        [K in PaletteVariants]: string;
       } & {
-        [K in CSS.PaletteVariants as `${K & string}-contrast`]: string;
+        [K in PaletteVariants as `${K & string}-contrast`]: string;
       }
     >;
-    containers: Record<CSS.Containers, string>;
+    containers: Record<Containers, string>;
+    widths: Record<Widths, string>;
     prefix: string;
-    baseColors: Record<CSS.baseColors, string>;
-    zIndex: Record<CSS.ZIndexes, number>;
+    baseColors: Record<BaseColors, string>;
+    zIndex: Record<ZIndexes, number>;
   };
 }
 

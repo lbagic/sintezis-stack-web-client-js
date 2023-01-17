@@ -24,7 +24,7 @@ async function onLogin() {
 </script>
 
 <template>
-  <div class="snt-container snt-flex center h-expand">
+  <div class="snt-container snt-flex center height-expand">
     <form @submit.prevent class="snt-container-s">
       <fieldset class="snt-card primary">
         <legend>Login</legend>
@@ -46,7 +46,7 @@ async function onLogin() {
           attr-type="submit"
           type="primary"
           size="large"
-          class="w-expand"
+          class="width-expand"
           :disabled="!form.isValid || login.isPending"
           @click="onLogin"
         >

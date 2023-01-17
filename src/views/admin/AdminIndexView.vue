@@ -12,7 +12,6 @@ import {
 import {
   NBreadcrumb,
   NBreadcrumbItem,
-  NIcon,
   NLayout,
   NLayoutSider,
   NMenu,
@@ -24,19 +23,15 @@ import { RouterLink, useRoute } from "vue-router";
 const route = useRoute();
 const adminStore = useAdminStore();
 const accountStore = useAccountStore();
-
 const breadcrumbs = useRouteBreadcrumbs();
-const activePath = computed(() => route.fullPath);
-const sideMenuOptions = adminResources.map(
-  (resource): MenuOption => ({
-    key: `/crud/${resource.id}`,
+const activePath = computed(() => route.path);
+
+const sideMenuOptions = Object.keys(adminResources).map(
+  (id): MenuOption => ({
+    key: `/resource/${id}`,
     label: () =>
-      h(
-        RouterLink,
-        { to: `/crud/${resource.id}` },
-        { default: () => resource.name }
-      ),
-    icon: () => h(NIcon, null, { default: () => h(resource.icon) }),
+      h(RouterLink, { to: `/resource/${id}` }, { default: () => id }),
+    icon: () => h(adminResources[id].icon),
   })
 );
 function confirmLogout() {

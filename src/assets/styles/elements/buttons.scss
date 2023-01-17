@@ -182,34 +182,34 @@
       &.text {
         @extend %btn-unset-background;
         --text: var(--#{$prefix}color-#{$color});
-        --text-hover: var(--#{$prefix}color-#{$color}-light2);
+        --text-hover: var(--#{$prefix}color-#{$color}-light-2);
         --text-active: var(--#{$prefix}color-#{$color}-dark);
-        --ripple: #fff0;
+        --ripple: var(--#{$prefix}color-#{$color}-opaque);
       }
       &.dashed {
         @extend %btn-unset-background;
         --text: var(--#{$prefix}color-#{$color});
-        --text-hover: var(--#{$prefix}color-#{$color}-light2);
+        --text-hover: var(--#{$prefix}color-#{$color}-light-2);
         --text-active: var(--#{$prefix}color-#{$color}-dark);
         --border: 1px dashed var(--#{$prefix}color-#{$color});
-        --border-hover: 1px dashed var(--#{$prefix}color-#{$color}-light2);
+        --border-hover: 1px dashed var(--#{$prefix}color-#{$color}-light-2);
         --border-active: 1px dashed var(--#{$prefix}color-#{$color}-dark);
         --ripple: var(--#{$prefix}color-#{$color}-opaque);
       }
       &.outlined {
         @extend %btn-unset-background;
         --text: var(--#{$prefix}color-#{$color});
-        --text-hover: var(--#{$prefix}color-#{$color}-light2);
+        --text-hover: var(--#{$prefix}color-#{$color}-light-2);
         --text-active: var(--#{$prefix}color-#{$color}-dark);
         --border: 1px solid var(--#{$prefix}color-#{$color});
-        --border-hover: 1px solid var(--#{$prefix}color-#{$color}-light2);
+        --border-hover: 1px solid var(--#{$prefix}color-#{$color}-light-2);
         --border-active: 1px solid var(--#{$prefix}color-#{$color}-dark);
         --ripple: var(--#{$prefix}color-#{$color}-opaque);
       }
       &.ghost {
         @extend %btn-unset-background;
         --text: var(--#{$prefix}color-#{$color});
-        --text-hover: var(--#{$prefix}color-#{$color}-light2);
+        --text-hover: var(--#{$prefix}color-#{$color}-light-2);
         --text-active: var(--#{$prefix}color-#{$color}-dark);
         --ripple: var(--#{$prefix}color-#{$color}-opaque);
       }

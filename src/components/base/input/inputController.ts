@@ -12,7 +12,7 @@ export function useFormData<
   T extends Parameters<S>[0],
   S extends (...args: any[]) => Promise<unknown>
 >(data: T, submit?: S) {
-  const keys = Object.keys(data);
+  const fields = Object.keys(data);
   const ctx = reactive({
     data,
     error: R.mapObjIndexed(() => null, data),
@@ -35,17 +35,17 @@ export function useFormData<
   const isValid = computed(() => R.values(ctx.error).every(R.not));
   const isSubmittable = computed(() => isValid.value && !isPending.value);
 
-  function hydrate(data: Record<PropertyKey, any>) {
-    keys.forEach((key) => {
+  function hydrate(data: any) {
+    if (typeof data !== "object") return;
+    fields.forEach((key) => {
       if (R.has(key, data)) (ctx.data as any)[key] = data[key];
     });
   }
   function reset() {
-    keys.forEach((key) => {
-      const m = model[key];
-      m.data = data[key];
-      m.error = null;
-      m.dirty = false;
+    fields.forEach((key) => {
+      model[key].data = data[key];
+      model[key].error = null;
+      model[key].dirty = false;
     });
   }
 
