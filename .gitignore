@@ -7,6 +7,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+package-lock.json
 node_modules
 .DS_Store
 dist
@@ -32,6 +33,9 @@ coverage
 .env
 .env.*
 !.env.example
+!.env.development
+!.env.staging
+!.env.production
 
 # Generated files
 src/gen
