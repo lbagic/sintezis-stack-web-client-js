@@ -8,7 +8,11 @@ import {
 } from "./input.types";
 import { inputValidation } from "./inputValidation";
 
-export function useFormData<T extends Record<PropertyKey, any>>(data: T) {
+export function useFormData<
+  T extends Parameters<S>[0],
+  S extends (...args: any[]) => Promise<unknown>
+>(data: T, submit?: S) {
+  const keys = Object.keys(data);
   const ctx = reactive({
     data,
     error: R.mapObjIndexed(() => null, data),
@@ -27,12 +31,44 @@ export function useFormData<T extends Record<PropertyKey, any>>(data: T) {
     );
     return Object.defineProperties({}, { isFormModel, ...accessors });
   }, data) as InputTypes.ModelType<T>;
-
+  const isPending = ref(false);
   const isValid = computed(() => R.values(ctx.error).every(R.not));
+  const isSubmittable = computed(() => isValid.value && !isPending.value);
+
+  function hydrate(data: Record<PropertyKey, any>) {
+    keys.forEach((key) => {
+      if (R.has(key, data)) (ctx.data as any)[key] = data[key];
+    });
+  }
+  function reset() {
+    keys.forEach((key) => {
+      const m = model[key];
+      m.data = data[key];
+      m.error = null;
+      m.dirty = false;
+    });
+  }
+
+  const submitter = !submit
+    ? (undefined as never)
+    : () => {
+        const promise = submit(ctx.data) as ReturnType<S>;
+        isPending.value = true;
+        promise
+          .then(() => (isPending.value = false))
+          .catch(() => (isPending.value = false));
+        return promise;
+      };
+
   return reactive({
     isValid,
+    isPending,
+    isSubmittable,
     ...ctx,
     model,
+    reset,
+    hydrate,
+    submit: submitter,
   });
 }
 
