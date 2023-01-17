@@ -1,12 +1,6 @@
 import { adminResources } from "@/modules/admin/adminResources";
 import type { RouteRecordRaw } from "vue-router";
 
-function getResourceName(route: any) {
-  return (
-    adminResources.find((el) => el.id === route.params.resourceId)?.name ?? ""
-  );
-}
-
 export const routes: RouteRecordRaw[] = [
   {
     path: "/login",
@@ -36,44 +30,80 @@ export const routes: RouteRecordRaw[] = [
         },
       },
       {
-        name: "crud-resource-details",
-        path: "crud/:resourceId/details/:entityId",
-        component: () => import("@/views/admin/AdminCrudDetailsView.vue"),
+        name: "resource",
+        path: "resource/:resourceId",
+        component: () => import("@/views/admin/AdminResourceView.vue"),
         beforeEnter(to, from, next) {
-          const id = to.params.resourceId;
-          const resource = adminResources.find((el) => el.id === id);
-          return !resource
-            ? next("/")
-            : !resource.useDetails
-            ? next(`/crud/${resource.id}`)
-            : next();
+          const id = to.params.resourceId as string;
+          return !adminResources[id] ? next("/") : next();
         },
         meta: {
-          title: (route) => getResourceName(route) + " details",
+          title: (route) => route.params.resourceId as string,
           breadcrumbs: (route) => [
             { label: "Dashboard", to: { name: "dashboard" } },
-            { label: getResourceName(route), to: { name: "crud-resource" } },
-            { label: "Details", to: { name: "crud-resource-details" } },
+            {
+              label: route.params.resourceId as string,
+              to: { name: "resource" },
+            },
           ],
         },
       },
-      {
-        name: "crud-resource",
-        path: "crud/:resourceId",
-        component: () => import("@/views/admin/AdminCrudView.vue"),
-        beforeEnter(to, from, next) {
-          const id = to.params.resourceId;
-          const resource = adminResources.find((el) => el.id === id);
-          return !resource ? next("/") : next();
-        },
-        meta: {
-          title: (route) => getResourceName(route),
-          breadcrumbs: (route) => [
-            { label: "Dashboard", to: { name: "dashboard" } },
-            { label: getResourceName(route), to: { name: "crud-resource" } },
-          ],
-        },
-      },
+      // {
+      //   name: "crud-resource",
+      //   path: "crud/:resourceId",
+      //   component: () => import("@/views/admin/AdminCrudView.vue"),
+      //   beforeEnter(to, from, next) {
+      //     const id = to.params.resourceId;
+      //     const resource = adminResources.find((el) => el.id === id);
+      //     return !resource ? next("/") : next();
+      //   },
+      //   meta: {
+      //     title: (route) => getResourceName(route),
+      //     breadcrumbs: (route) => [
+      //       { label: "Dashboard", to: { name: "dashboard" } },
+      //       { label: getResourceName(route), to: { name: "crud-resource" } },
+      //     ],
+      //   },
+      // },
+      // {
+      //   name: "crud-resource",
+      //   path: "crud/:resourceId",
+      //   component: () => import("@/views/admin/AdminCrudView.vue"),
+      //   beforeEnter(to, from, next) {
+      //     const id = to.params.resourceId;
+      //     const resource = adminResources.find((el) => el.id === id);
+      //     return !resource ? next("/") : next();
+      //   },
+      //   meta: {
+      //     title: (route) => getResourceName(route),
+      //     breadcrumbs: (route) => [
+      //       { label: "Dashboard", to: { name: "dashboard" } },
+      //       { label: getResourceName(route), to: { name: "crud-resource" } },
+      //     ],
+      //   },
+      // },
+      // {
+      //   name: "crud-resource-details",
+      //   path: "crud/:resourceId/details/:entityId",
+      //   component: () => import("@/views/admin/AdminCrudDetailsView.vue"),
+      //   beforeEnter(to, from, next) {
+      //     const id = to.params.resourceId;
+      //     const resource = adminResources.find((el) => el.id === id);
+      //     return !resource
+      //       ? next("/")
+      //       : !resource.useDetails
+      //       ? next(`/crud/${resource.id}`)
+      //       : next();
+      //   },
+      //   meta: {
+      //     title: (route) => getResourceName(route) + " details",
+      //     breadcrumbs: (route) => [
+      //       { label: "Dashboard", to: { name: "dashboard" } },
+      //       { label: getResourceName(route), to: { name: "crud-resource" } },
+      //       { label: "Details", to: { name: "crud-resource-details" } },
+      //     ],
+      //   },
+      // },
     ],
   },
 ];

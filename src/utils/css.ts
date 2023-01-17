@@ -4,6 +4,7 @@ import { mapObjIndexed } from "ramda";
 export namespace CSS {
   export type Breakpoints = "s" | "m" | "l" | "xl" | "xxl";
   export type Containers = "s" | "m" | "l" | "xl" | "expand";
+  export type Widths = "s" | "m" | "l" | "xl";
   export type PaletteColors =
     | "black"
     | "error"
@@ -19,45 +20,45 @@ export namespace CSS {
     | "white";
   export type PaletteVariants =
     | "dark"
-    | "dark2"
+    | "dark-2"
     | "darker"
-    | "darker2"
+    | "darker-2"
     | "darkest"
-    | "darkest2"
+    | "darkest-2"
     | "light"
-    | "light2"
+    | "light-2"
     | "lighter"
-    | "lighter2"
+    | "lighter-2"
     | "lightest"
-    | "lightest2"
+    | "lightest-2"
     | "opaque"
     | "opaque-soft"
     | "soft";
-  export type baseColors = "text" | "background";
+  export type BaseColors = "text" | "background";
   export type ZIndexes = "toast" | "modal";
   export type Parsed = {
-    breakpoints: Record<CSS.Breakpoints, string>;
+    breakpoints: Record<Breakpoints, string>;
     colors: Record<
-      CSS.PaletteColors,
+      PaletteColors,
       {
         base: string;
         contrast: string;
       } & {
-        [K in CSS.PaletteVariants]: string;
+        [K in PaletteVariants]: string;
       } & {
-        [K in CSS.PaletteVariants as `${K & string}-contrast`]: string;
+        [K in PaletteVariants as `${K & string}-contrast`]: string;
       }
     >;
-    containers: Record<CSS.Containers, string>;
+    containers: Record<Containers, string>;
+    widths: Record<Widths, string>;
     prefix: string;
-    baseColors: Record<CSS.baseColors, string>;
-    zIndex: Record<CSS.ZIndexes, number>;
+    baseColors: Record<BaseColors, string>;
+    zIndex: Record<ZIndexes, number>;
   };
 }
 
 const parsed: CSS.Parsed = JSON.parse(rawCSS.JSON.slice(1, -1));
 
-console.log(parsed);
 export const css = {
   prefix: parsed.prefix,
   colors: parsed.colors,
@@ -70,5 +71,3 @@ const paletteColorNames = Object.keys(css.colors);
 export function isColorName(name: string) {
   return paletteColorNames.includes(name);
 }
-
-console.log(css);

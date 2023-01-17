@@ -1,4 +1,21 @@
-import { bunkerPriceResource } from "./resources/bunkerPriceResource";
-import { bunkerPriceStatusResource } from "./resources/bunkerPriceStatusResource";
+import { AttachMoneyOutlined, MoneyOutlined } from "@vicons/material";
+import { defineAsyncComponent, type Component } from "vue";
 
-export const adminResources = [bunkerPriceResource, bunkerPriceStatusResource];
+type Resource = {
+  icon: Component;
+  component: Component;
+};
+export const adminResources: Record<string, Resource> = {
+  BunkerPrice: {
+    icon: MoneyOutlined,
+    component: defineAsyncComponent(
+      () => import("@/components/admin/resources/BunkerPriceResource.vue")
+    ),
+  },
+  BunkerPriceStatus: {
+    icon: AttachMoneyOutlined,
+    component: defineAsyncComponent(
+      () => import("@/components/admin/resources/BunkerPriceStatusResource.vue")
+    ),
+  },
+};

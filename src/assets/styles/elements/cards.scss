@@ -9,7 +9,7 @@
     &.#{$color} {
       background: linear-gradient(
         150deg,
-        var(--#{$prefix}color-#{$color}-lightest2) 0%,
+        var(--#{$prefix}color-#{$color}-lightest-2) 0%,
         var(--#{$prefix}color-#{$color}-lightest) 100%
       );
       border-color: var(--#{$prefix}color-#{$color}-lighter);

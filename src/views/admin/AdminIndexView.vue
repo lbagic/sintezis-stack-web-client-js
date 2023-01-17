@@ -12,7 +12,6 @@ import {
 import {
   NBreadcrumb,
   NBreadcrumbItem,
-  NIcon,
   NLayout,
   NLayoutSider,
   NMenu,
@@ -24,19 +23,15 @@ import { RouterLink, useRoute } from "vue-router";
 const route = useRoute();
 const adminStore = useAdminStore();
 const accountStore = useAccountStore();
-
 const breadcrumbs = useRouteBreadcrumbs();
-const activePath = computed(() => route.fullPath);
-const sideMenuOptions = adminResources.map(
-  (resource): MenuOption => ({
-    key: `/crud/${resource.id}`,
+const activePath = computed(() => route.path);
+
+const sideMenuOptions = Object.keys(adminResources).map(
+  (id): MenuOption => ({
+    key: `/resource/${id}`,
     label: () =>
-      h(
-        RouterLink,
-        { to: `/crud/${resource.id}` },
-        { default: () => resource.name }
-      ),
-    icon: () => h(NIcon, null, { default: () => h(resource.icon) }),
+      h(RouterLink, { to: `/resource/${id}` }, { default: () => id }),
+    icon: () => h(adminResources[id].icon),
   })
 );
 function confirmLogout() {
@@ -52,8 +47,13 @@ function confirmLogout() {
 
 <template>
   <div class="admin-index">
-    <nav class="admin-nav-main snt-container">
-      <RouterLink class="snt-button text white" to="/">
+    <nav class="admin-nav-main snt-container small">
+      <RouterLink
+        class="snt-button text white"
+        to="/"
+        title="dashboard"
+        aria-label="dashboard"
+      >
         <SpaceDashboardOutlined width="28" height="28" />
       </RouterLink>
       <NBreadcrumb
@@ -61,9 +61,16 @@ function confirmLogout() {
           itemTextColor: css.colors.white.base,
           separatorColor: css.colors.white.base,
           itemTextColorActive: css.colors.white.base,
+          itemTextColorHover: css.colors.white.base,
         }"
       >
+        <NBreadcrumbItem v-if="!breadcrumbs.length">
+          <RouterLink class="snt-button text white underline" to="/">
+            Dashboard
+          </RouterLink>
+        </NBreadcrumbItem>
         <NBreadcrumbItem
+          v-else
           v-for="breadcrumb in breadcrumbs"
           :key="breadcrumb.label"
         >
@@ -75,12 +82,15 @@ function confirmLogout() {
           </RouterLink>
         </NBreadcrumbItem>
       </NBreadcrumb>
+
       <button
         class="snt-button text white"
         style="justify-self: flex-end"
         @click="confirmLogout"
+        title="logout"
+        aria-label="logout"
       >
-        <PowerSettingsNewOutlined width="28" height="28" />
+        <PowerSettingsNewOutlined width="22" height="22" />
       </button>
     </nav>
     <NLayout has-sider style="height: 100%">
@@ -122,11 +132,12 @@ function confirmLogout() {
   background: linear-gradient(
     150deg,
     var(--snt-color-primary-dark) 0%,
-    var(--snt-color-primary-dark2) 100%
+    var(--snt-color-primary-dark-2) 100%
   );
   display: grid;
   grid-template-columns: auto 1fr auto;
   gap: 1rem;
   align-items: center;
+  justify-items: flex-start;
 }
 </style>
