@@ -1,6 +1,6 @@
 import { HTML_INPUT_ERRORS } from "@/enums/HTML_INPUT_ERRORS";
 import { intl } from "@/internationalization/intl";
-import { stringMapReplace } from "@/utils/string/stringMapReplace";
+import { stringMapReplace } from "@/utils/string";
 import * as R from "ramda";
 import { nextTick } from "vue";
 import type { InputTypes } from "./input.types";
