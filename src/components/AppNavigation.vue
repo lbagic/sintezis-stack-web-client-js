@@ -24,7 +24,7 @@
     var(--#{$prefix}color-primary-dark) 0%,
     var(--#{$prefix}color-primary-light) 100%
   );
-  box-shadow: var(--#{$prefix}shadow-3);
+  box-shadow: var(--#{$prefix}shadow-l);
   color: white;
 }
 </style>

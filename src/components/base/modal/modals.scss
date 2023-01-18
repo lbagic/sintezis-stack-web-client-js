@@ -65,7 +65,7 @@
     border-style: solid;
     border-radius: var(--#{$prefix}modal-border-radius);
     border-color: var(--#{$prefix}modal-border-color);
-    box-shadow: var(--#{$prefix}shadow-1);
+    box-shadow: var(--#{$prefix}shadow-s);
     @each $color, $value in $palette-colors {
       &.#{$color} {
         border-color: var(--#{$prefix}color-#{$color}-lighter-2);

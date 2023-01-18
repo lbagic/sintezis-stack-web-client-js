@@ -4,6 +4,7 @@ import { mapObjIndexed } from "ramda";
 export namespace CSS {
   export type Breakpoints = "s" | "m" | "l" | "xl" | "xxl";
   export type Containers = "s" | "m" | "l" | "xl" | "expand";
+  export type Shadows = "s" | "m" | "l" | "xl" | "xxl";
   export type Widths = "s" | "m" | "l" | "xl";
   export type PaletteColors =
     | "black"
@@ -37,6 +38,7 @@ export namespace CSS {
   export type BaseColors = "text" | "background";
   export type ZIndexes = "toast" | "modal";
   export type Parsed = {
+    baseColors: Record<BaseColors, string>;
     breakpoints: Record<Breakpoints, string>;
     colors: Record<
       PaletteColors,
@@ -50,9 +52,9 @@ export namespace CSS {
       }
     >;
     containers: Record<Containers, string>;
-    widths: Record<Widths, string>;
     prefix: string;
-    baseColors: Record<BaseColors, string>;
+    shadows: Record<Shadows, string[][]>;
+    widths: Record<Widths, string>;
     zIndex: Record<ZIndexes, number>;
   };
 }
@@ -60,12 +62,21 @@ export namespace CSS {
 const parsed: CSS.Parsed = JSON.parse(rawCSS.JSON.slice(1, -1));
 
 export const css = {
-  prefix: parsed.prefix,
-  colors: parsed.colors,
   baseColors: parsed.baseColors,
-  zIndex: parsed.zIndex,
   breakpoints: mapObjIndexed((value) => parseInt(value), parsed.breakpoints),
-} as const;
+  colors: parsed.colors,
+  containers: mapObjIndexed((value) => {
+    const parsed = parseInt(value);
+    return isNaN(parsed) ? value : parsed;
+  }, parsed.containers),
+  prefix: parsed.prefix,
+  shadows: mapObjIndexed(
+    (values) => values.map((el) => el.join(" ")).join(", "),
+    parsed.shadows
+  ),
+  widths: mapObjIndexed((value) => parseInt(value), parsed.widths),
+  zIndex: parsed.zIndex,
+} as const satisfies Record<keyof CSS.Parsed, any>;
 
 const paletteColorNames = Object.keys(css.colors);
 export function isColorName(name: string) {

@@ -6,20 +6,6 @@ $breakpoints: (
   "xxl": 1536px,
 );
 
-$containers: (
-  "s": 400px,
-  "m": 600px,
-  "l": 800px,
-  "xl": 1200px,
-  "expand": initial,
-);
-$widths: (
-  "s": 400px,
-  "m": 600px,
-  "l": 800px,
-  "xl": 1200px,
-);
-
 @mixin s {
   @media (min-width: map-get($breakpoints, "s")) {
     @content;
