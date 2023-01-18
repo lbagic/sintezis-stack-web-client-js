@@ -6,28 +6,77 @@ $breakpoints: (
   "xxl": 1536px,
 );
 
+@mixin smaller-than-s {
+  @media screen and (max-width: calc(map-get($breakpoints, "s") - 1px)) {
+    @content;
+  }
+}
 @mixin s {
-  @media (min-width: map-get($breakpoints, "s")) {
+  @media screen and (min-width: map-get($breakpoints, "s")) {
+    @content;
+  }
+}
+@mixin s-only {
+  @media screen and (min-width: map-get($breakpoints, "s")) and (max-width: calc(map-get($breakpoints, "m") - 1px)) {
+    @content;
+  }
+}
+
+@mixin smaller-than-m {
+  @media screen and (max-width: calc(map-get($breakpoints, "m") - 1px)) {
     @content;
   }
 }
 @mixin m {
-  @media (min-width: map-get($breakpoints, "m")) {
+  @media screen and (min-width: map-get($breakpoints, "m")) {
+    @content;
+  }
+}
+@mixin m-only {
+  @media screen and (min-width: map-get($breakpoints, "m")) and (max-width: calc(map-get($breakpoints, "l") - 1px)) {
+    @content;
+  }
+}
+
+@mixin smaller-than-l {
+  @media screen and (max-width: calc(map-get($breakpoints, "l") - 1px)) {
     @content;
   }
 }
 @mixin l {
-  @media (min-width: map-get($breakpoints, "l")) {
+  @media screen and (min-width: map-get($breakpoints, "l")) {
+    @content;
+  }
+}
+@mixin l-only {
+  @media screen and (min-width: map-get($breakpoints, "l")) and (max-width: calc(map-get($breakpoints, "xl") - 1px)) {
+    @content;
+  }
+}
+
+@mixin smaller-than-xl {
+  @media screen and (max-width: calc(map-get($breakpoints, "xl") - 1px)) {
     @content;
   }
 }
 @mixin xl {
-  @media (min-width: map-get($breakpoints, "xl")) {
+  @media screen and (min-width: map-get($breakpoints, "xl")) {
+    @content;
+  }
+}
+@mixin xl-only {
+  @media screen and (min-width: map-get($breakpoints, "xl")) and (max-width: calc(map-get($breakpoints, "xxl") - 1px)) {
+    @content;
+  }
+}
+
+@mixin smaller-than-xxl {
+  @media screen and (max-width: calc(map-get($breakpoints, "xxl") - 1px)) {
     @content;
   }
 }
 @mixin xxl {
-  @media (min-width: map-get($breakpoints, "xxl")) {
+  @media screen and (min-width: map-get($breakpoints, "xxl")) {
     @content;
   }
 }

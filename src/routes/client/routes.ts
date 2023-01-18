@@ -3,7 +3,7 @@ import type { RouteRecordRaw } from "vue-router";
 export const routes: RouteRecordRaw[] = [
   {
     path: "/",
-    component: () => import("@/views/IndexView.vue"),
+    component: () => import("@/views/index/IndexView.vue"),
   },
   {
     path: "/login",

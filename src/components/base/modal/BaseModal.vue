@@ -1,6 +1,7 @@
 <script lang="ts">
 // TODO Migrate to NModal
 import { modalProps } from "./modal.types";
+import { CloseOutlined } from "@vicons/material";
 export default { inheritAttrs: false };
 
 const focusableElements = [
@@ -14,7 +15,6 @@ const focusableElements = [
 </script>
 
 <script setup lang="ts">
-import BaseIconClose from "@/components/icons/BaseIconClose.vue";
 import { css, isColorName } from "@/utils/css";
 import { onClickOutside } from "@vueuse/core";
 import { useFocusTrap } from "@vueuse/integrations/useFocusTrap";
@@ -161,7 +161,7 @@ if (props.name) {
             :style="{ '--base-color': `var(--${$prefix}color-grey-dark)` }"
             aria-label="close"
           >
-            <BaseIconClose style="width: inherit; height: inherit" />
+            <CloseOutlined style="width: inherit; height: inherit" />
           </button>
           <slot></slot>
         </div>
