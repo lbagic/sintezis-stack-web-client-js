@@ -1,0 +1,6 @@
+:root {
+  --n-modal-mask-background-override: rgba(0, 0, 0, 0.4);
+}
+.n-modal-mask {
+  background-color: var(--n-modal-mask-background-override);
+}

@@ -82,3 +82,13 @@ const paletteColorNames = Object.keys(css.colors);
 export function isColorName(name: string) {
   return paletteColorNames.includes(name);
 }
+
+export function setCssVar(name: string, value: string | null) {
+  document.documentElement.style.setProperty(name, value);
+}
+export function getCssVar(
+  name: string,
+  element: Element = document.documentElement
+) {
+  return getComputedStyle(element).getPropertyValue(name).trim();
+}

@@ -1,6 +1,7 @@
 @charset 'UTF-8';
 @import "./normalize.css";
 @import "./elements/_index.scss";
+@import "./third-party-overrides.scss";
 
 :root {
   --prefix: #{$prefix};
