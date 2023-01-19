@@ -20,14 +20,17 @@ const emit = defineEmits(["update:show"]);
 const router = useRouter();
 const isShown = ref(!!props.show);
 const { name, hash, query } = props;
-
-setCssVar("--n-modal-mask-background-override", props.maskColor);
+const setMaskColor = () =>
+  setCssVar("--n-modal-mask-background-override", props.maskColor);
 
 watch(
   () => props.show,
   (value) => (isShown.value = value)
 );
-watch(isShown, (value) => emit("update:show", value));
+watch(isShown, (value) => {
+  emit("update:show", value);
+  if (value) setMaskColor();
+});
 
 function show() {
   isShown.value = true;
@@ -51,8 +54,8 @@ if (hash || query) {
     },
     { immediate: true }
   );
-  watch(isShown, () => {
-    if (isShown.value) return;
+  watch(isShown, (value) => {
+    if (value) return;
     const route = R.clone(router.currentRoute.value);
     if (hash === route.hash) route.hash = "";
     if (query && R.has(query, route.query)) delete route.query[query];
