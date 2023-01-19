@@ -4,17 +4,24 @@ import * as R from "ramda";
 import { onMounted, onUnmounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { modalInternals } from "./modalController";
+import { setCssVar, css } from "@/utils/css";
 
 const props = defineProps({
   ...modalProps,
   name: String,
   hash: String,
   query: String,
+  maskColor: {
+    type: String,
+    default: css.colors.primary["opaque-soft"],
+  },
 });
 const emit = defineEmits(["update:show"]);
 const router = useRouter();
 const isShown = ref(!!props.show);
 const { name, hash, query } = props;
+
+setCssVar("--n-modal-mask-background-override", props.maskColor);
 
 watch(
   () => props.show,
@@ -62,4 +69,4 @@ if (hash || query) {
   </NModal>
 </template>
 
-<style scoped lang="scss"></style>
+<style lang="scss"></style>
