@@ -11,10 +11,11 @@ module.exports = {
     "@vue/eslint-config-prettier",
   ],
   rules: {
-    "prefer-spread": "off",
-    "no-unused-vars": "off",
-    "vue/require-v-for-key": "off",
     "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
+    "no-unused-vars": "off",
+    "prefer-spread": "off",
+    "vue/no-setup-props-destructure": "off",
+    "vue/require-v-for-key": "off",
   },
   globals: {
     $ref: "readonly",

@@ -69,6 +69,9 @@ const constraint = { required: true };
 </script>
 
 <template>
+  <a href="https://www.naiveui.com/en-US/light/components/input"
+    >Based off of NaiveUi input components</a
+  >
   <pre>{{ form.data }}</pre>
   <form @submit.prevent="$log" class="snt-grid snt-container">
     <pre>Autocomplete: {{ form.data.Autocomplete }}</pre>

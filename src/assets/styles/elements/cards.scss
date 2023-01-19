@@ -1,6 +1,6 @@
 .#{$prefix}card {
-  --shadow: var(--#{$prefix}shadow-2);
-  --shadow-active: var(--#{$prefix}shadow-1);
+  --shadow: var(--#{$prefix}shadow-m);
+  --shadow-active: var(--#{$prefix}shadow-s);
   padding: 16px;
   border: 0.5px solid;
   border-radius: 2px;

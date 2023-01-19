@@ -1,4 +1,4 @@
-@import "./prefix.scss";
+@import "./variables.scss";
 
 @import "./generators/generate-color-palette.scss";
 @import "./generators/generate-css-variables.scss";
@@ -6,8 +6,6 @@
 @import "./generators/color-functions.scss";
 // @import "./generators/a11y-color.scss";
 
-@import "./colors.scss";
-@import "./breakpoints.scss";
 @import "./animations.scss";
-@import "./z-index.scss";
-@import "./shadows.scss";
+@import "./breakpoints.scss";
+@import "./colors.scss";

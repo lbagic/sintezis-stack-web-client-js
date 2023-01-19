@@ -7,13 +7,25 @@ export const routes: RouteRecordRaw[] = [
     meta: { title: "Test" },
   },
   {
-    path: "/test-inputs",
-    component: () => import("@/views/dev/TestInputsView.vue"),
-    meta: { title: "Test Inputs" },
-  },
-  {
-    path: "/test-buttons",
-    component: () => import("@/views/dev/TestButtonsView.vue"),
-    meta: { title: "Test Buttons" },
+    path: "/docs",
+    component: () => import("@/views/dev/docs/DocsIndexView.vue"),
+    meta: { title: "Docs" },
+    children: [
+      {
+        path: "buttons",
+        component: () => import("@/views/dev/docs/ExampleButtonsView.vue"),
+        meta: { title: "Example Buttons" },
+      },
+      {
+        path: "inputs",
+        component: () => import("@/views/dev/docs/ExampleInputsView.vue"),
+        meta: { title: "Example Inputs" },
+      },
+      {
+        path: "modals",
+        component: () => import("@/views/dev/docs/ExampleModalsView.vue"),
+        meta: { title: "Example Modals" },
+      },
+    ],
   },
 ];

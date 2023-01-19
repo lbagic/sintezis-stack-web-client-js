@@ -94,6 +94,9 @@
 .uppercase {
   text-transform: uppercase;
 }
+.underlined {
+  text-decoration: underline;
+}
 
 // content handlers
 *[content-before]::before {
