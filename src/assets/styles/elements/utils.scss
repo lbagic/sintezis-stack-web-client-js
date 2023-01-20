@@ -6,6 +6,12 @@
   opacity: 0;
   margin: 0;
 }
+.overflow-x {
+  overflow-x: auto;
+}
+.overflow-y {
+  overflow-y: auto;
+}
 
 // position
 .relative {
@@ -22,6 +28,9 @@
 }
 .m-auto {
   margin: auto;
+}
+.ml-auto {
+  margin-left: auto;
 }
 .mx-auto {
   margin-left: auto;
@@ -66,6 +75,9 @@
 .justify-self {
   justify-self: center;
 }
+.round {
+  border-radius: 100%;
+}
 
 // sizes
 .width-expand {
@@ -79,6 +91,11 @@
 }
 .height-viewport {
   height: 100vh;
+}
+@each $width, $size in $widths {
+  .width-#{$width} {
+    width: $size;
+  }
 }
 
 // text
@@ -96,6 +113,9 @@
 }
 .underlined {
   text-decoration: underline;
+}
+.nowrap {
+  white-space: nowrap;
 }
 
 // content handlers

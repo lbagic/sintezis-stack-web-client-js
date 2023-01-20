@@ -10,6 +10,7 @@
   @include generate-css-variables($widths, "width");
   @include generate-css-variables($z-index, "z-index");
   @include generate-css-variables($shadows, "shadow");
+  @include generate-css-variables($bezier, "bezier");
   @include generate-css-variables($base-colors, "color");
   @include generate-css-variables($colors, "color");
 }

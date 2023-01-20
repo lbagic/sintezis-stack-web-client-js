@@ -15,6 +15,7 @@ const state = reactive({
     hash="#hash"
     query="query"
     name="sampleModal"
+    class="width-m"
   >
     <template #header>Header</template>
     <p>Content</p>

@@ -1,12 +1,12 @@
 %btn-unset-background {
-  --background: initial;
-  --background-hover: initial;
-  --background-active: initial;
+  --button-background: initial;
+  --button-background-hover: initial;
+  --button-background-active: initial;
 }
 %btn-unset-border {
-  --border: initial;
-  --border-hover: initial;
-  --border-active: initial;
+  --button-border: initial;
+  --button-border-hover: initial;
+  --button-border-active: initial;
 }
 
 .#{$prefix}button {
@@ -15,30 +15,31 @@
   align-items: center;
   justify-content: center;
   font-weight: 400;
-  border-radius: 3px;
   cursor: pointer;
 
-  --padding: 14px;
-  --font-size: 14px;
-  --height: 34px;
-  --text: var(--snt-color-text);
-  --text-hover: var(--snt-color-primary);
-  --text-active: var(--snt-color-primary-darker);
-  --background: initial;
-  --background-hover: initial;
-  --background-active: initial;
-  --border: 1px solid var(--snt-color-muted);
-  --border-hover: 1px solid var(--snt-color-primary);
-  --border-active: 1px solid var(--snt-color-primary-darker);
-  --ripple: var(--snt-color-primary-opaque);
+  --button-border-radius: 3px;
+  --button-padding: 8px 14px;
+  --button-font-size: 14px;
+  --button-height: 34px;
+  --button-text: var(--snt-color-text);
+  --button-text-hover: var(--snt-color-primary);
+  --button-text-active: var(--snt-color-primary-darker);
+  --button-background: initial;
+  --button-background-hover: initial;
+  --button-background-active: initial;
+  --button-border: 1px solid var(--snt-color-muted);
+  --button-border-hover: 1px solid var(--snt-color-primary);
+  --button-border-active: 1px solid var(--snt-color-primary-darker);
+  --button-ripple: var(--snt-color-primary-opaque);
 
-  font-size: var(--font-size);
-  min-height: var(--height);
-  line-height: var(--height);
-  padding: 0px var(--padding);
-  color: var(--text);
-  background: var(--background);
-  border: var(--border);
+  border-radius: var(--button-border-radius);
+  font-size: var(--button-font-size);
+  min-height: var(--button-height);
+  // line-height: var(--button-height);
+  padding: var(--button-padding);
+  color: var(--button-text);
+  background: var(--button-background);
+  border: var(--button-border);
   box-shadow: 0 0 0 0 #fff0;
 
   transition: color 0.2s ease-in-out, background 0.2s ease-in-out,
@@ -46,15 +47,15 @@
 
   &:hover,
   &:focus {
-    color: var(--text-hover);
-    background: var(--background-hover);
-    border: var(--border-hover);
+    color: var(--button-text-hover);
+    background: var(--button-background-hover);
+    border: var(--button-border-hover);
   }
   &:active {
-    color: var(--text-active);
-    background: var(--background-active);
-    border: var(--border-active);
-    box-shadow: 0 0 0 0.12rem var(--ripple);
+    color: var(--button-text-active);
+    background: var(--button-background-active);
+    border: var(--button-border-active);
+    box-shadow: 0 0 0 0.12rem var(--button-ripple);
   }
   &[disabled],
   &.disabled {
@@ -65,74 +66,81 @@
 
   // sizes
   &.tiny {
-    --font-size: 12px;
-    --padding: 6px;
-    --height: 22px;
+    --button-font-size: 12px;
+    --button-padding: 4px 6px;
+    --button-height: 22px;
   }
   &.small {
-    --font-size: 14px;
-    --padding: 10px;
-    --height: 28px;
+    --button-font-size: 14px;
+    --button-padding: 4px 10px;
+    --button-height: 28px;
   }
   &.medium {
-    --font-size: 14px;
-    --padding: 14px;
-    --height: 34px;
+    --button-font-size: 14px;
+    --button-padding: 8px 14px;
+    --button-height: 34px;
   }
   &.large {
-    --font-size: 15px;
-    --padding: 18px;
-    --height: 40px;
+    --button-font-size: 15px;
+    --button-padding: 12px 18px;
+    --button-height: 40px;
   }
 
   // types
   &.secondary {
-    --text: var(--snt-color-text);
-    --text-hover: var(--snt-color-dark);
-    --text-active: var(--snt-color-dark-darker);
-    --background: #2e33380d;
-    --background-hover: #2e333817;
-    --background-active: #2e333821;
-    --ripple: #fff0;
+    --button-text: var(--snt-color-text);
+    --button-text-hover: var(--snt-color-dark);
+    --button-text-active: var(--snt-color-dark-darker);
+    --button-background: #2e33380d;
+    --button-background-hover: #2e333817;
+    --button-background-active: #2e333821;
+    --button-ripple: #fff0;
     @extend %btn-unset-border;
   }
   &.tertiary {
-    --text: var(--snt-color-text);
-    --text-hover: var(--snt-color-dark);
-    --text-active: var(--snt-color-dark-darker);
-    --background: #2e33380d;
-    --background-hover: #2e333817;
-    --background-active: #2e333821;
-    --ripple: #fff0;
+    --button-text: var(--snt-color-text);
+    --button-text-hover: var(--snt-color-dark);
+    --button-text-active: var(--snt-color-dark-darker);
+    --button-background: #2e33380d;
+    --button-background-hover: #2e333817;
+    --button-background-active: #2e333821;
+    --button-ripple: #fff0;
     @extend %btn-unset-border;
   }
   &.quaternary {
-    --text: var(--snt-color-text);
-    --text-hover: var(--snt-color-dark);
-    --text-active: var(--snt-color-dark-darker);
-    --background: initial;
-    --background-hover: #2e333817;
-    --background-active: #2e333821;
-    --ripple: #fff0;
+    --button-text: var(--snt-color-text);
+    --button-text-hover: var(--snt-color-dark);
+    --button-text-active: var(--snt-color-dark-darker);
+    --button-background: initial;
+    --button-background-hover: #2e333817;
+    --button-background-active: #2e333821;
+    --button-ripple: #fff0;
     @extend %btn-unset-border;
   }
   &.text {
-    --height: initial;
-    --padding: initial;
-    --ripple: #fff0;
+    --button-height: initial;
+    --button-padding: initial;
+    --button-ripple: #fff0;
+    @extend %btn-unset-background;
+    @extend %btn-unset-border;
+  }
+  &.text-active {
+    --button-height: initial;
+    --button-padding: initial;
+    --button-ripple: #fff0;
     @extend %btn-unset-background;
     @extend %btn-unset-border;
   }
   &.dashed {
-    --border: 1px dashed var(--snt-color-muted);
-    --border-hover: 1px dashed var(--snt-color-primary);
-    --border-active: 1px dashed var(--snt-color-primary-darker);
+    --button-border: 1px dashed var(--snt-color-muted);
+    --button-border-hover: 1px dashed var(--snt-color-primary);
+    --button-border-active: 1px dashed var(--snt-color-primary-darker);
     @extend %btn-unset-background;
   }
   &.outlined {
-    --border: 1px solid var(--snt-color-muted);
-    --border-hover: 1px solid var(--snt-color-primary);
-    --border-active: 1px solid var(--snt-color-primary-darker);
+    --button-border: 1px solid var(--snt-color-muted);
+    --button-border-hover: 1px solid var(--snt-color-primary);
+    --button-border-active: 1px solid var(--snt-color-primary-darker);
     @extend %btn-unset-background;
   }
   &.ghost {
@@ -145,73 +153,86 @@
     $base-color: map-get($color-map, "base");
     &.#{$color} {
       @extend %btn-unset-border;
-      --text: var(--#{$prefix}color-#{$color}-contrast);
-      --text-hover: var(--#{$prefix}color-#{$color}-contrast);
-      --text-active: var(--#{$prefix}color-#{$color}-contrast);
-      --background: var(--#{$prefix}color-#{$color});
-      --background-hover: var(--#{$prefix}color-#{$color}-light);
-      --background-active: var(--#{$prefix}color-#{$color}-dark);
-      --ripple: var(--#{$prefix}color-#{$color}-opaque);
+      --button-text: var(--#{$prefix}color-#{$color}-contrast);
+      --button-text-hover: var(--#{$prefix}color-#{$color}-contrast);
+      --button-text-active: var(--#{$prefix}color-#{$color}-contrast);
+      --button-background: var(--#{$prefix}color-#{$color});
+      --button-background-hover: var(--#{$prefix}color-#{$color}-light-2);
+      --button-background-active: var(--#{$prefix}color-#{$color}-dark);
+      --button-ripple: var(--#{$prefix}color-#{$color}-opaque);
       &.secondary {
-        --text: var(--#{$prefix}color-#{$color});
-        --text-hover: var(--#{$prefix}color-#{$color});
-        --text-active: var(--#{$prefix}color-#{$color});
-        --background: #{scale-color($base-color, $alpha: -84%)};
-        --background-hover: #{scale-color($base-color, $alpha: -79%)};
-        --background-active: #{scale-color($base-color, $alpha: -72%)};
-        --ripple: #fff0;
+        --button-text: var(--#{$prefix}color-#{$color});
+        --button-text-hover: var(--#{$prefix}color-#{$color});
+        --button-text-active: var(--#{$prefix}color-#{$color});
+        --button-background: #{scale-color($base-color, $alpha: -84%)};
+        --button-background-hover: #{scale-color($base-color, $alpha: -79%)};
+        --button-background-active: #{scale-color($base-color, $alpha: -72%)};
+        --button-ripple: #fff0;
       }
       &.tertiary {
-        --text: var(--#{$prefix}color-#{$color});
-        --text-hover: var(--#{$prefix}color-#{$color});
-        --text-active: var(--#{$prefix}color-#{$color});
-        --background: #2e33380d;
-        --background-hover: #2e333817;
-        --background-active: #2e333821;
-        --ripple: #fff0;
+        --button-text: var(--#{$prefix}color-#{$color});
+        --button-text-hover: var(--#{$prefix}color-#{$color});
+        --button-text-active: var(--#{$prefix}color-#{$color});
+        --button-background: #2e33380d;
+        --button-background-hover: #2e333817;
+        --button-background-active: #2e333821;
+        --button-ripple: #fff0;
       }
       &.quaternary {
-        --text: var(--#{$prefix}color-#{$color});
-        --text-hover: var(--#{$prefix}color-#{$color});
-        --text-active: var(--#{$prefix}color-#{$color});
-        --background: none;
-        --background-hover: #2e333817;
-        --background-active: #2e333821;
-        --ripple: #fff0;
+        --button-text: var(--#{$prefix}color-#{$color});
+        --button-text-hover: var(--#{$prefix}color-#{$color});
+        --button-text-active: var(--#{$prefix}color-#{$color});
+        --button-background: none;
+        --button-background-hover: #2e333817;
+        --button-background-active: #2e333821;
+        --button-ripple: #fff0;
       }
       &.text {
         @extend %btn-unset-background;
-        --text: var(--#{$prefix}color-#{$color});
-        --text-hover: var(--#{$prefix}color-#{$color}-light-2);
-        --text-active: var(--#{$prefix}color-#{$color}-dark);
-        --ripple: var(--#{$prefix}color-#{$color}-opaque);
+        --button-text: var(--#{$prefix}color-#{$color});
+        --button-text-hover: var(--#{$prefix}color-#{$color}-lighter);
+        --button-text-active: var(--#{$prefix}color-#{$color}-dark);
+        --button-ripple: var(--#{$prefix}color-#{$color}-opaque);
+      }
+      &.text-active {
+        @extend %btn-unset-background;
+        --button-text: var(--#{$prefix}color-text);
+        --button-text-hover: var(--#{$prefix}color-#{$color});
+        --button-text-active: var(--#{$prefix}color-#{$color}-dark);
+        --button-ripple: var(--#{$prefix}color-#{$color}-opaque);
       }
       &.dashed {
         @extend %btn-unset-background;
-        --text: var(--#{$prefix}color-#{$color});
-        --text-hover: var(--#{$prefix}color-#{$color}-light-2);
-        --text-active: var(--#{$prefix}color-#{$color}-dark);
-        --border: 1px dashed var(--#{$prefix}color-#{$color});
-        --border-hover: 1px dashed var(--#{$prefix}color-#{$color}-light-2);
-        --border-active: 1px dashed var(--#{$prefix}color-#{$color}-dark);
-        --ripple: var(--#{$prefix}color-#{$color}-opaque);
+        --button-text: var(--#{$prefix}color-#{$color});
+        --button-text-hover: var(--#{$prefix}color-#{$color}-light-2);
+        --button-text-active: var(--#{$prefix}color-#{$color}-dark);
+        --button-border: 1px dashed var(--#{$prefix}color-#{$color});
+        --button-border-hover: 1px
+          dashed
+          var(--#{$prefix}color-#{$color}-light-2);
+        --button-border-active: 1px
+          dashed
+          var(--#{$prefix}color-#{$color}-dark);
+        --button-ripple: var(--#{$prefix}color-#{$color}-opaque);
       }
       &.outlined {
         @extend %btn-unset-background;
-        --text: var(--#{$prefix}color-#{$color});
-        --text-hover: var(--#{$prefix}color-#{$color}-light-2);
-        --text-active: var(--#{$prefix}color-#{$color}-dark);
-        --border: 1px solid var(--#{$prefix}color-#{$color});
-        --border-hover: 1px solid var(--#{$prefix}color-#{$color}-light-2);
-        --border-active: 1px solid var(--#{$prefix}color-#{$color}-dark);
-        --ripple: var(--#{$prefix}color-#{$color}-opaque);
+        --button-text: var(--#{$prefix}color-#{$color});
+        --button-text-hover: var(--#{$prefix}color-#{$color}-light-2);
+        --button-text-active: var(--#{$prefix}color-#{$color}-dark);
+        --button-border: 1px solid var(--#{$prefix}color-#{$color});
+        --button-border-hover: 1px
+          solid
+          var(--#{$prefix}color-#{$color}-light-2);
+        --button-border-active: 1px solid var(--#{$prefix}color-#{$color}-dark);
+        --button-ripple: var(--#{$prefix}color-#{$color}-opaque);
       }
       &.ghost {
         @extend %btn-unset-background;
-        --text: var(--#{$prefix}color-#{$color});
-        --text-hover: var(--#{$prefix}color-#{$color}-light-2);
-        --text-active: var(--#{$prefix}color-#{$color}-dark);
-        --ripple: var(--#{$prefix}color-#{$color}-opaque);
+        --button-text: var(--#{$prefix}color-#{$color});
+        --button-text-hover: var(--#{$prefix}color-#{$color}-light-2);
+        --button-text-active: var(--#{$prefix}color-#{$color}-dark);
+        --button-ripple: var(--#{$prefix}color-#{$color}-opaque);
       }
     }
   }
@@ -221,7 +242,10 @@
     @extend %#{$prefix}animate-underline;
   }
   &.round {
-    border-radius: var(--height);
+    --button-border-radius: var(--button-height);
+  }
+  &.rounded {
+    --button-border-radius: 8px;
   }
   &.expand {
     width: 100%;
