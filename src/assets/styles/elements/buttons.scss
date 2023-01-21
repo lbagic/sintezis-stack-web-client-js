@@ -198,7 +198,7 @@
         @extend %btn-unset-background;
         --button-text: var(--#{$prefix}color-text);
         --button-text-hover: var(--#{$prefix}color-#{$color});
-        --button-text-active: var(--#{$prefix}color-#{$color}-dark);
+        --button-text-active: var(--#{$prefix}color-#{$color}-dark-2);
         --button-ripple: var(--#{$prefix}color-#{$color}-opaque);
       }
       &.dashed {

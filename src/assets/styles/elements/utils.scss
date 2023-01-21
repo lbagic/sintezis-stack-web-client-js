@@ -32,6 +32,9 @@
 .ml-auto {
   margin-left: auto;
 }
+.mt-auto {
+  margin-top: auto;
+}
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
@@ -80,6 +83,11 @@
 }
 
 // sizes
+@each $width, $size in $widths {
+  .width-#{$width} {
+    width: $size;
+  }
+}
 .width-expand {
   width: 100%;
 }
@@ -92,13 +100,13 @@
 .height-viewport {
   height: 100vh;
 }
-@each $width, $size in $widths {
-  .width-#{$width} {
-    width: $size;
-  }
-}
 
 // text
+@for $i from 10 to 36 {
+  .fs-#{$i} {
+    font-size: #{$i}px;
+  }
+}
 .italic {
   font-style: italic;
 }
