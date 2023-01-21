@@ -29,4 +29,7 @@ export const theme: GlobalThemeOverrides = {
   Divider: {
     color: css.colors.muted.base,
   },
+  LoadingBar: {
+    colorLoading: css.colors.success.base,
+  },
 };
