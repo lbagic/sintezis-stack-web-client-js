@@ -1,13 +1,14 @@
 :export {
   JSON: generate-json(
     (
-      baseColors: $base-colors,
-      breakpoints: $breakpoints,
-      colors: $colors,
-      containers: $containers,
       prefix: $prefix,
-      shadows: $shadows,
+      baseColors: $base-colors,
+      colors: $colors,
+      breakpoints: $breakpoints,
+      containers: $containers,
       widths: $widths,
+      shadows: $shadows,
+      bezier: $bezier,
       zIndex: $z-index,
     )
   );

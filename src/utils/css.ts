@@ -4,8 +4,11 @@ import { mapObjIndexed } from "ramda";
 export namespace CSS {
   export type Breakpoints = "s" | "m" | "l" | "xl" | "xxl";
   export type Containers = "s" | "m" | "l" | "xl" | "expand";
-  export type Shadows = "s" | "m" | "l" | "xl" | "xxl";
   export type Widths = "s" | "m" | "l" | "xl";
+  export type Shadows = "s" | "m" | "l" | "xl" | "xxl";
+  export type Bezier = "1" | "2" | "3" | "4";
+  export type ZIndexes = "toast" | "modal";
+  export type BaseColors = "text" | "background";
   export type PaletteColors =
     | "black"
     | "error"
@@ -35,11 +38,9 @@ export namespace CSS {
     | "opaque"
     | "opaque-soft"
     | "soft";
-  export type BaseColors = "text" | "background";
-  export type ZIndexes = "toast" | "modal";
   export type Parsed = {
+    prefix: string;
     baseColors: Record<BaseColors, string>;
-    breakpoints: Record<Breakpoints, string>;
     colors: Record<
       PaletteColors,
       {
@@ -51,10 +52,11 @@ export namespace CSS {
         [K in PaletteVariants as `${K & string}-contrast`]: string;
       }
     >;
+    breakpoints: Record<Breakpoints, string>;
     containers: Record<Containers, string>;
-    prefix: string;
-    shadows: Record<Shadows, string[][]>;
     widths: Record<Widths, string>;
+    shadows: Record<Shadows, string[][]>;
+    bezier: Record<Shadows, string>;
     zIndex: Record<ZIndexes, number>;
   };
 }
@@ -75,9 +77,11 @@ export const css = {
     parsed.shadows
   ),
   widths: mapObjIndexed((value) => parseInt(value), parsed.widths),
+  bezier: parsed.bezier,
   zIndex: parsed.zIndex,
 } as const satisfies Record<keyof CSS.Parsed, any>;
 
+console.log({ parsed, css });
 const paletteColorNames = Object.keys(css.colors);
 export function isColorName(name: string) {
   return paletteColorNames.includes(name);

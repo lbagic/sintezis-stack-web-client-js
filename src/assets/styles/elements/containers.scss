@@ -1,4 +1,4 @@
-%#{$prefix}container-base {
+@mixin container-base {
   width: 100%;
   padding-left: 16px;
   padding-right: 16px;
@@ -6,56 +6,66 @@
   margin-right: auto;
 }
 
-%#{$prefix}container-sizes {
-  --padding: 12px;
+@mixin container-sizes {
+  --container-padding: 16px;
   &.tiny {
-    --padding: 4px;
+    --container-padding: 4px;
   }
   &.small {
-    --padding: 8px;
+    --container-padding: 8px;
   }
   &.medium {
-    --padding: 12px;
+    --container-padding: 16px;
   }
   &.large {
-    --padding: 16px;
+    --container-padding: 32px;
   }
 }
 
-%#{$prefix}flexbox-sizes {
-  --gap: 8px;
+@mixin flexbox-sizes {
+  --flex-gap: 12px;
   &.tiny {
-    --gap: 2px;
+    --flex-gap: 3px;
   }
   &.small {
-    --gap: 4px;
+    --flex-gap: 6px;
   }
   &.medium {
-    --gap: 8px;
+    --flex-gap: 12px;
   }
   &.large {
-    --gap: 24px;
+    --flex-gap: 24px;
+  }
+}
+@mixin grid-sizes {
+  --grid-gap: 12px;
+  &.tiny {
+    --grid-gap: 3px;
+  }
+  &.small {
+    --grid-gap: 6px;
+  }
+  &.medium {
+    --grid-gap: 12px;
+  }
+  &.large {
+    --grid-gap: 24px;
   }
 }
 
 .#{$prefix}container {
-  @extend %#{$prefix}container-sizes;
-  padding: var(--padding);
+  @include container-sizes;
+  padding: var(--container-padding);
 }
 @each $container, $size in $containers {
   .#{$prefix}container-#{$container} {
-    @extend %#{$prefix}container-base;
+    @include container-base;
     max-width: $size;
-  }
-}
-@each $width, $size in $widths {
-  .#{$prefix}width-#{$width} {
-    width: $size;
   }
 }
 
 .#{$prefix}grid {
-  @extend %#{$prefix}flexbox-sizes;
+  @include grid-sizes;
   --gtc: initial;
   --gtr: initial;
   --gta: initial;
@@ -64,7 +74,7 @@
   grid-template-columns: var(--gtc);
   grid-template-rows: var(--gtr);
   grid-template-areas: var(--gta);
-  gap: var(--gap);
+  gap: var(--grid-gap);
   &.center {
     align-content: center;
     justify-content: center;
@@ -73,24 +83,42 @@
 
 .#{$prefix}grid-fill {
   --width: 200px;
-  @extend %#{$prefix}flexbox-sizes;
+  @include flexbox-sizes;
   display: grid;
   align-content: flex-start;
   grid-template-columns: repeat(auto-fill, minmax(var(--width), 1fr));
-  gap: var(--gap);
+  gap: var(--flex-gap);
 }
 .#{$prefix}flex {
-  @extend %#{$prefix}flexbox-sizes;
+  @include flexbox-sizes;
   display: flex;
   align-items: center;
   & > * + * {
-    margin-left: var(--gap);
+    margin-left: var(--flex-gap);
   }
   &.center {
     align-items: center;
     justify-content: center;
   }
-  &.equals {
+  &.equal {
+    & > * {
+      flex-basis: 0;
+      flex-grow: 1;
+    }
+  }
+}
+.#{$prefix}flex-column {
+  @include flexbox-sizes;
+  display: flex;
+  flex-direction: column;
+  & > * + * {
+    margin-top: var(--flex-gap);
+  }
+  &.center {
+    align-items: center;
+    justify-content: center;
+  }
+  &.equal {
     & > * {
       flex-basis: 0;
       flex-grow: 1;
@@ -98,14 +126,14 @@
   }
 }
 .#{$prefix}flex-wrap {
-  @extend %#{$prefix}flexbox-sizes;
+  @include flexbox-sizes;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  margin-left: calc(-1 * var(--gap));
-  margin-bottom: calc(-1 * var(--gap));
+  margin-left: calc(-1 * var(--flex-gap));
+  margin-bottom: calc(-1 * var(--flex-gap));
   & > * {
-    margin-left: var(--gap);
-    margin-bottom: var(--gap);
+    margin-left: var(--flex-gap);
+    margin-bottom: var(--flex-gap);
   }
 }

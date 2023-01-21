@@ -1,10 +1,26 @@
+@mixin card-sizes {
+  --card-padding: 16px;
+  &.tiny {
+    --card-padding: 8px;
+  }
+  &.small {
+    --card-padding: 12px;
+  }
+  &.medium {
+    --card-padding: 16px;
+  }
+  &.large {
+    --card-padding: 32px;
+  }
+}
+
 .#{$prefix}card {
-  --shadow: var(--#{$prefix}shadow-m);
-  --shadow-active: var(--#{$prefix}shadow-s);
-  padding: 16px;
-  border: 0.5px solid;
-  border-radius: 2px;
-  box-shadow: var(--shadow);
+  @include card-sizes;
+  padding: var(--card-padding);
+  --card-border: 1px solid var(--snt-color-muted);
+  border: var(--card-border);
+  --card-border-radius: 8px;
+  border-radius: var(--card-border-radius);
   @each $color, $value in $palette-colors {
     &.#{$color} {
       background: linear-gradient(
@@ -17,13 +33,20 @@
   }
 
   &.clickable {
-    transition: box-shadow 0.2s ease;
+    outline: none;
+    --card--box-shadow: 0 0 0 #fff0;
+    box-shadow: var(--card--box-shadow);
+    transition: box-shadow 0.2s ease-in-out;
     &:not([disabled]) {
       cursor: pointer;
-    }
-    &:focus,
-    &:hover {
-      box-shadow: var(--shadow-active);
+      &:focus,
+      &:focus-within,
+      &:hover {
+        --card--box-shadow: var(--snt-shadow-m);
+      }
+      &:active {
+        --card--box-shadow: var(--snt-shadow-s);
+      }
     }
   }
 }

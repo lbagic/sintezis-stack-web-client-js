@@ -1,4 +1,6 @@
-@mixin transition($transition-property-value) {
+@mixin transition(
+  $transition-property-value: '0.4s all #{map-get($bezier, "1")}'
+) {
   &-enter-from,
   &-leave-to {
     @content;

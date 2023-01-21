@@ -1,3 +1,4 @@
+$prefix: "snt-";
 $containers: (
   "s": 400px,
   "m": 600px,
@@ -5,7 +6,22 @@ $containers: (
   "xl": 1200px,
   "expand": initial,
 );
-$prefix: "snt-";
+$widths: (
+  "s": 400px,
+  "m": 600px,
+  "l": 800px,
+  "xl": 1200px,
+);
+$z-index: (
+  "toast": 9000,
+  "modal": 8000,
+);
+$bezier: (
+  "1": cubic-bezier(0.72, 0.16, 0.28, 0.93),
+  "2": cubic-bezier(0.81, 0.17, 0.28, 1),
+  "3": cubic-bezier(0.53, -0.05, 0.22, 0.9),
+  "4": cubic-bezier(0.45, 0, 0.47, 1.4),
+);
 $shadows: (
   "s": (
     0 1px 3px #0002,
@@ -32,14 +48,4 @@ $shadows: (
     0 10px 14px 1px #0002,
     0 4px 18px 3px #0002,
   ),
-);
-$widths: (
-  "s": 400px,
-  "m": 600px,
-  "l": 800px,
-  "xl": 1200px,
-);
-$z-index: (
-  "toast": 9000,
-  "modal": 8000,
 );

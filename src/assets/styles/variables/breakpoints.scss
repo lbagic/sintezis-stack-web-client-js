@@ -6,7 +6,7 @@ $breakpoints: (
   "xxl": 1536px,
 );
 
-@mixin smaller-than-s {
+@mixin -s {
   @media screen and (max-width: calc(map-get($breakpoints, "s") - 1px)) {
     @content;
   }
@@ -22,7 +22,7 @@ $breakpoints: (
   }
 }
 
-@mixin smaller-than-m {
+@mixin -m {
   @media screen and (max-width: calc(map-get($breakpoints, "m") - 1px)) {
     @content;
   }
@@ -38,7 +38,7 @@ $breakpoints: (
   }
 }
 
-@mixin smaller-than-l {
+@mixin -l {
   @media screen and (max-width: calc(map-get($breakpoints, "l") - 1px)) {
     @content;
   }
@@ -54,7 +54,7 @@ $breakpoints: (
   }
 }
 
-@mixin smaller-than-xl {
+@mixin -xl {
   @media screen and (max-width: calc(map-get($breakpoints, "xl") - 1px)) {
     @content;
   }
@@ -70,7 +70,7 @@ $breakpoints: (
   }
 }
 
-@mixin smaller-than-xxl {
+@mixin -xxl {
   @media screen and (max-width: calc(map-get($breakpoints, "xxl") - 1px)) {
     @content;
   }
