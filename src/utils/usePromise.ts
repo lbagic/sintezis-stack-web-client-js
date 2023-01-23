@@ -1,7 +1,11 @@
 import { reactive } from "vue";
 
 export function usePromise<T extends (...args: any[]) => Promise<any>>(
-  call: T
+  call: T,
+  hooks?: {
+    onError?: (...args: any[]) => any;
+    onSuccess?: (...args: any[]) => any;
+  }
 ) {
   const state = reactive({
     data: undefined,
@@ -35,9 +39,11 @@ export function usePromise<T extends (...args: any[]) => Promise<any>>(
     try {
       const data = await call.apply(null, args);
       onSettled({ data });
+      hooks?.onSuccess?.();
       return data;
     } catch (error) {
       onSettled({ error });
+      hooks?.onError?.();
       throw error;
     }
   }

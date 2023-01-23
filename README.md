@@ -22,13 +22,7 @@ copy and update .env variables
 cp .env.development .env
 ```
 
-link proto definitions in Makefile (replace the following line with project name & tag)
-
-```sh
-buf generate buf.build/sintezis/PROJECT_NAME:TAG
-```
-
-generate proto files
+generate proto files (and update Makefile with proto definitions as needed)
 
 ```sh
 make proto
