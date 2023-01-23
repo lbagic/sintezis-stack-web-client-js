@@ -10,8 +10,15 @@ import { inputValidation } from "./inputValidation";
 
 export function useFormData<
   T extends Parameters<S>[0],
-  S extends (...args: any[]) => Promise<unknown>
->(data: T, submit?: S) {
+  S extends (...args: any[]) => Promise<unknown> = any
+>(
+  data: T,
+  submit?: S,
+  hooks?: {
+    onError?: (...args: any[]) => any;
+    onSuccess?: (...args: any[]) => any;
+  }
+) {
   const fields = Object.keys(data);
   const ctx = reactive({
     data,
@@ -52,12 +59,16 @@ export function useFormData<
   const submitter = !submit
     ? (undefined as never)
     : () => {
-        const promise = submit(ctx.data) as ReturnType<S>;
         isPending.value = true;
-        promise
-          .then(() => (isPending.value = false))
-          .catch(() => (isPending.value = false));
-        return promise;
+        submit(ctx.data)
+          .then((res) => {
+            isPending.value = false;
+            hooks?.onSuccess?.(res);
+          })
+          .catch((err) => {
+            isPending.value = false;
+            hooks?.onError?.(err);
+          });
       };
 
   return reactive({

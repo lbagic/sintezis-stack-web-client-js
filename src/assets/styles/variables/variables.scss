@@ -22,7 +22,7 @@ $bezier: (
   "3": cubic-bezier(0.53, -0.05, 0.22, 0.9),
   "4": cubic-bezier(0.45, 0, 0.47, 1.4),
 );
-$shadows: (
+$box-shadows: (
   "s": (
     0 1px 3px #0002,
     0 1px 1px #0002,
@@ -48,4 +48,11 @@ $shadows: (
     0 10px 14px 1px #0002,
     0 4px 18px 3px #0002,
   ),
+);
+$border-radius: (
+  "s": 4px,
+  "m": 8px,
+  "l": 16px,
+  "xl": 24px,
+  "round": 100%,
 );

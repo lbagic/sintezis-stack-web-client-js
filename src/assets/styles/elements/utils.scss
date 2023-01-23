@@ -81,11 +81,12 @@
 .justify-self {
   justify-self: center;
 }
-.border-radius {
-  border-radius: 15px;
-}
-.border-radius-round {
-  border-radius: 100%;
+
+// border radius
+@each $name, $size in $border-radius {
+  .border-radius-#{$name} {
+    border-radius: $size;
+  }
 }
 
 // sizes

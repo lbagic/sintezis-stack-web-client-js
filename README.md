@@ -16,19 +16,13 @@ cd into project
 cd stack-client-js
 ```
 
-copy and update .env variables
+(optional) create local env file
 
 ```sh
-cp .env.development .env
+cp .env.development .env.development.local
 ```
 
-link proto definitions in Makefile (replace the following line with project name & tag)
-
-```sh
-buf generate buf.build/sintezis/PROJECT_NAME:TAG
-```
-
-generate proto files
+generate proto files (and update Makefile with proto definitions as needed)
 
 ```sh
 make proto

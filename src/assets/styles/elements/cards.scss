@@ -16,10 +16,10 @@
 
 .#{$prefix}card {
   @include card-sizes;
-  padding: var(--card-padding);
   --card-border: 1px solid var(--snt-color-muted);
+  --card-border-radius: var(--snt-border-radius-m);
+  padding: var(--card-padding);
   border: var(--card-border);
-  --card-border-radius: 8px;
   border-radius: var(--card-border-radius);
   @each $color, $value in $palette-colors {
     &.#{$color} {
@@ -42,10 +42,10 @@
       &:focus,
       &:focus-within,
       &:hover {
-        --card--box-shadow: var(--snt-shadow-m);
+        --card--box-shadow: var(--snt-box-shadow-l);
       }
       &:active {
-        --card--box-shadow: var(--snt-shadow-s);
+        --card--box-shadow: var(--snt-box-shadow-m);
       }
     }
   }
