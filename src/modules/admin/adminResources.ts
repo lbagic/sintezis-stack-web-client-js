@@ -6,7 +6,7 @@ type Resource = {
   component: Component;
 };
 export const adminResources: Record<string, Resource> = {
-  Role: {
+  Roles: {
     icon: LockOutlined,
     component: defineAsyncComponent(
       () => import("@/components/admin/resources/RoleResource.vue")

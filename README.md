@@ -16,10 +16,10 @@ cd into project
 cd stack-client-js
 ```
 
-copy and update .env variables
+(optional) create local env file
 
 ```sh
-cp .env.development .env
+cp .env.development .env.development.local
 ```
 
 generate proto files (and update Makefile with proto definitions as needed)
