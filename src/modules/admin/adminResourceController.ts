@@ -8,10 +8,10 @@ import type {
   NPageHeader,
 } from "naive-ui";
 import * as R from "ramda";
-import { computed, h, reactive, ref, type Ref } from "vue";
+import { computed, h, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 
-export type ResourceForm = Ref<{ form: ReturnType<typeof useFormData> }>;
+export type ResourceForm = ReturnType<typeof useFormData>;
 type Actions = Partial<{
   add: ResourceForm;
 }>;
@@ -26,15 +26,15 @@ const tableConfig = {
 } satisfies Record<keyof TableActions, any>;
 
 function setupContext<T extends Record<string, any> = any>(config: {
-  uniqueKey?: string;
+  uniqueKey?: keyof T;
   tableColumns: DataTableColumns<T>;
-  actions?: Actions;
-  tableActions?: TableActions;
+  actionForms?: Actions;
+  tableActionForms?: TableActions;
 }) {
   const router = useRouter();
   const id = router.currentRoute.value.params.resourceId as string;
   const title = id.toCapitalCase();
-  const uniqueKey = config.uniqueKey ?? "ID";
+  const uniqueKey = config.uniqueKey ?? "id";
   const onBack = () => router.push("/");
 
   const data = ref<T[]>([]);
@@ -56,7 +56,7 @@ function setupContext<T extends Record<string, any> = any>(config: {
 
   const tableProps = computed(() => {
     const columns = config.tableColumns;
-    const actions = config.tableActions;
+    const actions = config.tableActionForms;
     if (actions) {
       columns.unshift({
         title: "Actions",
@@ -76,9 +76,7 @@ function setupContext<T extends Record<string, any> = any>(config: {
                         showModal[actionName] = true;
                         const item = rowToItem(row);
                         console.log(item);
-                        setTimeout(() =>
-                          actions[actionName]?.value.form.hydrate(item)
-                        );
+                        setTimeout(() => actions[actionName]?.hydrate?.(item));
                       },
                       title: actionName,
                     },

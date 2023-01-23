@@ -10,7 +10,7 @@ import { inputValidation } from "./inputValidation";
 
 export function useFormData<
   T extends Parameters<S>[0],
-  S extends (...args: any[]) => Promise<unknown>
+  S extends (...args: any[]) => Promise<unknown> = any
 >(
   data: T,
   submit?: S,

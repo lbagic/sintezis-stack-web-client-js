@@ -1,4 +1,4 @@
-import { AttachMoneyOutlined, MoneyOutlined } from "@vicons/material";
+import { LockOutlined } from "@vicons/material";
 import { defineAsyncComponent, type Component } from "vue";
 
 type Resource = {
@@ -6,16 +6,10 @@ type Resource = {
   component: Component;
 };
 export const adminResources: Record<string, Resource> = {
-  BunkerPrice: {
-    icon: MoneyOutlined,
+  Role: {
+    icon: LockOutlined,
     component: defineAsyncComponent(
-      () => import("@/components/admin/resources/BunkerPriceResource.vue")
-    ),
-  },
-  BunkerPriceStatus: {
-    icon: AttachMoneyOutlined,
-    component: defineAsyncComponent(
-      () => import("@/components/admin/resources/BunkerPriceStatusResource.vue")
+      () => import("@/components/admin/resources/RoleResource.vue")
     ),
   },
 };
