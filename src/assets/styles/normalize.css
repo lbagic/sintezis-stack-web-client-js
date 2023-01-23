@@ -11,14 +11,16 @@ html {
 body {
   height: 100%;
   margin: 0;
+  font-size: 16px;
 }
 a {
+  --text-color: #007bff;
   text-decoration: none;
-  color: #007bff;
+  color: var(--text-color);
   transition: color 0.15s ease-in-out;
 }
 a:hover {
-  color: #0056b3;
+  --text-color: #0056b3;
 }
 p {
   margin: 0;
@@ -71,10 +73,10 @@ li {
   margin: 0;
   padding: 0;
 }
+label,
 button,
 [type="checkbox"],
-[type="radio"],
-label {
+[type="radio"] {
   cursor: pointer;
 }
 button {

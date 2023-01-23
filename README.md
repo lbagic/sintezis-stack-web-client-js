@@ -4,25 +4,43 @@ This template should help get you started developing with Vue 3 in Vite.
 
 ## Initialize Local Development
 
+clone project
+
 ```sh
 git clone ssh://git@gitlab.sintezis.co:8022/sintezis/stacks/js/stack-client-js.git
 ```
+
+cd into project
 
 ```sh
 cd stack-client-js
 ```
 
+copy and update .env variables
+
 ```sh
-cp .env.example .env
+cp .env.development .env
 ```
+
+link proto definitions in Makefile (replace the following line with project name & tag)
+
+```sh
+buf generate buf.build/sintezis/PROJECT_NAME:TAG
+```
+
+generate proto files
 
 ```sh
 make proto
 ```
 
+install dependencies
+
 ```sh
 npm install
 ```
+
+run local development server
 
 ```sh
 npm run dev
@@ -30,43 +48,23 @@ npm run dev
 
 ## Recommended IDE Setup
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
-
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
-
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
-
-1. Disable the built-in TypeScript Extension
-   1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-   2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+- install [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur)
+- install [Eslint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+- install [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+- disable `TypeScript and JavaScript Language Features`
+  - go to extensions
+  - search for: **@builtin TypeScript and JavaScript Language Features**
+  - disable
+  - reload window: `cmd + shift + p` > `Developer: Reload Window`
 
 ## Customize configuration
 
 See [Vite Configuration Reference](https://vitejs.dev/config/).
 
-## Project Setup
+## Production Deployment
 
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
+Type-Check, Compile and Minify for Production
 
 ```sh
 npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
 ```

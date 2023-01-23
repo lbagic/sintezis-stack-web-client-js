@@ -21,13 +21,15 @@ defineExpose({ inputRef });
 <template>
   <NFormItem v-bind="formItem">
     <input
-      type="text"
-      tabindex="-1"
-      ref="inputRef"
       :value="data"
-      v-bind="constraint"
-      class="hidden"
       @invalid="onInvalidSubmit"
+      aria-hidden="true"
+      autocomplete="off"
+      class="hidden"
+      ref="inputRef"
+      tabindex="-1"
+      type="text"
+      v-bind="constraint"
     />
     <slot></slot>
   </NFormItem>

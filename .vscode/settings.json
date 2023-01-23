@@ -6,6 +6,7 @@
   },
   "emmet.triggerExpansionOnTab": true,
   "volar.autoWrapParentheses": false,
+  "volar.autoCompleteRefs": true,
   // -------------------------- FORMATTER --------------------------
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.detectIndentation": false,

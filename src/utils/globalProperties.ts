@@ -11,6 +11,7 @@ export const globalProperties = {
   $imagePlaceholder: imagePlaceholder,
   $log: console.log,
   $formatCurrency: formatCurrency,
+  $dev: import.meta.env.DEV,
 };
 
 // Type definitions for global properties
