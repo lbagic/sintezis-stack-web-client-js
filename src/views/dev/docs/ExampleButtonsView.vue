@@ -10,7 +10,7 @@ const types = [
   "text",
   "text-active",
   "dashed",
-  "outlined",
+  "outline",
   "ghost",
 ];
 </script>

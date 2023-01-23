@@ -60,6 +60,9 @@
 .flex {
   display: flex;
 }
+.flex-column {
+  display: flex;
+}
 .align-items {
   align-items: center;
 }
@@ -78,7 +81,10 @@
 .justify-self {
   justify-self: center;
 }
-.round {
+.border-radius {
+  border-radius: 15px;
+}
+.border-radius-round {
   border-radius: 100%;
 }
 
@@ -126,7 +132,10 @@
   white-space: nowrap;
 }
 
-// content handlers
+// utils
+.ignore-pointer {
+  pointer-events: none;
+}
 *[content-before]::before {
   content: attr(content-before);
 }

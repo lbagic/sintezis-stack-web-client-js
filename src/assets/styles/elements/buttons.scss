@@ -8,7 +8,6 @@
   --button-border-hover: initial;
   --button-border-active: initial;
 }
-
 .#{$prefix}button {
   outline: none !important;
   display: inline-flex;
@@ -137,7 +136,7 @@
     --button-border-active: 1px dashed var(--snt-color-primary-darker);
     @extend %btn-unset-background;
   }
-  &.outlined {
+  &.outline {
     --button-border: 1px solid var(--snt-color-muted);
     --button-border-hover: 1px solid var(--snt-color-primary);
     --button-border-active: 1px solid var(--snt-color-primary-darker);
@@ -190,7 +189,7 @@
       &.text {
         @extend %btn-unset-background;
         --button-text: var(--#{$prefix}color-#{$color});
-        --button-text-hover: var(--#{$prefix}color-#{$color}-lighter);
+        --button-text-hover: var(--#{$prefix}color-#{$color}-light-2);
         --button-text-active: var(--#{$prefix}color-#{$color}-dark);
         --button-ripple: var(--#{$prefix}color-#{$color}-opaque);
       }
@@ -215,7 +214,7 @@
           var(--#{$prefix}color-#{$color}-dark);
         --button-ripple: var(--#{$prefix}color-#{$color}-opaque);
       }
-      &.outlined {
+      &.outline {
         @extend %btn-unset-background;
         --button-text: var(--#{$prefix}color-#{$color});
         --button-text-hover: var(--#{$prefix}color-#{$color}-light-2);

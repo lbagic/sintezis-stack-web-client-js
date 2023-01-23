@@ -48,7 +48,7 @@ if (hash || query) {
   watch(
     () => [router.currentRoute.value.hash, router.currentRoute.value.query],
     ([routeHash, routeQuery]) => {
-      if (isShown.value) return;
+      // if (isShown.value) return;
       isShown.value =
         (!!hash && routeHash === hash) || (!!query && R.has(query, routeQuery));
     },

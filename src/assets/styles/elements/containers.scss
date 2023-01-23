@@ -18,38 +18,38 @@
     --container-padding: 16px;
   }
   &.large {
-    --container-padding: 32px;
+    --container-padding: 36px;
   }
 }
 
 @mixin flexbox-sizes {
-  --flex-gap: 12px;
+  --flex-gap: 16px;
   &.tiny {
-    --flex-gap: 3px;
+    --flex-gap: 4px;
   }
   &.small {
-    --flex-gap: 6px;
+    --flex-gap: 8px;
   }
   &.medium {
-    --flex-gap: 12px;
+    --flex-gap: 16px;
   }
   &.large {
-    --flex-gap: 24px;
+    --flex-gap: 36px;
   }
 }
 @mixin grid-sizes {
-  --grid-gap: 12px;
+  --grid-gap: 16px;
   &.tiny {
-    --grid-gap: 3px;
+    --grid-gap: 4px;
   }
   &.small {
-    --grid-gap: 6px;
+    --grid-gap: 8px;
   }
   &.medium {
-    --grid-gap: 12px;
+    --grid-gap: 16px;
   }
   &.large {
-    --grid-gap: 24px;
+    --grid-gap: 36px;
   }
 }
 
