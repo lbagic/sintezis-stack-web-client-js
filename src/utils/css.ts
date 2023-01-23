@@ -5,7 +5,8 @@ export namespace CSS {
   export type Breakpoints = "s" | "m" | "l" | "xl" | "xxl";
   export type Containers = "s" | "m" | "l" | "xl" | "expand";
   export type Widths = "s" | "m" | "l" | "xl";
-  export type Shadows = "s" | "m" | "l" | "xl" | "xxl";
+  export type BoxShadows = "s" | "m" | "l" | "xl" | "xxl";
+  export type BorderRadius = "s" | "m" | "l" | "xl" | "round";
   export type Bezier = "1" | "2" | "3" | "4";
   export type ZIndexes = "toast" | "modal";
   export type BaseColors = "text" | "background";
@@ -55,8 +56,9 @@ export namespace CSS {
     breakpoints: Record<Breakpoints, string>;
     containers: Record<Containers, string>;
     widths: Record<Widths, string>;
-    shadows: Record<Shadows, string[][]>;
-    bezier: Record<Shadows, string>;
+    boxShadows: Record<BoxShadows, string[][]>;
+    borderRadius: Record<BorderRadius, string>;
+    bezier: Record<Bezier, string>;
     zIndex: Record<ZIndexes, number>;
   };
 }
@@ -72,16 +74,16 @@ export const css = {
     return isNaN(parsed) ? value : parsed;
   }, parsed.containers),
   prefix: parsed.prefix,
-  shadows: mapObjIndexed(
+  boxShadows: mapObjIndexed(
     (values) => values.map((el) => el.join(" ")).join(", "),
-    parsed.shadows
+    parsed.boxShadows
   ),
+  borderRadius: parsed.borderRadius,
   widths: mapObjIndexed((value) => parseInt(value), parsed.widths),
   bezier: parsed.bezier,
   zIndex: parsed.zIndex,
 } as const satisfies Record<keyof CSS.Parsed, any>;
 
-console.log({ parsed, css });
 const paletteColorNames = Object.keys(css.colors);
 export function isColorName(name: string) {
   return paletteColorNames.includes(name);

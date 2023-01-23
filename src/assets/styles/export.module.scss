@@ -7,7 +7,8 @@
       breakpoints: $breakpoints,
       containers: $containers,
       widths: $widths,
-      shadows: $shadows,
+      boxShadows: $box-shadows,
+      borderRadius: $border-radius,
       bezier: $bezier,
       zIndex: $z-index,
     )
