@@ -25,11 +25,14 @@ const state = reactive({
     >Based off of NaiveUi modal</a
   >
   <div class="snt-flex">
-    <button class="snt-button primary underline" @click="state.show = true">
+    <button
+      class="snt-button primary animate-underline"
+      @click="state.show = true"
+    >
       open programmatically
     </button>
     <button
-      class="snt-button primary underline"
+      class="snt-button primary animate-underline"
       @click="modalController.sampleModal.show"
     >
       open via modalController

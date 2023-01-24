@@ -14,7 +14,7 @@ const childRoutes = routes.find((el) => el.path === "/docs")?.children ?? [];
         :to="`/docs/${path}`"
         style="padding: 0 2rem"
         :key="path"
-        class="snt-button white text underline"
+        class="snt-button white text animate-underline-active"
         >{{ path }}</RouterLink
       >
     </aside>

@@ -19,7 +19,7 @@ const data = {
     <p>Resources:</p>
     <div class="snt-flex-wrap">
       <RouterLink
-        class="snt-button text primary underline"
+        class="snt-button text primary animate-underline-active"
         v-for="(_, id) in adminResources"
         :key="id"
         :to="`/resource/${id}`"

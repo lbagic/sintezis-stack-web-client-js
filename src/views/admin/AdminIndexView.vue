@@ -65,7 +65,10 @@ function confirmLogout() {
         }"
       >
         <NBreadcrumbItem v-if="!breadcrumbs.length">
-          <RouterLink class="snt-button text white underline" to="/">
+          <RouterLink
+            class="snt-button text white animate-underline-active"
+            to="/"
+          >
             Dashboard
           </RouterLink>
         </NBreadcrumbItem>
@@ -75,7 +78,7 @@ function confirmLogout() {
           :key="breadcrumb.label"
         >
           <RouterLink
-            class="snt-button text white underline"
+            class="snt-button text white animate-underline-active"
             :to="breadcrumb.to"
           >
             {{ breadcrumb.label }}

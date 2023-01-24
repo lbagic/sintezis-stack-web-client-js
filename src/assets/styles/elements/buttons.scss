@@ -237,16 +237,10 @@
   }
 
   // misc
-  &.underline {
-    @extend %#{$prefix}animate-underline;
-  }
   &.round {
     --button-border-radius: var(--button-height);
   }
   &.rounded {
     --button-border-radius: 8px;
-  }
-  &.expand {
-    width: 100%;
   }
 }
