@@ -2,7 +2,7 @@
 import { modalProps, NModal } from "naive-ui";
 import * as R from "ramda";
 import { onMounted, onUnmounted, ref, watch } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { modalInternals } from "./modalController";
 import { setCssVar, css } from "@/utils/css";
 
@@ -17,6 +17,7 @@ const props = defineProps({
   },
 });
 const emit = defineEmits(["update:show"]);
+const route = useRoute();
 const router = useRouter();
 const isShown = ref(!!props.show);
 const { name, hash, query } = props;
@@ -46,20 +47,20 @@ if (name) {
 
 if (hash || query) {
   watch(
-    () => [router.currentRoute.value.hash, router.currentRoute.value.query],
+    () => [route.hash, route.query],
     ([routeHash, routeQuery]) => {
-      // if (isShown.value) return;
-      isShown.value =
-        (!!hash && routeHash === hash) || (!!query && R.has(query, routeQuery));
+      const isHashActive = !!hash && routeHash === hash;
+      const isQueryActive = !!query && R.has(query, routeQuery);
+      isShown.value = isHashActive || isQueryActive;
     },
     { immediate: true }
   );
   watch(isShown, (value) => {
     if (value) return;
-    const route = R.clone(router.currentRoute.value);
-    if (hash === route.hash) route.hash = "";
-    if (query && R.has(query, route.query)) delete route.query[query];
-    router.replace(route);
+    const updated = { hash: route.hash, query: { ...route.query } };
+    if (hash === route.hash) updated.hash = "";
+    if (query) delete updated.query[query];
+    router.replace(updated);
   });
 }
 </script>

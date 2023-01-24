@@ -15,7 +15,10 @@ export const router = createRouter({
   routes,
 });
 
-const fallback = { user: "/", visitor: "/login" };
+const fallback = import.meta.env.VITE_ADMIN_PANEL
+  ? { user: "/", visitor: "/login" }
+  : { user: "/", visitor: "/login" };
+
 const settings = { useImplicitLoadingBar: true };
 
 const createAuthorization =
