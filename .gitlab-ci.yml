@@ -1,0 +1,163 @@
+image: docker:20.10.8-dind
+
+services:
+  - name: docker:20.10.8-dind
+    command: ["--tls=false"]
+
+variables:
+  DOCKER_DRIVER: overlay
+  DOCKER_HOST: tcp://127.0.0.1:2375/
+  DOCKER_TLS_CERTDIR: ""
+  BUF_TOKEN: ${BUF_REGISTRY_TOKEN}
+
+stages:
+  - install
+  - build
+  - deploy
+  - destroy
+
+cache:
+  key: $CI_COMMIT_REF_SLUG
+  paths:
+    - node_modules/
+
+install:
+  stage: install
+  image: node:18.13.0
+  script:
+    - npm install
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - node_modules/
+  cache:
+    paths:
+      - node_modules/
+
+build-auto:
+  stage: build
+  dependencies:
+    - install
+  image: node:18.13.0
+  script:
+    - apt update
+    - make buf
+    - make proto
+    - npx vite build --mode ${CI_COMMIT_BRANCH}
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 1 day
+  only:
+    - development
+    - staging
+
+build-manual:
+  stage: build
+  dependencies:
+    - install
+  image: node:18.13.0
+  script:
+    - apt update
+    - make buf
+    - make proto
+    - npx vite build --mode development
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 1 day
+  rules:
+    - if: '$CI_COMMIT_BRANCH != "development" && $CI_COMMIT_BRANCH != "staging"'
+      when: manual
+
+deploy_manual:
+  stage: deploy
+  dependencies:
+    - build-manual
+  environment:
+    name: review/$CI_COMMIT_REF_SLUG
+    url: https://reti-${CI_JOB_ID}.cdn.sintezis.link
+    on_stop: destroy_deploy_manual
+    auto_stop_in: 1 week
+  image:
+    name: amazon/aws-cli
+    entrypoint: [""]
+  variables:
+    AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+    AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+    AWS_REGION: $AWS_REGION
+    S3_BUCKET_NAME: $S3_BUCKET_NAME
+    CDN_DISTRIBUTION_ID: $CDN_DISTRIBUTION_ID
+  before_script:
+    - eval $(aws ecr get-login --no-include-email --region $AWS_REGION | sed 's|https://||')
+  script:
+    - aws --region $AWS_REGION s3 rm s3://${S3_BUCKET_NAME}/reti-${CI_JOB_ID}.cdn.sintezis.link --recursive
+    - aws --region $AWS_REGION s3 cp dist/ s3://${S3_BUCKET_NAME}/reti-${CI_JOB_ID}.cdn.sintezis.link --recursive
+    - aws cloudfront create-invalidation --distribution-id $CDN_DISTRIBUTION_ID --paths "/*"
+  rules:
+    - if: '$CI_COMMIT_BRANCH != "development" && $CI_COMMIT_BRANCH != "staging"'
+      when: manual
+
+deploy_auto:
+  stage: deploy
+  dependencies:
+    - build-auto
+  environment:
+    name: review/$CI_COMMIT_BRANCH
+    url: https://reti-${CI_COMMIT_BRANCH}.cdn.sintezis.link
+    on_stop: destroy_deploy_auto
+  image:
+    name: amazon/aws-cli
+    entrypoint: [""]
+  variables:
+    AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+    AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+    AWS_REGION: $AWS_REGION
+    S3_BUCKET_NAME: $S3_BUCKET_NAME
+    CDN_DISTRIBUTION_ID: $CDN_DISTRIBUTION_ID
+  before_script:
+    - eval $(aws ecr get-login --no-include-email --region $AWS_REGION | sed 's|https://||')
+  script:
+    - aws --region $AWS_REGION s3 rm s3://${S3_BUCKET_NAME}/reti-${CI_COMMIT_BRANCH}.cdn.sintezis.link --recursive
+    - aws --region $AWS_REGION s3 cp dist/ s3://${S3_BUCKET_NAME}/reti-${CI_COMMIT_BRANCH}.cdn.sintezis.link --recursive
+    - aws cloudfront create-invalidation --distribution-id $CDN_DISTRIBUTION_ID --paths "/*"
+  only:
+    - development
+    - staging
+
+destroy_deploy_manual:
+  image:
+    name: amazon/aws-cli
+    entrypoint: [""]
+  stage: destroy
+  dependencies:
+    - deploy_manual
+  environment:
+    name: review/$CI_COMMIT_REF_SLUG
+    action: stop
+  # Optional: Manual gate
+  script:
+    - aws --region $AWS_REGION s3 rm s3://${S3_BUCKET_NAME}/reti-${CI_JOB_ID}.cdn.sintezis.link --recursive
+    - aws cloudfront create-invalidation --distribution-id $CDN_DISTRIBUTION_ID --paths "/*"
+  rules:
+    - if: '$CI_COMMIT_BRANCH != "development" && $CI_COMMIT_BRANCH != "staging"'
+      when: manual
+
+destroy_deploy_auto:
+  image:
+    name: amazon/aws-cli
+    entrypoint: [""]
+  stage: destroy
+  dependencies:
+    - deploy_auto
+  environment:
+    name: review/$CI_COMMIT_BRANCH
+    action: stop
+  # Optional: Manual gate
+  when: manual
+  script:
+    - aws --region $AWS_REGION s3 rm s3://${S3_BUCKET_NAME}/reti-${CI_COMMIT_BRANCH}.cdn.sintezis.link --recursive
+    - aws cloudfront create-invalidation --distribution-id $CDN_DISTRIBUTION_ID --paths "/*"
+  only:
+    - development
+    - staging

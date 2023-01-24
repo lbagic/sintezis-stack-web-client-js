@@ -12,8 +12,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@bufbuild/connect-web": "^0.3.3",
-    "@bufbuild/protobuf": "^0.4.0",
+    "@bufbuild/connect-web": "^0.6.0",
     "@lbagic/collections": "^1.0.3",
     "@vueuse/core": "^9.6.0",
     "@vueuse/integrations": "^9.6.0",
