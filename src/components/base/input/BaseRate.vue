@@ -4,14 +4,14 @@ import { ref } from "vue";
 import InputValidation from "./FormItem.vue";
 import { inputController as ctl } from "./inputController";
 
-const inputRef = ref<any>(null);
-const validationRef = ref<any>(null);
+const inputRef = ref<InstanceType<typeof NRate>>();
+const validationRef = ref<any>();
 const props = defineProps({
   ...rateProps,
   ...ctl.props.base,
 });
 const emit = defineEmits(["update:modelValue"]);
-defineExpose(inputRef);
+defineExpose({ input: inputRef });
 
 const { model, context, formItemContext } = ctl.setup({
   emit,

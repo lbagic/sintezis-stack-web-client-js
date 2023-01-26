@@ -17,7 +17,7 @@
 .#{$prefix}card {
   @include card-sizes;
   --card-border: 1px solid var(--snt-color-muted);
-  --card-border-radius: var(--snt-border-radius-m);
+  --card-border-radius: var(--snt-border-radius-s);
   padding: var(--card-padding);
   border: var(--card-border);
   border-radius: var(--card-border-radius);
@@ -34,18 +34,18 @@
 
   &.clickable {
     outline: none;
-    --card--box-shadow: 0 0 0 #fff0;
+    --card--box-shadow: var(--snt-box-shadow-s);
     box-shadow: var(--card--box-shadow);
-    transition: box-shadow 0.2s ease-in-out;
+    transition: box-shadow 0.3s ease;
     &:not([disabled]) {
       cursor: pointer;
       &:focus,
       &:focus-within,
       &:hover {
-        --card--box-shadow: var(--snt-box-shadow-l);
+        --card--box-shadow: var(--snt-box-shadow-m);
       }
       &:active {
-        --card--box-shadow: var(--snt-box-shadow-m);
+        --card--box-shadow: var(--snt-box-shadow-s);
       }
     }
   }

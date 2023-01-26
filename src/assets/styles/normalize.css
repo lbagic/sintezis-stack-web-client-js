@@ -91,6 +91,9 @@ button {
   -webkit-font-smoothing: inherit;
   -moz-osx-font-smoothing: inherit;
   appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   /* line-height: normal; */
   /* text-align: inherit; */
 }

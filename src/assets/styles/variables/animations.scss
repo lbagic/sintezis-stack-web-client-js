@@ -11,7 +11,8 @@
   }
 }
 
-%animate-underline {
+@mixin animate-underline {
+  --underline-width: 0;
   position: relative;
   &::after {
     background: currentColor;
@@ -21,17 +22,10 @@
     left: 0;
     position: absolute;
     transition: width 0.2s ease-in-out;
-    width: 0;
+    width: var(--underline-width);
   }
+  &:hover::after,
   &:focus::after {
-    width: 100%;
-  }
-  @media (hover: hover) {
-    &:hover::after {
-      width: 100%;
-    }
-  }
-  &.router-link-exact-active::after {
-    width: 100%;
+    --underline-width: 100%;
   }
 }

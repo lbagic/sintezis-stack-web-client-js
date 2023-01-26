@@ -1,21 +1,12 @@
 <script setup lang="ts">
-import { modalProps, NModal } from "naive-ui";
+import { setCssVar } from "@/utils/css";
+import { NModal } from "naive-ui";
 import * as R from "ramda";
 import { onMounted, onUnmounted, ref, watch } from "vue";
-import { useRouter, useRoute } from "vue-router";
-import { modalInternals } from "./modalController";
-import { setCssVar, css } from "@/utils/css";
+import { useRoute, useRouter } from "vue-router";
+import { baseModalProps, modalInternals } from "./modalController";
 
-const props = defineProps({
-  ...modalProps,
-  name: String,
-  hash: String,
-  query: String,
-  maskColor: {
-    type: String,
-    default: css.colors.primary["opaque-soft"],
-  },
-});
+const props = defineProps(baseModalProps);
 const emit = defineEmits(["update:show"]);
 const route = useRoute();
 const router = useRouter();
@@ -60,9 +51,10 @@ if (hash || query) {
     const updated = { hash: route.hash, query: { ...route.query } };
     if (hash === route.hash) updated.hash = "";
     if (query) delete updated.query[query];
-    router.replace(updated);
+    router[props.routerAction](updated);
   });
 }
+defineExpose({ show, hide });
 </script>
 
 <template>

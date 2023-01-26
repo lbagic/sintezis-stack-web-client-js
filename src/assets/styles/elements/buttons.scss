@@ -1,9 +1,9 @@
-%btn-unset-background {
+@mixin btn-unset-background {
   --button-background: initial;
   --button-background-hover: initial;
   --button-background-active: initial;
 }
-%btn-unset-border {
+@mixin btn-unset-border {
   --button-border: initial;
   --button-border-hover: initial;
   --button-border-active: initial;
@@ -94,7 +94,7 @@
     --button-background-hover: #2e333817;
     --button-background-active: #2e333821;
     --button-ripple: #fff0;
-    @extend %btn-unset-border;
+    @include btn-unset-border;
   }
   &.tertiary {
     --button-text: var(--snt-color-text);
@@ -104,7 +104,7 @@
     --button-background-hover: #2e333817;
     --button-background-active: #2e333821;
     --button-ripple: #fff0;
-    @extend %btn-unset-border;
+    @include btn-unset-border;
   }
   &.quaternary {
     --button-text: var(--snt-color-text);
@@ -114,44 +114,44 @@
     --button-background-hover: #2e333817;
     --button-background-active: #2e333821;
     --button-ripple: #fff0;
-    @extend %btn-unset-border;
+    @include btn-unset-border;
   }
   &.text {
     --button-height: initial;
     --button-padding: initial;
     --button-ripple: #fff0;
-    @extend %btn-unset-background;
-    @extend %btn-unset-border;
+    @include btn-unset-background;
+    @include btn-unset-border;
   }
   &.text-active {
     --button-height: initial;
     --button-padding: initial;
     --button-ripple: #fff0;
-    @extend %btn-unset-background;
-    @extend %btn-unset-border;
+    @include btn-unset-background;
+    @include btn-unset-border;
   }
   &.dashed {
     --button-border: 1px dashed var(--snt-color-muted);
     --button-border-hover: 1px dashed var(--snt-color-primary);
     --button-border-active: 1px dashed var(--snt-color-primary-darker);
-    @extend %btn-unset-background;
+    @include btn-unset-background;
   }
   &.outline {
     --button-border: 1px solid var(--snt-color-muted);
     --button-border-hover: 1px solid var(--snt-color-primary);
     --button-border-active: 1px solid var(--snt-color-primary-darker);
-    @extend %btn-unset-background;
+    @include btn-unset-background;
   }
   &.ghost {
-    @extend %btn-unset-border;
-    @extend %btn-unset-background;
+    @include btn-unset-border;
+    @include btn-unset-background;
   }
 
   // colors
   @each $color, $color-map in $colors {
     $base-color: map-get($color-map, "base");
     &.#{$color} {
-      @extend %btn-unset-border;
+      @include btn-unset-border;
       --button-text: var(--#{$prefix}color-#{$color}-contrast);
       --button-text-hover: var(--#{$prefix}color-#{$color}-contrast);
       --button-text-active: var(--#{$prefix}color-#{$color}-contrast);
@@ -187,21 +187,21 @@
         --button-ripple: #fff0;
       }
       &.text {
-        @extend %btn-unset-background;
+        @include btn-unset-background;
         --button-text: var(--#{$prefix}color-#{$color});
         --button-text-hover: var(--#{$prefix}color-#{$color}-light-2);
         --button-text-active: var(--#{$prefix}color-#{$color}-dark);
         --button-ripple: var(--#{$prefix}color-#{$color}-opaque);
       }
       &.text-active {
-        @extend %btn-unset-background;
+        @include btn-unset-background;
         --button-text: var(--#{$prefix}color-text);
         --button-text-hover: var(--#{$prefix}color-#{$color});
         --button-text-active: var(--#{$prefix}color-#{$color}-dark-2);
         --button-ripple: var(--#{$prefix}color-#{$color}-opaque);
       }
       &.dashed {
-        @extend %btn-unset-background;
+        @include btn-unset-background;
         --button-text: var(--#{$prefix}color-#{$color});
         --button-text-hover: var(--#{$prefix}color-#{$color}-light-2);
         --button-text-active: var(--#{$prefix}color-#{$color}-dark);
@@ -215,7 +215,7 @@
         --button-ripple: var(--#{$prefix}color-#{$color}-opaque);
       }
       &.outline {
-        @extend %btn-unset-background;
+        @include btn-unset-background;
         --button-text: var(--#{$prefix}color-#{$color});
         --button-text-hover: var(--#{$prefix}color-#{$color}-light-2);
         --button-text-active: var(--#{$prefix}color-#{$color}-dark);
@@ -227,7 +227,7 @@
         --button-ripple: var(--#{$prefix}color-#{$color}-opaque);
       }
       &.ghost {
-        @extend %btn-unset-background;
+        @include btn-unset-background;
         --button-text: var(--#{$prefix}color-#{$color});
         --button-text-hover: var(--#{$prefix}color-#{$color}-light-2);
         --button-text-active: var(--#{$prefix}color-#{$color}-dark);
