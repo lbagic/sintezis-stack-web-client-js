@@ -1,5 +1,5 @@
-// TODO - adjust spinner
-.#{$prefix}spinner {
+// TODO - loaders?
+.loading-spinner {
   &::after {
     content: "";
     display: block;
@@ -9,11 +9,36 @@
     border-radius: 50%;
     border: 6px solid #fff;
     border-color: #fff transparent #fff transparent;
-    animation: loader-animation 1.2s linear infinite;
-    // @each $color, $value in $palette-colors {}
+    animation: loading-spinner-keyframes 1.2s linear infinite;
   }
 }
-@keyframes loader-animation {
+@keyframes loading-spinner-keyframes {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-spinner-2 {
+  --color: var(--#{$prefix}color-primary);
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+}
+.loading-spinner-2:after {
+  content: " ";
+  display: block;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border-radius: 50%;
+  border: 6px solid var(--color);
+  border-color: var(--color) transparent var(--color) transparent;
+  animation: loading-spinner-2-keyframes 1.2s linear infinite;
+}
+@keyframes loading-spinner-2-keyframes {
   0% {
     transform: rotate(0deg);
   }

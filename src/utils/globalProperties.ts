@@ -11,7 +11,7 @@ export const globalProperties = {
   $imagePlaceholder: imagePlaceholder,
   $log: console.log,
   $formatCurrency: formatCurrency,
-  $dev: import.meta.env.DEV,
+  $prod: import.meta.env.MODE === "production",
 };
 
 // Type definitions for global properties

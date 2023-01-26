@@ -126,7 +126,7 @@
 .uppercase {
   text-transform: uppercase;
 }
-.underlined {
+.underline {
   text-decoration: underline;
 }
 .nowrap {
@@ -134,7 +134,7 @@
 }
 
 // utils
-.ignore-pointer {
+.pointer-events-none {
   pointer-events: none;
 }
 *[content-before]::before {

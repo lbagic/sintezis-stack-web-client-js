@@ -8,6 +8,7 @@ import {
 } from "./input.types";
 import { inputValidation } from "./inputValidation";
 
+// TODO - RFC & refactor and implement better typing
 export function useFormData<
   T extends Parameters<S>[0],
   S extends (...args: any[]) => Promise<unknown> = any
@@ -90,6 +91,7 @@ function checkIfCanSubmit() {
   submittedAt = now;
   return false;
 }
+// TODO - label "for"
 export const inputController = {
   props: {
     base: baseInputProps,

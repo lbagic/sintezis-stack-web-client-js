@@ -32,7 +32,7 @@ const types = [
     </div>
     <p class="bold">EXPAND:</p>
     <div>
-      <button class="snt-button expand">expand</button>
+      <button class="snt-button width-expand">expand</button>
     </div>
     <p class="bold">ROUND:</p>
     <div>
@@ -40,7 +40,7 @@ const types = [
     </div>
     <p class="bold">UNDERLINE:</p>
     <div>
-      <button class="snt-button underline">underline</button>
+      <button class="snt-button animate-underline">underline</button>
     </div>
     <p class="bold">TYPES:</p>
     <template v-for="t in types">

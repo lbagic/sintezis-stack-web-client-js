@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ROLES } from "@/enums/ROLES";
 import { useAccountStore } from "@/modules/account/accountStore";
 import { feedback } from "@/utils/feedback";
 import { usePromise } from "@/utils/usePromise";
@@ -17,12 +18,16 @@ const rawOptions: {
   disabled?: boolean;
   suffix?: string;
   password?: string;
-}[] = [{ name: "user" }, { name: "guest", disabled: true }, { name: "admin" }];
+}[] = [
+  { name: ROLES.enum.Administrator, disabled: true },
+  { name: ROLES.enum.User },
+  { name: ROLES.enum.Guest, disabled: true },
+];
 
 const options: DropdownMixedOption[] = rawOptions.map((opt) => ({
   key: opt.name,
   payload: {
-    email: `${opt.name}${opt.suffix ?? defaultSuffix}`,
+    email: `${opt.name.toLowerCase()}${opt.suffix ?? defaultSuffix}`,
     password: opt.password ?? defaultPassword,
   },
   label: `As ${opt.name}`,
@@ -34,7 +39,7 @@ const options: DropdownMixedOption[] = rawOptions.map((opt) => ({
   <NDropdown
     :options="options"
     @select="(_, { payload }: any) => login.execute(payload)"
-    v-if="$dev"
+    v-if="!$prod"
   >
     <button style="margin-top: 1rem" class="snt-button text accent">
       Test login
