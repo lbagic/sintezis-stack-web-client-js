@@ -18,7 +18,7 @@
   @include card-sizes;
   padding: var(--card-padding);
   border: 1px solid var(--snt-color-muted);
-  border-radius: var(--snt-border-radius-l);
+  border-radius: var(--snt-border-radius-s);
   @each $color, $value in $palette-colors {
     &.#{$color} {
       background: linear-gradient(
