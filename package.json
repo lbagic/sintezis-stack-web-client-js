@@ -12,7 +12,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@bufbuild/connect-web": "^0.6.0",
+    "@buf/sintezis_reti.bufbuild_connect-web": "^0.6.0-20230126170634-740b135537e0.1",
     "@lbagic/collections": "^1.0.3",
     "@vueuse/core": "^9.6.0",
     "@vueuse/integrations": "^9.6.0",

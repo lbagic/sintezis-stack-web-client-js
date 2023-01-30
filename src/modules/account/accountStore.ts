@@ -1,5 +1,5 @@
-import type { LoginRequest } from "@/gen/account_pb";
-import type { User } from "@/gen/user_pb";
+import type { LoginRequest } from "@buf/sintezis_reti.bufbuild_es/account_pb";
+import type { User } from "@buf/sintezis_reti.bufbuild_es/user_pb";
 import { lifecycleHooks } from "@/hooks";
 import { defineStore } from "pinia";
 import { accountService } from "./accountService";
@@ -18,14 +18,12 @@ export const useAccountStore = defineStore({
     async login(payload: Partial<LoginRequest>) {
       const response = await accountService.login(payload);
       this.token = response.token;
-      this.user = response.user;
-      this.router.push("/");
+      if (response.user) this.user = response.user;
       lifecycleHooks.onLoggedIn();
       return response;
     },
     logout() {
       this.$reset();
-      this.router.push("/login");
       lifecycleHooks.onLoggedOut();
     },
   },

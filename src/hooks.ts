@@ -1,3 +1,4 @@
+import { router } from "@/app/router";
 import { useAccountStore } from "@/modules/account/accountStore";
 
 function onOpened() {
@@ -5,8 +6,12 @@ function onOpened() {
   if (account.isLoggedIn) onLoggedIn();
 }
 function onClosed() {}
-function onLoggedIn() {}
-function onLoggedOut() {}
+function onLoggedIn() {
+  router.push("/");
+}
+function onLoggedOut() {
+  router.push("/login");
+}
 
 export const lifecycleHooks = {
   onOpened,

@@ -1,13 +1,31 @@
 {
   "extends": "@vue/tsconfig/tsconfig.web.json",
-  "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
-  "exclude": ["./dist"],
+  "include": [
+    "env.d.ts",
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "src/**/*.js",
+    "node_modules/@buf/sintezis_*/**/*.d.ts"
+  ],
+  "exclude": ["dist"],
+  "references": [{ "path": "./tsconfig.config.json" }],
   "compilerOptions": {
-    "baseUrl": ".",
-    "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "paths": { "@/*": ["./src/*"] },
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "strict": true,
+    "jsx": "preserve",
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
     "allowJs": true,
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+
+    "baseUrl": ".",
+    "paths": { "@/*": ["./src/*"] },
     "outDir": "./dist"
-  },
-  "references": [{ "path": "./tsconfig.config.json" }]
+  }
 }
