@@ -1,15 +1,12 @@
 <script setup lang="ts">
 import { ROLES } from "@/enums/ROLES";
 import { useAccountStore } from "@/modules/account/accountStore";
-import { feedback } from "@/utils/feedback";
 import { usePromise } from "@/utils/usePromise";
 import { NDropdown } from "naive-ui";
 import type { DropdownMixedOption } from "naive-ui/es/dropdown/src/interface";
 
 const account = useAccountStore();
-const login = usePromise((data: any) => account.login(data), {
-  onError: () => feedback.message.error("Failed to log in."),
-});
+const login = usePromise((data: any) => account.login(data));
 const defaultSuffix = "@sintezis.co";
 const defaultPassword = "secret";
 
@@ -19,8 +16,8 @@ const rawOptions: {
   suffix?: string;
   password?: string;
 }[] = [
-  { name: ROLES.enum.Administrator, disabled: true },
-  { name: ROLES.enum.User },
+  { name: ROLES.enum.Administrator },
+  { name: ROLES.enum.User, disabled: true },
   { name: ROLES.enum.Guest, disabled: true },
 ];
 
@@ -41,7 +38,7 @@ const options: DropdownMixedOption[] = rawOptions.map((opt) => ({
     @select="(_, { payload }: any) => login.execute(payload)"
     v-if="!$prod"
   >
-    <button style="margin-top: 1rem" class="snt-button text accent">
+    <button style="margin-top: 1rem" class="snt-button text primary">
       Test login
     </button>
   </NDropdown>
