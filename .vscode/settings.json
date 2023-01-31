@@ -7,6 +7,12 @@
   "emmet.triggerExpansionOnTab": true,
   "volar.autoWrapParentheses": false,
   "volar.autoCompleteRefs": true,
+  "javascript.suggest.completeFunctionCalls": false,
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "javascript.preferences.importModuleSpecifier": "non-relative",
+  "typescript.suggest.completeFunctionCalls": false,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "typescript.preferences.importModuleSpecifier": "non-relative",
   // -------------------------- FORMATTER --------------------------
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.detectIndentation": false,

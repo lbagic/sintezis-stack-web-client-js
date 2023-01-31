@@ -1,7 +1,7 @@
-import { AccountService } from "@/gen/account_connectweb";
-import { PermissionService } from "@/gen/permission_connectweb";
-import { RoleService } from "@/gen/role_connectweb";
-import { UserService } from "@/gen/user_connectweb";
+import { AccountService } from "@buf/sintezis_reti.bufbuild_connect-web/account_connectweb";
+import { PermissionService } from "@buf/sintezis_reti.bufbuild_connect-web/permission_connectweb";
+import { RoleService } from "@buf/sintezis_reti.bufbuild_connect-web/role_connectweb";
+import { UserService } from "@buf/sintezis_reti.bufbuild_connect-web/user_connectweb";
 import { createGrpcPromiseClient } from "./base/grpcClientFactory";
 import { grpcInterceptors } from "./interceptors";
 

@@ -41,8 +41,6 @@ build-auto:
   image: node:18.13.0
   script:
     - apt update
-    - make buf
-    - make proto
     - npx vite build --mode ${CI_COMMIT_BRANCH}
   artifacts:
     paths:
@@ -59,8 +57,6 @@ build-manual:
   image: node:18.13.0
   script:
     - apt update
-    - make buf
-    - make proto
     - npx vite build --mode development
   artifacts:
     paths:

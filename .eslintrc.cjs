@@ -17,13 +17,4 @@ module.exports = {
     "vue/no-setup-props-destructure": "off",
     "vue/require-v-for-key": "off",
   },
-  globals: {
-    $ref: "readonly",
-    $computed: "readonly",
-    $shallowRef: "readonly",
-    $customRef: "readonly",
-    $toRef: "readonly",
-    $: "readonly",
-    $$: "readonly",
-  },
 };

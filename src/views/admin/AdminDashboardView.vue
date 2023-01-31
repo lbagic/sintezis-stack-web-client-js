@@ -1,5 +1,5 @@
 <script setup>
-import { adminResources } from "@/modules/admin/adminResources";
+import { NStatistic } from "naive-ui";
 
 const data = {
   Users: 23,
@@ -11,21 +11,14 @@ const data = {
   <div class="snt-container snt-grid">
     <p>Overview:</p>
     <div class="snt-grid-fill">
-      <div v-for="(value, key) in data" :key="key" class="snt-card primary">
-        <p style="font-size: 20px">{{ value }}</p>
-        <p style="font-size: 11px; color: var(--snt-color-grey)">{{ key }}</p>
-      </div>
-    </div>
-    <p>Resources:</p>
-    <div class="snt-flex-wrap">
-      <RouterLink
-        class="snt-button text primary animate-underline-active"
-        v-for="(_, id) in adminResources"
-        :key="id"
-        :to="`/resource/${id}`"
+      <NStatistic
+        v-for="(value, key) in data"
+        :key="key"
+        class="snt-card primary"
+        :label="key"
       >
-        {{ id }}
-      </RouterLink>
+        {{ value }}
+      </NStatistic>
     </div>
   </div>
 </template>

@@ -1,48 +1,23 @@
+import type ResourceTable from "@/components/admin/ResourceTable.vue";
 import type { useFormData } from "@/components/base/input/inputController";
-import { formatNumber } from "@/utils/number";
-import { DeleteOutlined, EditOutlined } from "@vicons/material";
-import type {
-  DataTableColumns,
-  NDataTable,
-  NModal,
-  NPageHeader,
-} from "naive-ui";
-import * as R from "ramda";
-import { computed, h, reactive, ref } from "vue";
-import { useRouter } from "vue-router";
+import type BaseModal from "@/components/base/modal/BaseModal.vue";
+import type { OmitType } from "@/utils/types";
+import type { NPageHeader } from "naive-ui";
+import { computed, reactive, ref } from "vue";
+import { useRouter, useRoute } from "vue-router";
 
 export type ResourceForm = ReturnType<typeof useFormData>;
-type Actions = Partial<{
-  add: ResourceForm;
-}>;
-type TableActions = Partial<{
-  edit: ResourceForm;
-  delete: ResourceForm;
-}>;
 
-const tableConfig = {
-  delete: { icon: DeleteOutlined, color: "error" },
-  edit: { icon: EditOutlined, color: "warning" },
-} satisfies Record<keyof TableActions, any>;
-
-function setupContext<T extends Record<string, any> = any>(config: {
+export function setupResource<T extends Record<string, any> = any>(config: {
   uniqueKey?: keyof T;
-  tableColumns: DataTableColumns<T>;
-  actionForms?: Actions;
-  tableActionForms?: TableActions;
+  columns?: { key: keyof Partial<OmitType<T, Function>>; title: string }[];
 }) {
   const router = useRouter();
-  const id = router.currentRoute.value.params.resourceId as string;
-  const title = id.toCapitalCase();
-  const uniqueKey = config.uniqueKey ?? "id";
-  const onBack = () => router.push("/");
+  const route = useRoute();
+  const resourceId = route.params.resourceId as string;
+  const title = resourceId.toCapitalCase();
 
   const data = ref<T[]>([]);
-  const checkedRowKeys = ref<any[]>([]);
-  function rowToItem(row: any) {
-    return data.value.find((el) => el[uniqueKey] === row[uniqueKey]);
-  }
-  const selected = computed(() => checkedRowKeys.value.map(rowToItem));
   const showModal = reactive({
     add: false,
     edit: false,
@@ -51,65 +26,20 @@ function setupContext<T extends Record<string, any> = any>(config: {
 
   const headerProps: InstanceType<typeof NPageHeader>["$props"] = {
     title,
-    onBack,
+    onBack: () => router.push("/"),
   };
 
   const tableProps = computed(() => {
-    const columns = config.tableColumns;
-    const actions = config.tableActionForms;
-    if (actions) {
-      columns.unshift({
-        title: "Actions",
-        key: "actions",
-        render: (row) =>
-          h(
-            "div",
-            { class: "snt-flex" },
-            {
-              default: () =>
-                R.keys(actions).map((actionName) =>
-                  h(
-                    "button",
-                    {
-                      class: `snt-button ${tableConfig[actionName].color} tiny text`,
-                      onClick: () => {
-                        showModal[actionName] = true;
-                        const item = rowToItem(row);
-                        console.log(item);
-                        setTimeout(() => actions[actionName]?.hydrate?.(item));
-                      },
-                      title: actionName,
-                    },
-                    h(tableConfig[actionName].icon, { width: 16, height: 16 })
-                  )
-                ),
-            }
-          ),
-      });
-    }
-    const props: InstanceType<typeof NDataTable>["$props"] = {
-      columns,
-      data: data.value as any,
-      rowKey: (el) => el[uniqueKey],
-      checkedRowKeys: checkedRowKeys.value,
-      virtualScroll: true,
-      maxHeight: 500,
-      striped: true,
-      summary: (pageData) => ({
-        actions: {
-          value: h("span", `Total: ${formatNumber(pageData.length)}`),
-          colSpan: columns.length - 1,
-        },
-      }),
-      summaryPlacement: "top",
-      onUpdateCheckedRowKeys: (value) => (checkedRowKeys.value = value),
+    const props: InstanceType<typeof ResourceTable>["$props"] = {
+      data: data.value,
+      columns: config.columns as any,
     };
     return props;
   });
 
   const addModalProps = computed(() => {
-    const props: InstanceType<typeof NModal>["$props"] = {
-      class: "snt-width-s",
+    const props: InstanceType<typeof BaseModal>["$props"] = {
+      class: "width-s",
       title: `Create ${title}`,
       preset: "card",
       show: showModal.add,
@@ -118,8 +48,8 @@ function setupContext<T extends Record<string, any> = any>(config: {
     return props;
   });
   const editModalProps = computed(() => {
-    const props: InstanceType<typeof NModal>["$props"] = {
-      class: "snt-width-s",
+    const props: InstanceType<typeof BaseModal>["$props"] = {
+      class: "width-s",
       title: `Update ${title}`,
       preset: "card",
       show: showModal.edit,
@@ -128,8 +58,8 @@ function setupContext<T extends Record<string, any> = any>(config: {
     return props;
   });
   const deleteModalProps = computed(() => {
-    const props: InstanceType<typeof NModal>["$props"] = {
-      class: "snt-width-s",
+    const props: InstanceType<typeof BaseModal>["$props"] = {
+      class: "width-s",
       title: `Delete ${title}`,
       preset: "card",
       show: showModal.delete,
@@ -140,13 +70,7 @@ function setupContext<T extends Record<string, any> = any>(config: {
 
   return {
     data,
-    selected,
-    checkedRowKeys,
-    hasPagination: false,
-    usePagination: false,
     showModal,
-    title,
-    onBack,
     bind: {
       table: tableProps,
       header: headerProps,
@@ -156,7 +80,3 @@ function setupContext<T extends Record<string, any> = any>(config: {
     },
   };
 }
-
-export const adminResourceController = {
-  setupContext,
-};

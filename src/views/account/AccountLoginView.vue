@@ -1,8 +1,8 @@
 <script setup>
+import DevelopmentLogin from "@/components/account/DevelopmentLogin.vue";
 import BaseInput from "@/components/base/input/BaseInput.vue";
 import { useFormData } from "@/components/base/input/inputController";
 import { useAccountStore } from "@/modules/account/accountStore";
-import { feedback } from "@/utils/feedback";
 import { usePromise } from "@/utils/usePromise";
 import { NButton } from "naive-ui";
 
@@ -13,14 +13,6 @@ const form = useFormData({
 
 const accountStore = useAccountStore();
 const login = usePromise(accountStore.login);
-async function onLogin() {
-  try {
-    await login.execute(form.data);
-    feedback.message.success("Logged in");
-  } catch {
-    feedback.message.error("Failed to log in");
-  }
-}
 </script>
 
 <template>
@@ -48,10 +40,13 @@ async function onLogin() {
           size="large"
           class="width-expand"
           :disabled="!form.isValid || login.isPending"
-          @click="onLogin"
+          @click="login.execute(form.data)"
         >
           Submit
         </NButton>
+        <div class="snt-flex center">
+          <DevelopmentLogin v-if="!$prod" style="justify-self: center" />
+        </div>
       </fieldset>
     </form>
   </div>
