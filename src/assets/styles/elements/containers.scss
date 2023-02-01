@@ -99,7 +99,7 @@
   display: grid;
   align-content: flex-start;
   grid-template-columns: repeat(auto-fill, minmax(var(--width), 1fr));
-  gap: var(--flex-gap);
+  gap: var(--grid-gap);
 }
 .#{$prefix}flex {
   @include flexbox-gap;

@@ -33,7 +33,6 @@ getAll();
 
 const forms = {
   add: useFormData({
-    id: 0,
     name: "",
   }),
   edit: useFormData({
@@ -91,12 +90,6 @@ async function onDeleteSubmit() {
   />
   <BaseModal v-bind="ctx.bind.addModal.value">
     <form class="snt-grid" @submit.prevent>
-      <BaseInputNumber
-        :constraint="{ required: true }"
-        label="Id"
-        min="0"
-        v-model="forms.add.model.id"
-      />
       <BaseInput
         :constraint="{ required: true }"
         label="Name"
