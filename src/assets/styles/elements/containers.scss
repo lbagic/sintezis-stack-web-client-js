@@ -18,11 +18,11 @@
     --container-padding: 16px;
   }
   &.large {
-    --container-padding: 36px;
+    --container-padding: 32px;
   }
 }
 
-@mixin flexbox-sizes {
+@mixin flexbox-gap {
   --flex-gap: 16px;
   &.tiny {
     --flex-gap: 4px;
@@ -34,10 +34,22 @@
     --flex-gap: 16px;
   }
   &.large {
-    --flex-gap: 36px;
+    --flex-gap: 32px;
   }
 }
-@mixin grid-sizes {
+@mixin flexbox-center {
+  &.center {
+    align-items: center;
+    justify-content: center;
+  }
+}
+@mixin flexbox-equal {
+  &.equal > * {
+    flex-basis: 0;
+    flex-grow: 1;
+  }
+}
+@mixin grid-gap {
   --grid-gap: 16px;
   &.tiny {
     --grid-gap: 4px;
@@ -49,7 +61,7 @@
     --grid-gap: 16px;
   }
   &.large {
-    --grid-gap: 36px;
+    --grid-gap: 32px;
   }
 }
 
@@ -65,7 +77,7 @@
 }
 
 .#{$prefix}grid {
-  @include grid-sizes;
+  @include grid-gap;
   --gtc: initial;
   --gtr: initial;
   --gta: initial;
@@ -83,50 +95,34 @@
 
 .#{$prefix}grid-fill {
   --width: 200px;
-  @include flexbox-sizes;
+  @include grid-gap;
   display: grid;
   align-content: flex-start;
   grid-template-columns: repeat(auto-fill, minmax(var(--width), 1fr));
   gap: var(--flex-gap);
 }
 .#{$prefix}flex {
-  @include flexbox-sizes;
+  @include flexbox-gap;
+  @include flexbox-center;
+  @include flexbox-equal;
   display: flex;
   align-items: center;
   & > * + * {
     margin-left: var(--flex-gap);
   }
-  &.center {
-    align-items: center;
-    justify-content: center;
-  }
-  &.equal {
-    & > * {
-      flex-basis: 0;
-      flex-grow: 1;
-    }
-  }
 }
 .#{$prefix}flex-column {
-  @include flexbox-sizes;
+  @include flexbox-gap;
+  @include flexbox-center;
+  @include flexbox-equal;
   display: flex;
   flex-direction: column;
   & > * + * {
     margin-top: var(--flex-gap);
   }
-  &.center {
-    align-items: center;
-    justify-content: center;
-  }
-  &.equal {
-    & > * {
-      flex-basis: 0;
-      flex-grow: 1;
-    }
-  }
 }
 .#{$prefix}flex-wrap {
-  @include flexbox-sizes;
+  @include flexbox-gap;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -135,5 +131,34 @@
   & > * {
     margin-left: var(--flex-gap);
     margin-bottom: var(--flex-gap);
+  }
+}
+.#{$prefix}flex-carousel {
+  // If used within grid, be wary of grid blowout. https://css-tricks.com/preventing-a-grid-blowout/
+  // Quick fix: `min-width: 0;` or `overflow-x: hidden;` on grid element containing carousel
+  --carousel-item-width: auto;
+  --carousel-item-height: auto;
+  @include flexbox-gap;
+
+  display: flex;
+  overflow-x: auto;
+
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch; // iOS smooth scroll
+
+  & > * {
+    scroll-snap-align: start;
+    flex: 0 0 var(--carousel-item-width);
+    width: auto;
+    height: var(--carousel-item-height);
+    max-width: 100%;
+  }
+  & > * + * {
+    margin-left: var(--flex-gap);
+  }
+  & img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
   }
 }
