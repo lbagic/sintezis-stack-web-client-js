@@ -6,7 +6,6 @@
   },
   "emmet.triggerExpansionOnTab": true,
   "volar.autoWrapParentheses": false,
-  "volar.autoCompleteRefs": true,
   "javascript.suggest.completeFunctionCalls": false,
   "javascript.updateImportsOnFileMove.enabled": "always",
   "javascript.preferences.importModuleSpecifier": "non-relative",
