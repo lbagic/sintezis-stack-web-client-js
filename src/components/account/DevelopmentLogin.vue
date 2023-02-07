@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ROLES } from "@/enums/ROLES";
-import { useAccountStore } from "@/modules/account/accountStore";
+import { useAccountService } from "@/modules/account/accountService";
 import { usePromise } from "@/utils/usePromise";
 import { NDropdown } from "naive-ui";
 import type { DropdownMixedOption } from "naive-ui/es/dropdown/src/interface";
 
-const account = useAccountStore();
+const account = useAccountService();
 const login = usePromise((data: any) => account.login(data));
 const defaultSuffix = "@sintezis.co";
 const defaultPassword = "secret";

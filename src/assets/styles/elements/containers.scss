@@ -143,11 +143,11 @@
   display: flex;
   overflow-x: auto;
 
-  scroll-snap-type: x mandatory;
+  // scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch; // iOS smooth scroll
 
   & > * {
-    scroll-snap-align: start;
+    // scroll-snap-align: start;
     flex: 0 0 var(--carousel-item-width);
     width: auto;
     height: var(--carousel-item-height);

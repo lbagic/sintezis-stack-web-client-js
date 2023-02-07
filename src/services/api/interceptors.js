@@ -1,4 +1,4 @@
-import { useAccountStore } from "@/modules/account/accountStore";
+import { useAccountService } from "@/modules/account/accountService";
 import { createInterceptor } from "./base/interceptorFactory";
 
 const loggingInterceptor = createInterceptor({
@@ -26,9 +26,8 @@ const loggingInterceptor = createInterceptor({
 
 const authInterceptor = createInterceptor({
   onRequest({ setHeader }) {
-    const accountStore = useAccountStore();
-    if (accountStore.token)
-      setHeader("Authorization", `Bearer ${accountStore.token}`);
+    const account = useAccountService();
+    if (account.token) setHeader("Authorization", `Bearer ${account.token}`);
   },
 });
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useAccountStore } from "@/modules/account/accountStore";
+import { useAccountService } from "@/modules/account/accountService";
 import { adminResources } from "@/modules/admin/adminResources";
-import { useAdminStore } from "@/modules/admin/adminStore";
+import { useAdminService } from "@/modules/admin/adminService";
 import { css } from "@/utils/css";
 import { feedback } from "@/utils/feedback";
 import { useRouteBreadcrumbs } from "@/utils/routeBreadcrumbs";
@@ -21,8 +21,8 @@ import { computed, h } from "vue";
 import { RouterLink, useRoute } from "vue-router";
 
 const route = useRoute();
-const adminStore = useAdminStore();
-const accountStore = useAccountStore();
+const adminStore = useAdminService();
+const account = useAccountService();
 const breadcrumbs = useRouteBreadcrumbs();
 const activePath = computed(() => route.path);
 
@@ -40,7 +40,7 @@ function confirmLogout() {
     title: "Logout",
     positiveText: "Yes",
     negativeText: "No, not yet",
-    onPositiveClick: accountStore.logout,
+    onPositiveClick: account.logout,
   });
 }
 </script>

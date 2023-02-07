@@ -1,7 +1,7 @@
-import { useAccountStore } from "@/modules/account/accountStore";
+import { useAccountService } from "@/modules/account/accountService";
 
 function onOpened() {
-  const account = useAccountStore();
+  const account = useAccountService();
   if (account.isLoggedIn) onLoggedIn();
 }
 function onClosed() {}

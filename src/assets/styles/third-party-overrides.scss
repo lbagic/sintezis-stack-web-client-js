@@ -1,8 +1,14 @@
+// Enable changing modal mask color in BaseModal
 :root {
   --n-modal-mask-background-override: rgba(0, 0, 0, 0.4);
 }
 .n-modal-mask {
   background-color: var(--n-modal-mask-background-override);
+}
+
+// Remove duplicate border on NUpload when NUploadDragger is used
+.n-upload-dragger > .n-upload-dragger {
+  border: none;
 }
 
 // use <NBadge dot dot-mask /> for white badge mask

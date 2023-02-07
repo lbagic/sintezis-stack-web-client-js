@@ -2,7 +2,7 @@
 import DevelopmentLogin from "@/components/account/DevelopmentLogin.vue";
 import BaseInput from "@/components/base/input/BaseInput.vue";
 import { useFormData } from "@/components/base/input/inputController";
-import { useAccountStore } from "@/modules/account/accountStore";
+import { useAccountService } from "@/modules/account/accountService";
 import { usePromise } from "@/utils/usePromise";
 import { NButton } from "naive-ui";
 
@@ -11,8 +11,8 @@ const form = useFormData({
   password: "",
 });
 
-const accountStore = useAccountStore();
-const login = usePromise(accountStore.login);
+const account = useAccountService();
+const login = usePromise(account.login);
 </script>
 
 <template>
