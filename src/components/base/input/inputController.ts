@@ -159,8 +159,10 @@ export const inputController = {
     );
 
     const context = computed(() =>
-      mergeProps(props, {
+      mergeProps(props, props.nProps ?? {}, {
         ...staticProps,
+        style: props.nStyle,
+        class: props.nClass,
         "data-input-invalid": !!model.error,
       })
     );

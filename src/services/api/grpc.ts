@@ -2,10 +2,10 @@ import { AccountService } from "@buf/sintezis_reti.bufbuild_connect-web/account_
 import { PermissionService } from "@buf/sintezis_reti.bufbuild_connect-web/permission_connectweb";
 import { RoleService } from "@buf/sintezis_reti.bufbuild_connect-web/role_connectweb";
 import { UserService } from "@buf/sintezis_reti.bufbuild_connect-web/user_connectweb";
-import { createGrpcPromiseClient } from "./base/grpcClientFactory";
+import { createGrpcClient } from "./base/grpcClientFactory";
 import { grpcInterceptors } from "./interceptors";
 
-export const grpc = createGrpcPromiseClient({
+export const grpc = createGrpcClient({
   services: {
     AccountService,
     PermissionService,
@@ -13,6 +13,8 @@ export const grpc = createGrpcPromiseClient({
     UserService,
   },
   useEnvoyProxy: false,
-  baseUrl: import.meta.env.VITE_SNT_GRPC_URL,
-  interceptors: grpcInterceptors,
+  transportOptions: {
+    baseUrl: import.meta.env.VITE_SNT_GRPC_URL,
+    interceptors: grpcInterceptors,
+  },
 });

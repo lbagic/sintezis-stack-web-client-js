@@ -1,5 +1,5 @@
 import type { ROLES } from "@/enums/ROLES";
-import { useAccountStore } from "@/modules/account/accountStore";
+import { useAccountService } from "@/modules/account/accountService";
 import { routes } from "@/routes";
 import { feedback } from "@/utils/feedback";
 import { applicationTitle } from "@/utils/globalProperties";
@@ -27,7 +27,7 @@ const createAuthorization =
     route.meta.authorize?.({ roles, isLoggedIn }) ?? true;
 
 router.beforeEach((to, from, next) => {
-  const { roles, isLoggedIn } = useAccountStore();
+  const { roles, isLoggedIn } = useAccountService();
   const authorize = createAuthorization(roles, isLoggedIn);
   const referrer = router.referrer;
   router.referrer = from;

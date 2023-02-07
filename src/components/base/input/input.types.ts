@@ -29,6 +29,9 @@ export const baseInputProps = {
   feedback: formItemProps.feedback,
   label: formItemProps.label,
   modelValue: undefined as unknown as PropType<any>,
+  nProps: Object,
+  nStyle: [Object, String],
+  nClass: [Object, String],
 };
 
 export namespace InputTypes {
