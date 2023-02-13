@@ -9,6 +9,7 @@ variables:
   DOCKER_HOST: tcp://127.0.0.1:2375/
   DOCKER_TLS_CERTDIR: ""
   BUF_TOKEN: ${BUF_REGISTRY_TOKEN}
+  PROJECT: web-stack
 
 stages:
   - install
@@ -72,7 +73,7 @@ deploy_manual:
     - build-manual
   environment:
     name: review/$CI_COMMIT_REF_SLUG
-    url: https://reti-${CI_JOB_ID}.cdn.sintezis.link
+    url: https://${PROJECT}-${CI_JOB_ID}.cdn.sintezis.link
     on_stop: destroy_deploy_manual
     auto_stop_in: 1 week
   image:
@@ -87,8 +88,8 @@ deploy_manual:
   before_script:
     - eval $(aws ecr get-login --no-include-email --region $AWS_REGION | sed 's|https://||')
   script:
-    - aws --region $AWS_REGION s3 rm s3://${S3_BUCKET_NAME}/reti-${CI_JOB_ID}.cdn.sintezis.link --recursive
-    - aws --region $AWS_REGION s3 cp dist/ s3://${S3_BUCKET_NAME}/reti-${CI_JOB_ID}.cdn.sintezis.link --recursive
+    - aws --region $AWS_REGION s3 rm s3://${S3_BUCKET_NAME}/${PROJECT}-${CI_JOB_ID}.cdn.sintezis.link --recursive
+    - aws --region $AWS_REGION s3 cp dist/ s3://${S3_BUCKET_NAME}/${PROJECT}-${CI_JOB_ID}.cdn.sintezis.link --recursive
     - aws cloudfront create-invalidation --distribution-id $CDN_DISTRIBUTION_ID --paths "/*"
   rules:
     - if: '$CI_COMMIT_BRANCH != "development" && $CI_COMMIT_BRANCH != "staging"'
@@ -100,7 +101,7 @@ deploy_auto:
     - build-auto
   environment:
     name: review/$CI_COMMIT_BRANCH
-    url: https://reti-${CI_COMMIT_BRANCH}.cdn.sintezis.link
+    url: https://${PROJECT}-${CI_COMMIT_BRANCH}.cdn.sintezis.link
     on_stop: destroy_deploy_auto
   image:
     name: amazon/aws-cli
@@ -114,8 +115,8 @@ deploy_auto:
   before_script:
     - eval $(aws ecr get-login --no-include-email --region $AWS_REGION | sed 's|https://||')
   script:
-    - aws --region $AWS_REGION s3 rm s3://${S3_BUCKET_NAME}/reti-${CI_COMMIT_BRANCH}.cdn.sintezis.link --recursive
-    - aws --region $AWS_REGION s3 cp dist/ s3://${S3_BUCKET_NAME}/reti-${CI_COMMIT_BRANCH}.cdn.sintezis.link --recursive
+    - aws --region $AWS_REGION s3 rm s3://${S3_BUCKET_NAME}/${PROJECT}-${CI_COMMIT_BRANCH}.cdn.sintezis.link --recursive
+    - aws --region $AWS_REGION s3 cp dist/ s3://${S3_BUCKET_NAME}/${PROJECT}-${CI_COMMIT_BRANCH}.cdn.sintezis.link --recursive
     - aws cloudfront create-invalidation --distribution-id $CDN_DISTRIBUTION_ID --paths "/*"
   only:
     - development
@@ -133,7 +134,7 @@ destroy_deploy_manual:
     action: stop
   # Optional: Manual gate
   script:
-    - aws --region $AWS_REGION s3 rm s3://${S3_BUCKET_NAME}/reti-${CI_JOB_ID}.cdn.sintezis.link --recursive
+    - aws --region $AWS_REGION s3 rm s3://${S3_BUCKET_NAME}/${PROJECT}-${CI_JOB_ID}.cdn.sintezis.link --recursive
     - aws cloudfront create-invalidation --distribution-id $CDN_DISTRIBUTION_ID --paths "/*"
   rules:
     - if: '$CI_COMMIT_BRANCH != "development" && $CI_COMMIT_BRANCH != "staging"'
@@ -152,7 +153,7 @@ destroy_deploy_auto:
   # Optional: Manual gate
   when: manual
   script:
-    - aws --region $AWS_REGION s3 rm s3://${S3_BUCKET_NAME}/reti-${CI_COMMIT_BRANCH}.cdn.sintezis.link --recursive
+    - aws --region $AWS_REGION s3 rm s3://${S3_BUCKET_NAME}/${PROJECT}-${CI_COMMIT_BRANCH}.cdn.sintezis.link --recursive
     - aws cloudfront create-invalidation --distribution-id $CDN_DISTRIBUTION_ID --paths "/*"
   only:
     - development
