@@ -16,10 +16,11 @@ export const router = createRouter({
 });
 
 const fallback = import.meta.env.VITE_ADMIN_PANEL
-  ? { user: "/", visitor: "/login" }
-  : { user: "/", visitor: "/login" };
+  ? { user: "/", visitor: "login" }
+  : { user: "/", visitor: "login" };
 
-const settings = { useImplicitLoadingBar: true };
+const settings = { implicitLoadingBar: true };
+const loadingBar = feedback.loadingBar;
 
 const createAuthorization =
   (roles: string[], isLoggedIn: boolean) =>
@@ -36,12 +37,9 @@ router.beforeEach((to, from, next) => {
   const isAuthorized = to.matched.every(authorize);
   const isValid = isFound && isAuthorized;
 
-  const useLoadingBar = to.meta.useLoadingBar ?? settings.useImplicitLoadingBar;
-  if (useLoadingBar) {
-    feedback.loadingBar.start();
-    setTimeout(() =>
-      isValid ? feedback.loadingBar.finish() : feedback.loadingBar.error()
-    );
+  if (to.meta.loadingBar ?? settings.implicitLoadingBar) {
+    loadingBar.start();
+    setTimeout(() => (isValid ? loadingBar.finish() : loadingBar.error()));
   }
 
   return isValid
@@ -73,7 +71,7 @@ declare module "vue-router" {
     }) => boolean;
     breadcrumbs?: (route: RouteLocationNormalized) => RouteBreadcrumb[];
     title?: string | ((route: RouteLocationNormalized) => string);
-    useLoadingBar?: boolean;
+    loadingBar?: boolean;
   }
   interface Router {
     referrer?: RouteLocationNormalized;

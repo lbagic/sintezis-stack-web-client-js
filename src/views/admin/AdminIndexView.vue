@@ -3,7 +3,6 @@ import { useAccountService } from "@/modules/account/accountService";
 import { adminResources } from "@/modules/admin/adminResources";
 import { useAdminService } from "@/modules/admin/adminService";
 import { css } from "@/utils/css";
-import { feedback } from "@/utils/feedback";
 import { useRouteBreadcrumbs } from "@/utils/routeBreadcrumbs";
 import {
   PowerSettingsNewOutlined,
@@ -15,12 +14,14 @@ import {
   NLayout,
   NLayoutSider,
   NMenu,
+  useDialog,
   type MenuOption,
 } from "naive-ui";
 import { computed, h } from "vue";
 import { RouterLink, useRoute } from "vue-router";
 
 const route = useRoute();
+const dialog = useDialog();
 const adminStore = useAdminService();
 const account = useAccountService();
 const breadcrumbs = useRouteBreadcrumbs();
@@ -35,7 +36,7 @@ const sideMenuOptions = Object.keys(adminResources).map(
   })
 );
 function confirmLogout() {
-  feedback.dialog.warning({
+  dialog.warning({
     content: "Are you sure you want to logout?",
     title: "Logout",
     positiveText: "Yes",
@@ -87,8 +88,7 @@ function confirmLogout() {
       </NBreadcrumb>
 
       <button
-        class="snt-button text white"
-        style="justify-self: flex-end"
+        class="snt-button text white justify-self-end"
         @click="confirmLogout"
         title="logout"
         aria-label="logout"

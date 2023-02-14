@@ -7,6 +7,7 @@ import type { DropdownMixedOption } from "naive-ui/es/dropdown/src/interface";
 
 const account = useAccountService();
 const login = usePromise((data: any) => account.login(data));
+
 const defaultSuffix = "@sintezis.co";
 const defaultPassword = "secret";
 
@@ -16,8 +17,8 @@ const rawOptions: {
   suffix?: string;
   password?: string;
 }[] = [
-  { name: ROLES.enum.Administrator },
-  { name: ROLES.enum.User, disabled: true },
+  { name: ROLES.enum.Admin },
+  { name: ROLES.enum.User },
   { name: ROLES.enum.Guest, disabled: true },
 ];
 
@@ -35,11 +36,16 @@ const options: DropdownMixedOption[] = rawOptions.map((opt) => ({
 <template>
   <NDropdown
     :options="options"
+    :disabled="login.isPending"
     @select="(_, { payload }: any) => login.execute(payload)"
     v-if="!$prod"
   >
-    <button style="margin-top: 1rem" class="snt-button text primary">
-      Test login
+    <button
+      class="snt-button text primary"
+      type="button"
+      :disabled="login.isPending"
+    >
+      Quick login
     </button>
   </NDropdown>
 </template>

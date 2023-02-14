@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { lifecycleHooks } from "@/hooks";
-import { NConfigProvider } from "naive-ui";
+import {
+  NConfigProvider,
+  NDialogProvider,
+  NMessageProvider,
+  NNotificationProvider,
+} from "naive-ui";
 import { theme } from "./app/theme";
 
 lifecycleHooks.onOpened();
@@ -9,7 +14,13 @@ window.addEventListener("beforeunload", lifecycleHooks.onClosed);
 
 <template>
   <NConfigProvider :theme-overrides="theme" style="height: 100%">
-    <RouterView />
+    <NDialogProvider>
+      <NMessageProvider>
+        <NNotificationProvider>
+          <RouterView />
+        </NNotificationProvider>
+      </NMessageProvider>
+    </NDialogProvider>
   </NConfigProvider>
 </template>
 

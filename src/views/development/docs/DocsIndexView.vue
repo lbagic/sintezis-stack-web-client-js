@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { routes } from "@/routes/development/routes";
-const childRoutes = routes.find((el) => el.path === "/docs")?.children ?? [];
+import { developmentRoutes } from "@/routes/shared/development.routes";
+
+const childRoutes =
+  developmentRoutes.find((el) => el.path === "/docs")?.children ?? [];
 </script>
 
 <template>
