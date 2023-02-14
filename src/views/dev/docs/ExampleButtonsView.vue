@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { css } from "@/utils/css";
 
-const colors = ["default", ...Object.keys(css.colors)];
+const colors = ["default", ...Object.keys(css.color)];
 const types = [
   "default",
   "secondary",

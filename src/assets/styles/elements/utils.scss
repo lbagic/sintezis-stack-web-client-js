@@ -1,3 +1,25 @@
+// Generated
+@for $i from 10 to 36 {
+  .fs-#{$i} {
+    font-size: #{$i}px;
+  }
+}
+@each $name, $value in get("border-radius") {
+  .border-radius-#{$name} {
+    border-radius: $value;
+  }
+}
+@each $name, $value in get("width") {
+  .width-#{$name} {
+    width: $value;
+  }
+}
+@each $name, $value in get("box-shadow") {
+  .box-shadow-#{$name} {
+    box-shadow: $value;
+  }
+}
+
 // display
 .hidden {
   position: absolute;
@@ -82,19 +104,6 @@
   justify-self: center;
 }
 
-// border radius
-@each $name, $size in $border-radius {
-  .border-radius-#{$name} {
-    border-radius: $size;
-  }
-}
-
-// sizes
-@each $width, $size in $widths {
-  .width-#{$width} {
-    width: $size;
-  }
-}
 .width-expand {
   width: 100%;
 }
@@ -108,12 +117,6 @@
   height: 100vh;
 }
 
-// text
-@for $i from 10 to 36 {
-  .fs-#{$i} {
-    font-size: #{$i}px;
-  }
-}
 .italic {
   font-style: italic;
 }

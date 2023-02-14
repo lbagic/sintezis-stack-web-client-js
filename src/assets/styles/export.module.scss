@@ -1,16 +1,4 @@
 :export {
-  JSON: generate-json(
-    (
-      prefix: $prefix,
-      baseColors: $base-colors,
-      colors: $colors,
-      breakpoints: $breakpoints,
-      containers: $containers,
-      widths: $widths,
-      boxShadows: $box-shadows,
-      borderRadius: $border-radius,
-      bezier: $bezier,
-      zIndex: $z-index,
-    )
-  );
+  prefix: $prefix;
+  jsonVariables: generate-json($project-variables);
 }

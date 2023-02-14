@@ -5,13 +5,5 @@
 
 :root {
   --prefix: #{$prefix};
-
-  @include generate-css-variables($breakpoints, "breakpoint");
-  @include generate-css-variables($widths, "width");
-  @include generate-css-variables($z-index, "z-index");
-  @include generate-css-variables($box-shadows, "box-shadow");
-  @include generate-css-variables($border-radius, "border-radius");
-  @include generate-css-variables($bezier, "bezier");
-  @include generate-css-variables($base-colors, "color");
-  @include generate-css-variables($colors, "color");
+  @include generate-css-variables($project-variables);
 }

@@ -58,10 +58,10 @@ function confirmLogout() {
       </RouterLink>
       <NBreadcrumb
         :theme-overrides="{
-          itemTextColor: css.colors.white.base,
-          separatorColor: css.colors.white.base,
-          itemTextColorActive: css.colors.white.base,
-          itemTextColorHover: css.colors.white.base,
+          itemTextColor: css.color.white.base,
+          separatorColor: css.color.white.base,
+          itemTextColorActive: css.color.white.base,
+          itemTextColorHover: css.color.white.base,
         }"
       >
         <NBreadcrumbItem v-if="!breadcrumbs.length">

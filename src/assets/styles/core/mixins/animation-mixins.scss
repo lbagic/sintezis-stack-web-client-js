@@ -1,13 +1,25 @@
-@mixin transition(
-  $transition-property-value: '0.4s all #{map-get($bezier, "1")}'
-) {
+@mixin transition($transition-property) {
   &-enter-from,
   &-leave-to {
     @content;
   }
   &-enter-active,
   &-leave-active {
-    transition: $transition-property-value;
+    transition: $transition-property;
+  }
+}
+@mixin transition-move($transition-property) {
+  &-enter-from,
+  &-leave-to {
+    @content;
+  }
+  &-move,
+  &-enter-active,
+  &-leave-active {
+    transition: $transition-property;
+  }
+  &-leave-active {
+    position: absolute;
   }
 }
 

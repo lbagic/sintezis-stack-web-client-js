@@ -69,7 +69,7 @@
   @include container-sizes;
   padding: var(--container-padding);
 }
-@each $container, $size in $containers {
+@each $container, $size in get("container") {
   .#{$prefix}container-#{$container} {
     @include container-base;
     max-width: $size;

@@ -1,14 +1,13 @@
-import rawCSS from "@/assets/styles/export.module.scss";
+import raw from "@/assets/styles/export.module.scss";
 import { mapObjIndexed } from "ramda";
 
 export namespace CSS {
   export type Breakpoints = "s" | "m" | "l" | "xl" | "xxl";
   export type Containers = "s" | "m" | "l" | "xl" | "expand";
-  export type Widths = "s" | "m" | "l" | "xl";
-  export type BoxShadows = "s" | "m" | "l" | "xl" | "xxl";
+  export type Widths = "xs" | "s" | "m" | "l" | "xl";
   export type BorderRadius = "s" | "m" | "l" | "xl" | "round";
+  export type BoxShadows = "s" | "m" | "l" | "xl" | "xxl";
   export type Bezier = "1" | "2" | "3" | "4";
-  export type ZIndexes = "toast" | "modal";
   export type BaseColors = "text" | "background";
   export type PaletteColors =
     | "black"
@@ -41,8 +40,14 @@ export namespace CSS {
     | "soft";
   export type Parsed = {
     prefix: string;
-    baseColors: Record<BaseColors, string>;
-    colors: Record<
+    breakpoint: Record<Breakpoints, string>;
+    container: Record<Containers, string>;
+    width: Record<Widths, string>;
+    bezier: Record<Bezier, string>;
+    "border-radius": Record<BorderRadius, string>;
+    "box-shadow": Record<BoxShadows, string[][]>;
+    "base-color": Record<BaseColors, string>;
+    color: Record<
       PaletteColors,
       {
         base: string;
@@ -53,41 +58,30 @@ export namespace CSS {
         [K in PaletteVariants as `${K & string}-contrast`]: string;
       }
     >;
-    breakpoints: Record<Breakpoints, string>;
-    containers: Record<Containers, string>;
-    widths: Record<Widths, string>;
-    boxShadows: Record<BoxShadows, string[][]>;
-    borderRadius: Record<BorderRadius, string>;
-    bezier: Record<Bezier, string>;
-    zIndex: Record<ZIndexes, number>;
   };
 }
 
-const parsed: CSS.Parsed = JSON.parse(rawCSS.JSON.slice(1, -1));
+const asNumber = (value: string) => parseInt(value);
+const asNumberOrString = (value: string) => {
+  const parsedValue = parseInt(value);
+  return isNaN(parsedValue) ? value : parsedValue;
+};
 
+const parsed: CSS.Parsed = JSON.parse(raw.jsonVariables.slice(1, -1));
 export const css = {
-  baseColors: parsed.baseColors,
-  breakpoints: mapObjIndexed((value) => parseInt(value), parsed.breakpoints),
-  colors: parsed.colors,
-  containers: mapObjIndexed((value) => {
-    const parsed = parseInt(value);
-    return isNaN(parsed) ? value : parsed;
-  }, parsed.containers),
-  prefix: parsed.prefix,
-  boxShadows: mapObjIndexed(
-    (values) => values.map((el) => el.join(" ")).join(", "),
-    parsed.boxShadows
-  ),
-  borderRadius: parsed.borderRadius,
-  widths: mapObjIndexed((value) => parseInt(value), parsed.widths),
+  prefix: raw.prefix,
+  breakpoint: mapObjIndexed(asNumber, parsed.breakpoint),
+  container: mapObjIndexed(asNumberOrString, parsed.container),
+  width: mapObjIndexed(asNumber, parsed.width),
   bezier: parsed.bezier,
-  zIndex: parsed.zIndex,
-} as const satisfies Record<keyof CSS.Parsed, any>;
-
-const paletteColorNames = Object.keys(css.colors);
-export function isColorName(name: string) {
-  return paletteColorNames.includes(name);
-}
+  borderRadius: parsed["border-radius"],
+  boxShadow: mapObjIndexed(
+    (values) => values.map((el) => el.join(" ")).join(", "),
+    parsed["box-shadow"]
+  ),
+  baseColor: parsed["base-color"],
+  color: parsed.color,
+};
 
 export function setCssVar(name: string, value: string | null) {
   document.documentElement.style.setProperty(name, value);

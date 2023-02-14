@@ -20,7 +20,7 @@
   --button-padding: 8px 14px;
   --button-font-size: 14px;
   --button-height: 34px;
-  --button-text: var(--snt-color-text);
+  --button-text: var(--snt-base-color-text);
   --button-text-hover: var(--snt-color-primary);
   --button-text-active: var(--snt-color-primary-darker);
   --button-background: initial;
@@ -87,7 +87,7 @@
 
   // types
   &.secondary {
-    --button-text: var(--snt-color-text);
+    --button-text: var(--snt-base-color-text);
     --button-text-hover: var(--snt-color-dark);
     --button-text-active: var(--snt-color-dark-darker);
     --button-background: #2e33380d;
@@ -97,7 +97,7 @@
     @include btn-unset-border;
   }
   &.tertiary {
-    --button-text: var(--snt-color-text);
+    --button-text: var(--snt-base-color-text);
     --button-text-hover: var(--snt-color-dark);
     --button-text-active: var(--snt-color-dark-darker);
     --button-background: #2e33380d;
@@ -107,7 +107,7 @@
     @include btn-unset-border;
   }
   &.quaternary {
-    --button-text: var(--snt-color-text);
+    --button-text: var(--snt-base-color-text);
     --button-text-hover: var(--snt-color-dark);
     --button-text-active: var(--snt-color-dark-darker);
     --button-background: initial;
@@ -148,7 +148,7 @@
   }
 
   // colors
-  @each $color, $color-map in $colors {
+  @each $color, $color-map in get("color") {
     $base-color: map-get($color-map, "base");
     &.#{$color} {
       @include btn-unset-border;
@@ -195,7 +195,7 @@
       }
       &.text-active {
         @include btn-unset-background;
-        --button-text: var(--#{$prefix}color-text);
+        --button-text: var(--#{$prefix}base-color-text);
         --button-text-hover: var(--#{$prefix}color-#{$color});
         --button-text-active: var(--#{$prefix}color-#{$color}-dark-2);
         --button-ripple: var(--#{$prefix}color-#{$color}-opaque);
