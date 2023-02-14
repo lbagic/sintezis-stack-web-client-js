@@ -37,7 +37,9 @@ const transformInterceptor = createInterceptor({
       const fields = request.method.I.fields.list();
       const pagination = fields.find((el) => el.name === "pagination");
       if (pagination && !request.message.pagination)
-        request.message.pagination = new pagination.T();
+        request.message.pagination = new pagination.T({
+          overridePagination: true,
+        });
     }
   },
   onResponseError: ({ error, errorContext }) => {
