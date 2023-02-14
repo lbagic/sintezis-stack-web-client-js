@@ -4,21 +4,29 @@
     font-size: #{$i}px;
   }
 }
-@each $name, $value in get("border-radius") {
-  .border-radius-#{$name} {
-    border-radius: $value;
+@include generate-classes("border-radius");
+@include generate-classes("width");
+@include generate-classes("box-shadow");
+
+@mixin generate-flexbox-alignments() {
+  $modes: "align", "justify";
+  $entities: "items", "content", "self";
+  $values: (
+    "center": center,
+    "start": flex-start,
+    "end": flex-end,
+  );
+  @each $mode in $modes {
+    @each $entity in $entities {
+      @each $position, $value in $values {
+        .#{$mode}-#{$entity}-#{$position} {
+          #{$mode}-#{$entity}: $value;
+        }
+      }
+    }
   }
 }
-@each $name, $value in get("width") {
-  .width-#{$name} {
-    width: $value;
-  }
-}
-@each $name, $value in get("box-shadow") {
-  .box-shadow-#{$name} {
-    box-shadow: $value;
-  }
-}
+@include generate-flexbox-alignments();
 
 // display
 .hidden {
@@ -84,24 +92,7 @@
 }
 .flex-column {
   display: flex;
-}
-.align-items {
-  align-items: center;
-}
-.align-content {
-  align-content: center;
-}
-.align-self {
-  align-self: center;
-}
-.justify-items {
-  justify-items: center;
-}
-.justify-content {
-  justify-content: center;
-}
-.justify-self {
-  justify-self: center;
+  flex-direction: column;
 }
 
 .width-expand {
