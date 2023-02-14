@@ -17,8 +17,8 @@ window.addEventListener("beforeunload", lifecycleHooks.onClosed);
 @import "@/assets/styles/index.scss";
 
 body {
-  background: var(--#{$prefix}color-background);
-  color: var(--#{$prefix}color-text);
+  background: var(--#{$prefix}base-color-background);
+  color: var(--#{$prefix}base-color-text);
 }
 #app {
   height: 100%;

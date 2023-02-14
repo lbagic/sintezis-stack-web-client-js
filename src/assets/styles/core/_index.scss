@@ -1,0 +1,9 @@
+@import "./generators/generate-color-palette.scss";
+@import "./generators/generate-css-variables.scss";
+@import "./generators/generate-json.scss";
+
+@import "./colors.scss";
+@import "./variables.scss";
+
+@import "./mixins/animation-mixins.scss";
+@import "./mixins/breakpoint-mixins.scss";

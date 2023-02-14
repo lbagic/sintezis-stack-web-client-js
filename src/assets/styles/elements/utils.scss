@@ -1,3 +1,33 @@
+// Generated
+@for $i from 10 to 36 {
+  .fs-#{$i} {
+    font-size: #{$i}px;
+  }
+}
+@include generate-classes("border-radius");
+@include generate-classes("width");
+@include generate-classes("box-shadow");
+
+@mixin generate-flexbox-alignments() {
+  $modes: "align", "justify";
+  $entities: "items", "content", "self";
+  $values: (
+    "center": center,
+    "start": flex-start,
+    "end": flex-end,
+  );
+  @each $mode in $modes {
+    @each $entity in $entities {
+      @each $position, $value in $values {
+        .#{$mode}-#{$entity}-#{$position} {
+          #{$mode}-#{$entity}: $value;
+        }
+      }
+    }
+  }
+}
+@include generate-flexbox-alignments();
+
 // display
 .hidden {
   position: absolute;
@@ -62,39 +92,9 @@
 }
 .flex-column {
   display: flex;
-}
-.align-items {
-  align-items: center;
-}
-.align-content {
-  align-content: center;
-}
-.align-self {
-  align-self: center;
-}
-.justify-items {
-  justify-items: center;
-}
-.justify-content {
-  justify-content: center;
-}
-.justify-self {
-  justify-self: center;
+  flex-direction: column;
 }
 
-// border radius
-@each $name, $size in $border-radius {
-  .border-radius-#{$name} {
-    border-radius: $size;
-  }
-}
-
-// sizes
-@each $width, $size in $widths {
-  .width-#{$width} {
-    width: $size;
-  }
-}
 .width-expand {
   width: 100%;
 }
@@ -108,12 +108,6 @@
   height: 100vh;
 }
 
-// text
-@for $i from 10 to 36 {
-  .fs-#{$i} {
-    font-size: #{$i}px;
-  }
-}
 .italic {
   font-style: italic;
 }

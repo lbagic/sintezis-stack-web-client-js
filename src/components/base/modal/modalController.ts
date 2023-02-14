@@ -18,7 +18,7 @@ export const baseModalProps = {
   },
   maskColor: {
     type: String,
-    default: css.colors.primary["opaque-soft"],
+    default: css.color.primary["opaque-soft"],
   },
 };
 
