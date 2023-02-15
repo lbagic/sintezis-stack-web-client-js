@@ -7,6 +7,10 @@ export const accountRoutes: RouteRecordRaw[] = [
     meta: { authorize: ({ isLoggedIn }) => !isLoggedIn },
     children: [
       {
+        path: "",
+        redirect: "login",
+      },
+      {
         path: "login",
         name: "login",
         alias: "/login",
