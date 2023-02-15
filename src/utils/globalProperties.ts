@@ -1,5 +1,6 @@
-import { css } from "./css";
-import { formatCurrency } from "./currency";
+import { css } from "@/utils/css";
+import { formatCurrency } from "@/utils/currency";
+import { formatNumber } from "@/utils/number";
 
 export const applicationTitle = "Application";
 export const prefix = css.prefix;
@@ -11,6 +12,7 @@ export const globalProperties = {
   $imagePlaceholder: imagePlaceholder,
   $log: console.log,
   $formatCurrency: formatCurrency,
+  $formatNumber: formatNumber,
   $prod: import.meta.env.MODE === "production",
 };
 
