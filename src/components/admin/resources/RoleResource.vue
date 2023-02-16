@@ -76,11 +76,7 @@ async function onDeleteSubmit() {
 
 <template>
   <NPageHeader v-bind="ctx.bind.header" />
-  <button
-    class="snt-button success"
-    style="justify-self: flex-start"
-    @click="onAddOpen"
-  >
+  <button class="snt-button success justify-self-start" @click="onAddOpen">
     <AddOutlined height="18" /> Create
   </button>
   <ResourceTable

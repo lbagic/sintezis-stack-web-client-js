@@ -1,37 +1,52 @@
 <script setup lang="ts">
-import DevelopmentLogin from "@/components/account/DevelopmentLogin.vue";
 import BaseInput from "@/components/base/input/BaseInput.vue";
 import { useFormData } from "@/components/base/input/inputController";
 import { useAccountService } from "@/modules/account/accountService";
-import { useMessage } from "naive-ui";
+import { useDialog, useMessage } from "naive-ui";
+import { h } from "vue";
 import { useRoute } from "vue-router";
 
 const account = useAccountService();
+const dialog = useDialog();
 const message = useMessage();
 const route = useRoute();
 const form = useFormData(
   {
     email: (route.query.email as string) ?? "",
-    password: "",
   },
-  account.login,
+  account.recoverPassword,
   {
-    onSuccess: () => message.success("Logged in successfully."),
-    onError: () => message.error("Failed to log in."),
+    onSuccess: () =>
+      dialog.success({
+        title: "Password recovered",
+        content: "Please check your email.",
+        action: () =>
+          h(
+            "a",
+            {
+              class: "snt-button text primary animate-underline",
+              href: "mailto:",
+              target: "_blank",
+              rel: "noopener noreferrer",
+            },
+            { default: () => "Open mail" }
+          ),
+      }),
+    onError: () => message.error("Failed to recover password"),
   }
 );
 </script>
 
 <template>
   <form @submit.prevent class="snt-grid justify-items-start">
-    <h2 class="subtitle">Login</h2>
+    <h2 class="subtitle">Recover password</h2>
     <p>
-      Don't have an account?
+      Already have a recovery code?
       <RouterLink
         class="snt-button text primary animate-underline"
-        to="register"
+        :to="{ name: 'reset-password' }"
       >
-        Register here
+        Reset password now.
       </RouterLink>
     </p>
     <div class="snt-grid tiny width-xs">
@@ -42,33 +57,22 @@ const form = useFormData(
         placeholder="john.doe@mail.com"
         v-model="form.model.email"
       />
-      <BaseInput
-        :constraint="{ required: true, minlength: 6 }"
-        :input-props="{ name: 'password', autocomplete: 'password' }"
-        label="Password"
-        type="password"
-        show-password-on="click"
-        v-model="form.model.password"
-      />
     </div>
-    <div class="snt-flex">
-      <button
-        :disabled="!form.isSubmittable"
-        @click="form.submit"
-        class="snt-button primary"
-      >
-        Login
-      </button>
-      <DevelopmentLogin v-if="!$prod" />
-    </div>
+    <button
+      :disabled="!form.isSubmittable"
+      @click="form.submit"
+      class="snt-button primary"
+    >
+      Submit
+    </button>
     <RouterLink
       class="snt-button text primary animate-underline"
       :to="{
-        name: 'recover-password',
+        name: 'login',
         query: form.data.email ? { email: form.data.email } : {},
       }"
     >
-      Recover password
+      Back to login
     </RouterLink>
   </form>
 </template>

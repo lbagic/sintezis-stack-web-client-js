@@ -1,15 +1,10 @@
 import { adminResources } from "@/modules/admin/adminResources";
+import { accountRoutes } from "@/routes/shared/account.routes";
+import { developmentRoutes } from "@/routes/shared/development.routes";
 import type { RouteRecordRaw } from "vue-router";
 
-export const routes: RouteRecordRaw[] = [
-  {
-    path: "/login",
-    component: () => import("@/views/account/AccountLoginView.vue"),
-    meta: {
-      title: "Log In",
-      authorize: ({ isLoggedIn }) => !isLoggedIn,
-    },
-  },
+export const adminRoutes: RouteRecordRaw[] = [
+  ...accountRoutes,
   {
     path: "/",
     component: () => import("@/views/admin/AdminIndexView.vue"),
@@ -48,62 +43,8 @@ export const routes: RouteRecordRaw[] = [
           ],
         },
       },
-      // {
-      //   name: "crud-resource",
-      //   path: "crud/:resourceId",
-      //   component: () => import("@/views/admin/AdminCrudView.vue"),
-      //   beforeEnter(to, from, next) {
-      //     const id = to.params.resourceId;
-      //     const resource = adminResources.find((el) => el.id === id);
-      //     return !resource ? next("/") : next();
-      //   },
-      //   meta: {
-      //     title: (route) => getResourceName(route),
-      //     breadcrumbs: (route) => [
-      //       { label: "Dashboard", to: { name: "dashboard" } },
-      //       { label: getResourceName(route), to: { name: "crud-resource" } },
-      //     ],
-      //   },
-      // },
-      // {
-      //   name: "crud-resource",
-      //   path: "crud/:resourceId",
-      //   component: () => import("@/views/admin/AdminCrudView.vue"),
-      //   beforeEnter(to, from, next) {
-      //     const id = to.params.resourceId;
-      //     const resource = adminResources.find((el) => el.id === id);
-      //     return !resource ? next("/") : next();
-      //   },
-      //   meta: {
-      //     title: (route) => getResourceName(route),
-      //     breadcrumbs: (route) => [
-      //       { label: "Dashboard", to: { name: "dashboard" } },
-      //       { label: getResourceName(route), to: { name: "crud-resource" } },
-      //     ],
-      //   },
-      // },
-      // {
-      //   name: "crud-resource-details",
-      //   path: "crud/:resourceId/details/:entityId",
-      //   component: () => import("@/views/admin/AdminCrudDetailsView.vue"),
-      //   beforeEnter(to, from, next) {
-      //     const id = to.params.resourceId;
-      //     const resource = adminResources.find((el) => el.id === id);
-      //     return !resource
-      //       ? next("/")
-      //       : !resource.useDetails
-      //       ? next(`/crud/${resource.id}`)
-      //       : next();
-      //   },
-      //   meta: {
-      //     title: (route) => getResourceName(route) + " details",
-      //     breadcrumbs: (route) => [
-      //       { label: "Dashboard", to: { name: "dashboard" } },
-      //       { label: getResourceName(route), to: { name: "crud-resource" } },
-      //       { label: "Details", to: { name: "crud-resource-details" } },
-      //     ],
-      //   },
-      // },
     ],
   },
 ];
+
+if (import.meta.env.DEV) adminRoutes.push(...developmentRoutes);

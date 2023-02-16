@@ -1,8 +1,15 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useAccountService } from "@/modules/account/accountService";
+import { RouterLink } from "vue-router";
+const account = useAccountService();
+</script>
 
 <template>
-  <div>
+  <div data-view="index-view">
     <p>IndexView</p>
+    <RouterLink to="login">Login</RouterLink>
+    <button @click="account.logout">Logout</button>
+    <RouterView></RouterView>
   </div>
 </template>
 

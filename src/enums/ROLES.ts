@@ -1,7 +1,7 @@
 import { createEnum } from "@/utils/enums";
 
 export const ROLES = createEnum({
-  Administrator: "Administrator",
+  Admin: "Admin",
   Guest: "Guest",
   User: "User",
 } as const);
