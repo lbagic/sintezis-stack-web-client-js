@@ -9,7 +9,7 @@ export namespace CSS {
   export type BoxShadows = "s" | "m" | "l" | "xl" | "xxl";
   export type Bezier = "1" | "2" | "3" | "4";
   export type BaseColors = "text" | "background";
-  export type PaletteColors =
+  export type PaletteColorNames =
     | "black"
     | "error"
     | "dark"
@@ -22,7 +22,7 @@ export namespace CSS {
     | "success"
     | "warning"
     | "white";
-  export type PaletteVariants =
+  export type PaletteColorVariants =
     | "dark"
     | "dark-2"
     | "darker"
@@ -38,6 +38,14 @@ export namespace CSS {
     | "opaque"
     | "opaque-soft"
     | "soft";
+  export type PaletteColor = {
+    base: string;
+    contrast: string;
+  } & {
+    [K in PaletteColorVariants]: string;
+  } & {
+    [K in PaletteColorVariants as `${K & string}-contrast`]: string;
+  };
   export type Parsed = {
     prefix: string;
     breakpoint: Record<Breakpoints, string>;
@@ -47,17 +55,7 @@ export namespace CSS {
     "border-radius": Record<BorderRadius, string>;
     "box-shadow": Record<BoxShadows, string[][]>;
     "base-color": Record<BaseColors, string>;
-    color: Record<
-      PaletteColors,
-      {
-        base: string;
-        contrast: string;
-      } & {
-        [K in PaletteVariants]: string;
-      } & {
-        [K in PaletteVariants as `${K & string}-contrast`]: string;
-      }
-    >;
+    color: Record<PaletteColorNames, PaletteColor>;
   };
 }
 
