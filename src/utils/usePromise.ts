@@ -3,51 +3,46 @@ import { reactive } from "vue";
 export function usePromise<T extends (...args: any[]) => Promise<any>>(
   call: T,
   hooks?: {
-    onError?: (...args: any[]) => any;
-    onSuccess?: (...args: any[]) => any;
+    onError?: (error: any) => any;
+    onSuccess?: (res: Awaited<ReturnType<T>>) => any;
   }
 ) {
-  const state = reactive({
-    data: undefined,
-    error: undefined,
+  const ctx = {
+    data: undefined as undefined | Awaited<ReturnType<T>>,
+    error: undefined as undefined | any,
     isPending: false,
     isSettled: false,
     isFulfilled: false,
     isRejected: false,
-  }) as unknown as {
-    data: Awaited<ReturnType<T>>;
-    error: any;
-    isFulfilled: boolean;
-    isPending: boolean;
-    isRejected: boolean;
-    isSettled: boolean;
-    execute: T;
+    execute: undefined as unknown as T,
   };
+  const state = reactive(ctx) as typeof ctx;
 
-  function onSettled(res: any) {
-    state.data = res.data;
-    state.error = res.error;
-    state.isPending = false;
-    state.isSettled = true;
-    state.isFulfilled = !res.error;
-    state.isRejected = !!res.error;
+  function handle(
+    type: "start" | "success" | "error",
+    payload: any = undefined
+  ) {
+    state.isPending = type === "start";
+    state.isSettled = !state.isPending;
+    state.isFulfilled = type === "success";
+    state.isRejected = type === "error";
+    state.data = type === "success" ? payload : undefined;
+    state.error = type === "error" ? payload : undefined;
+    if (type === "success") hooks?.onSuccess?.(payload);
+    if (type === "error") hooks?.onError?.(payload);
   }
 
-  async function onExecute(...args: any) {
-    state.isPending = true;
-    state.isSettled = false;
+  state.execute = (async (...args) => {
+    handle("start");
     try {
-      const data = await call.apply(null, args);
-      onSettled({ data });
-      hooks?.onSuccess?.();
+      const data = await call(...args);
+      handle("success", data);
       return data;
     } catch (error) {
-      onSettled({ error });
-      hooks?.onError?.();
+      handle("error", error);
       throw error;
     }
-  }
+  }) as T;
 
-  Object.assign(state, { execute: onExecute });
   return state;
 }
