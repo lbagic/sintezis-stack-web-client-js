@@ -1,6 +1,6 @@
-import { createLocale } from "./intl";
+import { createLocaleMessages } from "@/internationalization/messages";
 
-export const de = createLocale({
+export const de = createLocaleMessages({
   HTMLInputErrors: {
     badInput: "Bad input value. YAAAR!",
     patternMismatch: "Value does not match. YAAAR!",
