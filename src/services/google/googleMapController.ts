@@ -5,11 +5,10 @@ import { isRef, onMounted, ref, watchEffect, type Ref } from "vue";
 export namespace GoogleMap {
   export type Map = google.maps.Map;
   export type MapOptions = google.maps.MapOptions;
-  export type MarkerOptions = google.maps.MarkerOptions;
   export type Marker = google.maps.Marker;
+  export type MarkerOptions = google.maps.MarkerOptions;
   export type InfoWindow = google.maps.InfoWindow;
   export type InfoWindowOptions = google.maps.InfoWindowOptions;
-  export type Place = google.maps.places.Place;
 }
 
 type GoogleMapConfig = {
