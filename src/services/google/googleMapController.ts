@@ -7,8 +7,10 @@ export namespace GoogleMap {
   export type MapOptions = google.maps.MapOptions;
   export type Marker = google.maps.Marker;
   export type MarkerOptions = google.maps.MarkerOptions;
-  export type InfoWindow = google.maps.InfoWindow;
-  export type InfoWindowOptions = google.maps.InfoWindowOptions;
+  export type InfoWindow = google.maps.InfoWindow & { isShown?: boolean };
+  export type InfoWindowOptions = google.maps.InfoWindowOptions & {
+    isShown?: boolean;
+  };
 }
 
 type GoogleMapConfig = {
@@ -51,8 +53,17 @@ function useMarkers(map: Ref<GoogleMap.Map | undefined>) {
   const markers = new Map<string, Marker>();
   const infoWindows = new Map<string, InfoWindow>();
 
-  const setMap = (marker?: Marker) => map.value && marker?.setMap(map.value);
-  const unsetMap = (marker?: Marker) => marker?.setMap(null);
+  const setMarkerMap = (marker: Marker) =>
+    map.value && marker.setMap(map.value);
+  const unsetMarkerMap = (marker: Marker) => marker.setMap(null);
+  const openInfoWindow = (info: InfoWindow, marker: Marker) => {
+    info.isShown = true;
+    info.open({ map: map.value, anchor: marker });
+  };
+  const closeInfoWindow = (info: InfoWindow) => {
+    info.isShown = false;
+    info.close();
+  };
 
   const controller = {
     set: async (
@@ -60,7 +71,8 @@ function useMarkers(map: Ref<GoogleMap.Map | undefined>) {
       options: { marker: MarkerOptions; infoWindow?: InfoWindowOptions }
     ) => {
       const marker = await controller.setMarker(key, options.marker);
-      if (options.infoWindow) controller.setInfo(key, options.infoWindow);
+      if (options.infoWindow)
+        await controller.setInfoWindow(key, options.infoWindow);
       return marker;
     },
     setMarker: async (key: string, options: MarkerOptions) => {
@@ -71,12 +83,16 @@ function useMarkers(map: Ref<GoogleMap.Map | undefined>) {
         marker = new Marker(options);
         markers.set(key, marker);
 
-        if (map.value) setMap(marker);
-        else watchOnce(map, () => setMap(marker));
+        if (map.value) setMarkerMap(marker);
+        // else watchOnce(map, () => marker && setMarkerMap(marker));
+        else
+          await new Promise((resolve) => {
+            watchOnce(map, () => resolve(marker && setMarkerMap(marker)));
+          });
       }
       return marker;
     },
-    setInfo: async (key: string, options: InfoWindowOptions) => {
+    setInfoWindow: async (key: string, options: InfoWindowOptions) => {
       const marker = markers.get(key);
       if (!marker) throw new Error(`Can't set info until marker is created.`);
 
@@ -84,31 +100,85 @@ function useMarkers(map: Ref<GoogleMap.Map | undefined>) {
       if (info) info.setOptions(options);
       else {
         const { InfoWindow } = (await googleInstance).maps;
-        info = new InfoWindow(options);
+        if (!Object.hasOwn(options, "isShown")) options.isShown = false;
+        info = new InfoWindow(options) as GoogleMap.InfoWindow;
         infoWindows.set(key, info);
-        let isShown = false;
 
         marker.addListener("click", () => {
-          if (isShown) info?.close();
-          else info?.open({ anchor: marker, map: map.value });
-          isShown = !isShown;
+          if (!info) return;
+          if (info.isShown) info.close();
+          else info.open({ anchor: marker, map: map.value });
+          info.isShown = !info.isShown;
         });
       }
+      if (info.isShown) openInfoWindow(info, marker);
+      else closeInfoWindow(info);
     },
-    show: (key: string) => setMap(markers.get(key)),
-    showAll: () => [...markers.values()].forEach(setMap),
-    hide: (key: string) => unsetMap(markers.get(key)),
-    hideAll: () => [...markers.values()].forEach((el) => unsetMap(el)),
+    show: (key: string) => {
+      controller.showMarker(key);
+      controller.showInfoWindow(key);
+    },
+    showMarker: (key: string) => {
+      const marker = markers.get(key);
+      if (marker) setMarkerMap(marker);
+    },
+    showInfoWindow: (key: string) => {
+      const marker = markers.get(key);
+      const infoWindow = infoWindows.get(key);
+      if (infoWindow && marker) openInfoWindow(infoWindow, marker);
+    },
+    showAll: () => [...markers.keys()].forEach(controller.show),
+    showAllMarkers: () => [...markers.keys()].forEach(controller.showMarker),
+    showAllInfoWindows: () =>
+      [...infoWindows.keys()].forEach(controller.showInfoWindow),
+    hide: (key: string) => {
+      controller.hideMarker(key);
+      controller.hideInfoWindow(key);
+    },
+    hideMarker: (key: string) => {
+      const marker = markers.get(key);
+      if (marker) unsetMarkerMap(marker);
+    },
+    hideInfoWindow: (key: string) => {
+      const infoWindow = infoWindows.get(key);
+      if (infoWindow) closeInfoWindow(infoWindow);
+    },
+    hideAll: () => {
+      controller.hideAllMarkers();
+      controller.hideAllInfoWindows();
+    },
+    hideAllMarkers: () => {
+      [...markers.keys()].forEach(controller.hideMarker);
+    },
+    hideAllInfoWindows: () => {
+      [...infoWindows.keys()].forEach(controller.hideInfoWindow);
+    },
     delete: (key: string) => {
-      controller.hide(key);
+      controller.deleteMarker(key);
+      controller.deleteInfoWindow(key);
+    },
+    deleteMarker: (key: string) => {
+      controller.hideMarker(key);
       markers.delete(key);
     },
-    deleteAll: () => {
-      controller.hideAll();
-      markers.clear();
+    deleteInfoWindow: (key: string) => {
+      controller.hideInfoWindow(key);
+      infoWindows.delete(key);
     },
-    get: (key: string) => markers.get(key),
-    getAll: () => [...markers.values()],
+    deleteAll: () => {
+      controller.deleteAllMarkers();
+      controller.deleteAllInfoWindows();
+    },
+    deleteAllMarkers: () => {
+      [...markers.keys()].forEach(controller.deleteMarker);
+    },
+    deleteAllInfoWindows: () => {
+      [...infoWindows.keys()].forEach(controller.deleteInfoWindow);
+    },
+    getMarker: (key: string) => markers.get(key),
+    getAllMarkers: () => [...markers.values()],
+    getInfoWindow: (key: string) => infoWindows.get(key),
+    getAllInfoWindows: () => [...infoWindows.values()],
   };
 
   return controller;
