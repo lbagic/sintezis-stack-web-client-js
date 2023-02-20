@@ -10,6 +10,10 @@ type ResolvedType<T, TAction> = T extends Message<any> | DataType
   : TAction extends DataType
   ? PartialMessage<TAction & Message<any>>
   : DataType;
+type SuccessAction<Action, TAction> = Action extends never
+  ? never
+  : (response: TAction) => void;
+type ErrorAction<Action> = Action extends never ? never : (error: any) => void;
 
 export function useForm<
   T,
@@ -18,8 +22,11 @@ export function useForm<
   Data extends ResolvedType<T, TAction> extends never
     ? any
     : ResolvedType<T, TAction> = ResolvedType<T, TAction>,
-  SuccessHandler = Action extends never ? never : (response: TAction) => void,
-  ErrorHandler = Action extends never ? never : (error: any) => void
+  SuccessHandler extends SuccessAction<Action, TAction> = SuccessAction<
+    Action,
+    TAction
+  >,
+  ErrorHandler extends ErrorAction<Action> = ErrorAction<Action>
 >(
   data: Data,
   config?: {
