@@ -1,24 +1,27 @@
 <script setup lang="ts">
 import BaseInput from "@/components/base/input/BaseInput.vue";
-import { useFormData } from "@/components/base/input/inputController";
-import { useAccountService } from "@/modules/account/accountService";
+import { useForm } from "@/components/base/input/formController";
+import { grpc } from "@/services/api/grpc";
 import { useMessage } from "naive-ui";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
-const account = useAccountService();
-const message = useMessage();
 const route = useRoute();
-const form = useFormData(
+const router = useRouter();
+const message = useMessage();
+const form = useForm(
   {
     email: (route.query.email as string) ?? "",
     recoveryToken: (route.query.token as string) ?? "",
     password: "",
     passwordConfirmation: "",
   },
-  account.resetPassword,
   {
-    onSuccess: () => message.success("Password reset successfully"),
+    action: grpc.AccountService.passwordReset,
     onError: () => message.error("Failed to recover password"),
+    onSuccess: () => {
+      message.success("Password reset successfully");
+      router.push("/login");
+    },
   }
 );
 </script>

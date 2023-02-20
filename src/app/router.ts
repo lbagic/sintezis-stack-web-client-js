@@ -15,7 +15,7 @@ export const router = createRouter({
   routes,
 });
 
-const fallback = import.meta.env.VITE_ADMIN_PANEL
+export const defaultRoute = import.meta.env.VITE_ADMIN_PANEL
   ? { user: "/", visitor: "login" }
   : { user: "/", visitor: "login" };
 
@@ -48,7 +48,7 @@ router.beforeEach((to, from, next) => {
     ? next(from)
     : referrer && authorize(referrer)
     ? next(referrer)
-    : next(isLoggedIn ? fallback.user : fallback.visitor);
+    : next(isLoggedIn ? defaultRoute.user : defaultRoute.visitor);
 });
 
 router.afterEach((to) => {
