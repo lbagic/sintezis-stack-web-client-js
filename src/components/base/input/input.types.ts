@@ -39,15 +39,15 @@ export namespace InputTypes {
   export type BaseFormItemProps = Partial<
     ExtractPropTypes<typeof baseFormItemProps>
   >;
-  export type BaseModel<T = any> = {
+  export type BaseModel<T extends Record<string, any> = Record<string, any>> = {
     data: T;
     error: null | string;
     dirty: boolean;
   };
-  export type ContextType<T> = {
+  export type ContextType<T extends Record<string, any>> = {
     [Mk in keyof BaseModel]: { [Tk in keyof T]: BaseModel<T[Tk]>[Mk] };
   };
-  export type ModelType<T> = {
+  export type ModelType<T extends Record<string, any>> = {
     [Tk in keyof T]: { [Mk in keyof BaseModel]: BaseModel<T[Tk]>[Mk] };
   };
   export type ValidationRef = Ref<{ inputRef: HTMLInputElement }>;

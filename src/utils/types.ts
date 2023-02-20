@@ -7,6 +7,3 @@ export type OmitType<T extends Record<PropertyKey, any>, U> = Omit<
 export type StrictPartial<T, Schema> = Schema & {
   [K in keyof T]: K extends keyof Schema ? Schema[K] : any;
 };
-export type UnwrapCtor<T> = Instance<T> extends Record<PropertyKey, any>
-  ? OmitType<Instance<T>, Function>
-  : T;
