@@ -1,24 +1,24 @@
 <script setup lang="ts">
 import BaseInput from "@/components/base/input/BaseInput.vue";
-import { useFormData } from "@/components/base/input/inputController";
-import { useAccountService } from "@/modules/account/accountService";
+import { useForm } from "@/components/base/input/formController";
+import { grpc } from "@/services/api/grpc";
 import { useDialog, useMessage } from "naive-ui";
 import { h } from "vue";
 import { RouterLink } from "vue-router";
 
 const message = useMessage();
 const dialog = useDialog();
-const account = useAccountService();
-const form = useFormData(
+const form = useForm(
   {
     email: "",
     password: "",
     passwordConfirmation: "",
   },
-  account.register,
   {
-    onSuccess: () =>
-      dialog.success({
+    action: grpc.AccountService.register,
+    onError: () => message.error("Failed to register."),
+    onSuccess: () => {
+      const successDialog = dialog.success({
         content: "Registration successful, please verify your email address.",
         action: () =>
           h("div", { class: "snt-flex" }, [
@@ -36,13 +36,14 @@ const form = useFormData(
               RouterLink,
               {
                 class: "snt-button text primary animate-underline",
-                to: "login",
+                to: "/login",
+                onClick: successDialog.destroy,
               },
               { default: () => "Go to login" }
             ),
           ]),
-      }),
-    onError: () => message.error("Failed to register."),
+      });
+    },
   }
 );
 </script>

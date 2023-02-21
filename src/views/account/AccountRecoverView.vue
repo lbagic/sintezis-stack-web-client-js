@@ -1,22 +1,22 @@
 <script setup lang="ts">
 import BaseInput from "@/components/base/input/BaseInput.vue";
-import { useFormData } from "@/components/base/input/inputController";
-import { useAccountService } from "@/modules/account/accountService";
+import { useForm } from "@/components/base/input/formController";
+import { grpc } from "@/services/api/grpc";
 import { useDialog, useMessage } from "naive-ui";
 import { h } from "vue";
 import { useRoute } from "vue-router";
 
-const account = useAccountService();
+const route = useRoute();
 const dialog = useDialog();
 const message = useMessage();
-const route = useRoute();
-const form = useFormData(
+const form = useForm(
   {
     email: (route.query.email as string) ?? "",
   },
-  account.recoverPassword,
   {
-    onSuccess: () =>
+    action: grpc.AccountService.passwordRecover,
+    onError: () => message.error("Failed to recover password"),
+    onSuccess: () => {
       dialog.success({
         title: "Password recovered",
         content: "Please check your email.",
@@ -31,8 +31,8 @@ const form = useFormData(
             },
             { default: () => "Open mail" }
           ),
-      }),
-    onError: () => message.error("Failed to recover password"),
+      });
+    },
   }
 );
 </script>
