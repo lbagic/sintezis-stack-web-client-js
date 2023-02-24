@@ -70,6 +70,10 @@ export function useForm<
     });
   }
 
+  function touchAll() {
+    fields.forEach((key) => ((ctx.dirty as any)[key] = true));
+  }
+
   const isPending = ref(false);
   const isValid = computed(() => values(ctx.error).every(not));
   const isSubmittable = computed(() => isValid.value && !isPending.value);
@@ -99,11 +103,12 @@ export function useForm<
   return reactive({
     ...ctx,
     model,
-    reset,
     hydrate,
-    submit,
-    onSuccess,
     onError,
+    onSuccess,
+    reset,
+    submit,
+    touchAll,
     isPending,
     isValid,
     isSubmittable,

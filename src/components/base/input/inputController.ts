@@ -8,7 +8,9 @@ import {
 } from "./input.types";
 import { inputValidation } from "./inputValidation";
 
-// TODO - RFC & refactor and implement better typing
+/**
+ * @deprecated in favor of useForm
+ */
 export function useFormData<
   T extends Parameters<S>[0],
   S extends (...args: any[]) => Promise<unknown> = any
@@ -159,22 +161,32 @@ export const inputController = {
     );
 
     const context = computed(() =>
-      mergeProps(props, props.nProps ?? {}, {
-        ...staticProps,
-        style: props.nStyle,
-        class: props.nClass,
-        "data-input-invalid": !!model.error,
-      })
+      mergeProps(
+        {
+          ...staticProps,
+          style: props.nStyle,
+          class: props.nClass,
+          status: errorMessage.value ? "error" : undefined,
+          "data-input-invalid": !!model.error,
+        },
+        props,
+        props.nProps ?? {}
+      )
     );
+
+    const delayedErrorMessage = ref(errorMessage.value);
+    watch(errorMessage, (value) => {
+      if (!value) delayedErrorMessage.value = value;
+      else setTimeout(() => (delayedErrorMessage.value = value));
+    });
 
     const formItem = computed(() => {
       const label = config?.ignoreLabel ? undefined : props?.label;
-      const feedback = errorMessage.value || props?.feedback;
       const formItemProps: InputTypes.BaseFormItemProps = {
         label,
         showLabel: !!label,
-        feedback,
-        showFeedback: !!(props?.feedback || props?.constraint),
+        feedback: delayedErrorMessage.value || props?.feedback,
+        showFeedback: !!(props?.feedback || errorMessage.value),
         validationStatus: errorMessage.value ? "error" : undefined,
         showRequireMark: !!props.constraint?.required,
         ...props.formItem,
