@@ -131,6 +131,10 @@
 .pointer-events-none {
   pointer-events: none;
 }
+.required-asterisk::after {
+  content: " *";
+  color: var(--snt-color-error);
+}
 *[content-before]::before {
   content: attr(content-before);
 }

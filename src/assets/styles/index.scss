@@ -8,6 +8,16 @@
   @include generate-css-variables($project-variables);
 }
 
+.input-label {
+  font-size: 14px;
+  line-height: 1.25;
+  color: var(--snt-color-text);
+}
+.input-error {
+  font-size: 14px;
+  color: var(--snt-color-error);
+  line-height: 1.25;
+}
 .title {
   font-size: 32px;
 }
