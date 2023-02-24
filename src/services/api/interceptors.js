@@ -46,7 +46,7 @@ const transformInterceptor = createInterceptor({
     Object.assign(error, { meta: errorContext });
   },
   onResponse: ({ response, requestContext }) => {
-    if (requestContext.type === "grpc") {
+    if (requestContext.type === "grpc" && !requestContext.stream) {
       response.message = response.message.toJson();
     }
   },
