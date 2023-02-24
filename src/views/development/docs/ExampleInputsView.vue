@@ -18,10 +18,10 @@ import BaseTimePicker from "@/components/base/input/BaseTimePicker.vue";
 import BaseTransfer from "@/components/base/input/BaseTransfer.vue";
 import BaseTreeSelect from "@/components/base/input/BaseTreeSelect.vue";
 import BaseUpload from "@/components/base/input/BaseUpload.vue";
-import { useFormData } from "@/components/base/input/inputController";
+import { useForm } from "@/components/base/input/formController";
 import { NButton } from "naive-ui";
 
-const form = useFormData({
+const form = useForm({
   Autocomplete: "",
   Cascader: null,
   Checkbox: true,

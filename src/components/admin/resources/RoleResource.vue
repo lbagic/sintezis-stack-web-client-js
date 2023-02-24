@@ -2,7 +2,7 @@
 import ResourceTable from "@/components/admin/ResourceTable.vue";
 import BaseInput from "@/components/base/input/BaseInput.vue";
 import BaseInputNumber from "@/components/base/input/BaseInputNumber.vue";
-import { useFormData } from "@/components/base/input/inputController";
+import { useForm } from "@/components/base/input/formController";
 import BaseModal from "@/components/base/modal/BaseModal.vue";
 import { setupResource } from "@/modules/admin/adminResourceController";
 import { grpc } from "@/services/api/grpc";
@@ -32,14 +32,14 @@ function getAll() {
 getAll();
 
 const forms = {
-  add: useFormData({
+  add: useForm({
     name: "",
   }),
-  edit: useFormData({
+  edit: useForm({
     id: 0,
     name: "",
   }),
-  delete: useFormData({
+  delete: useForm({
     id: 0,
   }),
 };
