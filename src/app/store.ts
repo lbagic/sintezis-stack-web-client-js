@@ -17,7 +17,8 @@ pinia.use(({ store }) => {
 // Plugin - reset
 pinia.use(({ store, options }) => {
   const reset = Object.keys(store.$state).reduce((o, key) => {
-    o[key] = () => store.$patch({ [key]: options.state?.()[key] });
+    // o[key] = () => store.$patch({ [key]: options.state?.()[key] });
+    o[key] = () => (store.$state[key] = options.state?.()[key]);
     return o;
   }, {} as Record<keyof typeof store.$state, () => void>);
   if (import.meta.env.DEV) store._customProperties.add("reset");
