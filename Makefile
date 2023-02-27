@@ -1,5 +1,5 @@
 # compile a string with @buf dependencies with @latest suffix
-BUF_PACKAGES_LATEST := `cat package.json | grep @buf | sed 's/":/@latest"/' | cut -d'"' -f2`
+BUF_PACKAGES_LATEST := $(shell cat package.json | grep @buf | cut -d'"' -f2)
 
 .DEFAULT_GOAL := all
 
@@ -8,6 +8,7 @@ BUF_PACKAGES_LATEST := `cat package.json | grep @buf | sed 's/":/@latest"/' | cu
 
 ## Install latest buf dependencies
 proto:
+	npm remove $(BUF_PACKAGES_LATEST)
 	npm install $(BUF_PACKAGES_LATEST)
 
 # Fancy help message
