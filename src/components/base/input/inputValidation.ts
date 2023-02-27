@@ -37,7 +37,7 @@ export const inputValidation = {
           const rawMessage =
             props.constraintErrorMessages?.[key] ??
             intl.value.HTMLInputErrors[key];
-          return stringMapReplace(rawMessage, props.constraint);
+          return stringMapReplace(rawMessage, props.constraint, true);
         }, null);
       });
     };

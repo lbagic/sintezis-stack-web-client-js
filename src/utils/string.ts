@@ -1,18 +1,25 @@
 import * as R from "ramda";
 
-const createPattern = R.compose(
-  R.join("|"),
-  R.map((el) => `{${el}}`),
-  R.keys
-);
-
 export function stringMapReplace(
   string: string,
-  replaceMap?: Record<PropertyKey, any>
+  map?: Record<string, any>,
+  useMustacheSyntax = false
 ) {
-  if (!replaceMap) return string;
-  const pattern = createPattern(replaceMap);
+  if (!map) return string;
+
+  const createPattern = useMustacheSyntax
+    ? R.compose(
+        R.join("|"),
+        R.map((el) => `{${el}}`),
+        R.keys
+      )
+    : R.compose(R.join("|"), R.keys);
+  const pattern = createPattern(map);
   if (!pattern) return string;
+
   const regexp = new RegExp(pattern, "g");
-  return string.replace(regexp, (match) => replaceMap[match.slice(1, -1)]);
+
+  return useMustacheSyntax
+    ? string.replace(regexp, (match) => map[match.slice(1, -1)])
+    : string.replace(regexp, (match) => map[match]);
 }
