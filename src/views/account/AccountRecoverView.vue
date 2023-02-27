@@ -44,7 +44,7 @@ const form = useForm(
       Already have a recovery code?
       <RouterLink
         class="snt-button text primary animate-underline"
-        :to="{ name: 'reset-password' }"
+        to="/reset-password"
       >
         Reset password now.
       </RouterLink>
@@ -68,7 +68,7 @@ const form = useForm(
     <RouterLink
       class="snt-button text primary animate-underline"
       :to="{
-        name: 'login',
+        path: '/login',
         query: form.data.email ? { email: form.data.email } : {},
       }"
     >

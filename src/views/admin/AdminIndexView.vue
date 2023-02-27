@@ -24,6 +24,7 @@ const route = useRoute();
 const dialog = useDialog();
 const adminStore = useAdminService();
 const account = useAccountService();
+const logout = account.useLogout();
 const breadcrumbs = useRouteBreadcrumbs();
 const activePath = computed(() => route.path);
 
@@ -41,7 +42,7 @@ function confirmLogout() {
     title: "Logout",
     positiveText: "Yes",
     negativeText: "No, not yet",
-    onPositiveClick: account.logout,
+    onPositiveClick: logout,
   });
 }
 </script>
