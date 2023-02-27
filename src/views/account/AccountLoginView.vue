@@ -3,9 +3,6 @@ import DevelopmentLogin from "@/components/account/DevelopmentLogin.vue";
 import BaseInput from "@/components/base/input/BaseInput.vue";
 import { useForm } from "@/components/base/input/formController";
 import { useAccountService } from "@/modules/account/accountService";
-import { grpc } from "@/services/api/grpc";
-import { createHash } from "@/utils/hash";
-import type { LoginRequest } from "@buf/sintezis_reti.bufbuild_es/account_pb";
 import { useMessage } from "naive-ui";
 import { useRoute } from "vue-router";
 
@@ -13,23 +10,13 @@ const account = useAccountService();
 const message = useMessage();
 const route = useRoute();
 
-async function login(payload: Partial<LoginRequest>) {
-  const password = await createHash(payload.password);
-  const response = await grpc.AccountService.login({
-    ...payload,
-    password,
-  });
-  account.handleLogin(response);
-  return;
-}
-
 const form = useForm(
   {
     email: (route.query.email as string) ?? "",
     password: "",
   },
   {
-    action: login,
+    action: account.login,
     onError: () => message.error("Failed to log in."),
     onSuccess: () => message.success("Logged in successfully."),
   }
