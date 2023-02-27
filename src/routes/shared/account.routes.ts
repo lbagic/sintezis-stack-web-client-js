@@ -2,26 +2,6 @@ import type { RouteRecordRaw } from "vue-router";
 
 export const accountRoutes: RouteRecordRaw[] = [
   {
-    path: "/account/login",
-    redirect: "/login",
-  },
-  {
-    path: "/account/register",
-    redirect: "/register",
-  },
-  {
-    path: "/account/verify-account",
-    redirect: "/verify-account",
-  },
-  {
-    path: "/account/recover-password",
-    redirect: "/recover-password",
-  },
-  {
-    path: "/account/reset-password",
-    redirect: "/reset-password",
-  },
-  {
     path: "/account",
     component: () => import("@/views/account/AccountIndexView.vue"),
     meta: { authorize: ({ isLoggedIn }) => !isLoggedIn },

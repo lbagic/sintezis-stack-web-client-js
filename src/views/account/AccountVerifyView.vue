@@ -51,7 +51,7 @@ onMounted(verifyAccount);
     <RouterLink
       class="snt-button text primary animate-underline"
       :to="{
-        name: 'login',
+        path: '/login',
         query: route.query.email ? { email: route.query.email } : {},
       }"
     >

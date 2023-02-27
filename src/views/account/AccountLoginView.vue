@@ -65,7 +65,7 @@ const form = useForm(
     <RouterLink
       class="snt-button text primary animate-underline"
       :to="{
-        name: 'recover-password',
+        path: '/recover-password',
         query: form.data.email ? { email: form.data.email } : {},
       }"
     >
