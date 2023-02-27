@@ -42,7 +42,7 @@ export namespace InputTypes {
   export type BaseModel<T extends Record<string, any> = Record<string, any>> = {
     data: T;
     error: null | string;
-    dirty: boolean;
+    touched: boolean;
   };
   export type ContextType<T extends Record<string, any>> = {
     [Mk in keyof BaseModel]: { [Tk in keyof T]: BaseModel<T[Tk]>[Mk] };

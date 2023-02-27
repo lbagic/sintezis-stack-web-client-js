@@ -39,7 +39,7 @@ export function useForm<
   const ctx = reactive({
     data: data,
     error: mapObjIndexed(() => null, data),
-    dirty: mapObjIndexed(() => false, data),
+    touched: mapObjIndexed(() => false, data),
   }) as InputTypes.ContextType<Data>;
 
   const model = mapObjIndexed((_, key) => {
@@ -66,8 +66,12 @@ export function useForm<
     fields.forEach((key) => {
       model[key].data = data[key];
       model[key].error = null;
-      model[key].dirty = false;
+      model[key].touched = false;
     });
+  }
+
+  function touchAll() {
+    fields.forEach((key) => ((ctx.touched as any)[key] = true));
   }
 
   const isPending = ref(false);
@@ -99,11 +103,12 @@ export function useForm<
   return reactive({
     ...ctx,
     model,
-    reset,
     hydrate,
-    submit,
-    onSuccess,
     onError,
+    onSuccess,
+    reset,
+    submit,
+    touchAll,
     isPending,
     isValid,
     isSubmittable,

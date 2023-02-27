@@ -1,12 +1,12 @@
 import type ResourceTable from "@/components/admin/ResourceTable.vue";
-import type { useFormData } from "@/components/base/input/inputController";
+import type { useForm } from "@/components/base/input/formController";
 import type BaseModal from "@/components/base/modal/BaseModal.vue";
 import type { OmitType } from "@/utils/types";
 import type { NPageHeader } from "naive-ui";
 import { computed, reactive, ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 
-export type ResourceForm = ReturnType<typeof useFormData>;
+export type ResourceForm = ReturnType<typeof useForm>;
 
 export function setupResource<T extends Record<string, any> = any>(config: {
   uniqueKey?: keyof T;

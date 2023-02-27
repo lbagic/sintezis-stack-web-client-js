@@ -8,82 +8,6 @@ import {
 } from "./input.types";
 import { inputValidation } from "./inputValidation";
 
-// TODO - RFC & refactor and implement better typing
-export function useFormData<
-  T extends Parameters<S>[0],
-  S extends (...args: any[]) => Promise<unknown> = any
->(
-  data: T,
-  submit?: S,
-  hooks?: {
-    onError?: (...args: any[]) => any;
-    onSuccess?: (...args: any[]) => any;
-  }
-) {
-  const fields = Object.keys(data);
-  const ctx = reactive({
-    data,
-    error: R.mapObjIndexed(() => null, data),
-    dirty: R.mapObjIndexed(() => false, data),
-  }) as InputTypes.ContextType<T>;
-
-  const model = R.mapObjIndexed((_, propertyKey: keyof T) => {
-    const isFormModel = { value: true, configurable: false };
-    const accessors = R.mapObjIndexed(
-      (contextField) => ({
-        get: () => contextField[propertyKey],
-        set: (value: any) => (contextField[propertyKey] = value),
-        enumerable: true,
-      }),
-      ctx
-    );
-    return Object.defineProperties({}, { isFormModel, ...accessors });
-  }, data) as InputTypes.ModelType<T>;
-  const isPending = ref(false);
-  const isValid = computed(() => R.values(ctx.error).every(R.not));
-  const isSubmittable = computed(() => isValid.value && !isPending.value);
-
-  function hydrate(data: any) {
-    if (typeof data !== "object") return;
-    fields.forEach((key) => {
-      if (R.has(key, data)) (ctx.data as any)[key] = data[key];
-    });
-  }
-  function reset() {
-    fields.forEach((key) => {
-      model[key].data = data[key];
-      model[key].error = null;
-      model[key].dirty = false;
-    });
-  }
-
-  const submitter = !submit
-    ? (undefined as never)
-    : () => {
-        isPending.value = true;
-        submit(ctx.data)
-          .then((res) => {
-            isPending.value = false;
-            hooks?.onSuccess?.(res);
-          })
-          .catch((err) => {
-            isPending.value = false;
-            hooks?.onError?.(err);
-          });
-      };
-
-  return reactive({
-    isValid,
-    isPending,
-    isSubmittable,
-    ...ctx,
-    model,
-    reset,
-    hydrate,
-    submit: submitter,
-  });
-}
-
 let submittedAt = 0;
 function checkIfCanSubmit() {
   const now = Date.now();
@@ -109,19 +33,19 @@ export const inputController = {
     const model = reactive<InputTypes.BaseModel>({
       data: isFormModel.value ? props.modelValue.data : props.modelValue,
       error: isFormModel.value ? props.modelValue.error : null,
-      dirty: isFormModel.value ? props.modelValue.dirty : false,
+      touched: isFormModel.value ? props.modelValue.touched : false,
     });
     const state = reactive<InputTypes.State>({
       submitted: false,
     });
     const errorMessage = computed(() =>
-      (model.dirty || state.submitted) && model.error ? model.error : ""
+      (model.touched || state.submitted) && model.error ? model.error : ""
     );
     const validate = props.constraint
       ? inputValidation.create({ model, props, validationRef })
       : R.F;
     function onBlur() {
-      model.dirty = true;
+      model.touched = true;
     }
     staticProps.onBlur = onBlur;
     function onKeydown(e: KeyboardEvent) {
@@ -159,22 +83,32 @@ export const inputController = {
     );
 
     const context = computed(() =>
-      mergeProps(props, props.nProps ?? {}, {
-        ...staticProps,
-        style: props.nStyle,
-        class: props.nClass,
-        "data-input-invalid": !!model.error,
-      })
+      mergeProps(
+        {
+          ...staticProps,
+          style: props.nStyle,
+          class: props.nClass,
+          status: errorMessage.value ? "error" : undefined,
+          "data-input-invalid": !!model.error,
+        },
+        props,
+        props.nProps ?? {}
+      )
     );
+
+    const delayedErrorMessage = ref(errorMessage.value);
+    watch(errorMessage, (value) => {
+      if (!value) delayedErrorMessage.value = value;
+      else setTimeout(() => (delayedErrorMessage.value = value));
+    });
 
     const formItem = computed(() => {
       const label = config?.ignoreLabel ? undefined : props?.label;
-      const feedback = errorMessage.value || props?.feedback;
       const formItemProps: InputTypes.BaseFormItemProps = {
         label,
         showLabel: !!label,
-        feedback,
-        showFeedback: !!(props?.feedback || props?.constraint),
+        feedback: delayedErrorMessage.value || props?.feedback,
+        showFeedback: !!(props?.feedback || errorMessage.value),
         validationStatus: errorMessage.value ? "error" : undefined,
         showRequireMark: !!props.constraint?.required,
         ...props.formItem,
