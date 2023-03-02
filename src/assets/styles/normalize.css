@@ -91,11 +91,7 @@ button {
   -webkit-font-smoothing: inherit;
   -moz-osx-font-smoothing: inherit;
   appearance: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  /* line-height: normal; */
-  /* text-align: inherit; */
+  text-align: inherit;
 }
 fieldset {
   border-width: 1px;
@@ -135,7 +131,6 @@ textarea {
   padding: 0;
   text-transform: none;
 }
-/* a[disabled], */
 button[disabled],
 input[disabled],
 select[disabled],
