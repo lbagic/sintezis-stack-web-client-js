@@ -3,7 +3,7 @@ import { defineAsyncComponent, computed, type Component } from "vue";
 
 const props = defineProps<{
   icon: string | Component;
-  is?: string | Component;
+  tag?: string | Component;
   size?: string | number;
   width?: string | number;
   height?: string | number;
@@ -21,7 +21,7 @@ const iconAttrs = computed(() => ({
 </script>
 
 <template>
-  <component v-if="is" :is="is">
+  <component v-if="tag" :is="tag">
     <component :is="icon" v-bind="iconAttrs" />
   </component>
   <component v-else :is="icon" v-bind="iconAttrs" />
