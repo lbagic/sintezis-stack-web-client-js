@@ -20,6 +20,8 @@ export const baseModalProps = {
     type: String,
     default: css.color.primary["opaque-soft"],
   },
+  onModalShow: { type: Function as PropType<() => any> },
+  onModalHide: { type: Function as PropType<() => any> },
 };
 
 export const modalController: Record<string, ModalInstance> = {};
