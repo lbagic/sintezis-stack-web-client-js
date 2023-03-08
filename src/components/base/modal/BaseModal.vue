@@ -25,7 +25,7 @@ watch(
 watch(isShown, (value) => {
   emit("update:show", value);
   emit(value ? "modalShow" : "modalHide");
-  setMaskColor();
+  if (value) setMaskColor();
 });
 
 const isControlledByName = !!name;
