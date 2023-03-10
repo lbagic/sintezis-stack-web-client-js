@@ -12,8 +12,7 @@ export const grpc = createGrpcClient({
     RoleService,
     UserService,
   },
-  useEnvoyProxy: false,
-  transportOptions: {
+  options: {
     baseUrl: import.meta.env.VITE_SNT_GRPC_URL,
     interceptors: grpcInterceptors,
   },

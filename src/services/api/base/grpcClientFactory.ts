@@ -1,32 +1,21 @@
+import { createPromiseClient, type PromiseClient } from "@bufbuild/connect";
 import {
   createConnectTransport,
-  createGrpcWebTransport,
-  createPromiseClient,
   type ConnectTransportOptions,
-  type PromiseClient,
 } from "@bufbuild/connect-web";
 import type { ServiceType } from "@bufbuild/protobuf";
-import * as R from "ramda";
+import { mapObjIndexed } from "ramda";
 
-type GrpcClientFactoryConfig<T> = {
+type Services = Record<string, ServiceType>;
+
+export function createGrpcClient<T extends Services>(config: {
   services: T;
-  useEnvoyProxy?: Boolean;
-  transportOptions: ConnectTransportOptions;
-};
-
-export function createGrpcClient<T extends Record<string, ServiceType>>(
-  config: GrpcClientFactoryConfig<T>
-) {
-  const { useEnvoyProxy, services, transportOptions } = config;
-
-  const createTransport = useEnvoyProxy
-    ? createGrpcWebTransport
-    : createConnectTransport;
-
-  const clients = R.mapObjIndexed(
-    (service) =>
-      createPromiseClient(service, createTransport(transportOptions)),
-    services
+  options: ConnectTransportOptions;
+}) {
+  const transport = createConnectTransport(config.options);
+  const clients = mapObjIndexed(
+    (service) => createPromiseClient(service, transport),
+    config.services
   ) as { [K in keyof T]: PromiseClient<T[K]> };
 
   return clients;
