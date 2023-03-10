@@ -6,7 +6,7 @@ import { useRoute, useRouter } from "vue-router";
 import { baseModalProps, modalInternals } from "./modalController";
 
 const props = defineProps(baseModalProps);
-const emit = defineEmits(["update:show"]);
+const emit = defineEmits(["update:show", "modalShow", "modalHide"]);
 const route = useRoute();
 const router = useRouter();
 const { name, hash, query } = props;
@@ -23,9 +23,9 @@ watch(
   (value) => (isShown.value = value)
 );
 watch(isShown, (value) => {
-  if (!value) return;
   emit("update:show", value);
-  setMaskColor();
+  emit(value ? "modalShow" : "modalHide");
+  if (value) setMaskColor();
 });
 
 const isControlledByName = !!name;
