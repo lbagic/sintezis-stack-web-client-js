@@ -7,7 +7,6 @@ import {
   createRouter,
   createWebHistory,
   type RouteLocationNormalized,
-  type RouteRecordNormalized,
 } from "vue-router";
 
 export const router = createRouter({
@@ -16,38 +15,36 @@ export const router = createRouter({
 });
 
 export const defaultRoute = import.meta.env.VITE_ADMIN_PANEL
-  ? { user: "/", visitor: "login" }
-  : { user: "/", visitor: "login" };
+  ? { user: "/app", visitor: "/login" }
+  : { user: "/app", visitor: "/login" };
 
-const settings = { implicitLoadingBar: true };
-const loadingBar = feedback.loadingBar;
+function useRouteValidation() {
+  const { roles, isLoggedIn } = useAccountService();
+  return (route: RouteLocationNormalized) =>
+    !!route.matched.length &&
+    route.matched.every(
+      (r) => r.meta.authorize?.({ roles, isLoggedIn }) ?? true
+    );
+}
 
-const createAuthorization =
-  (roles: string[], isLoggedIn: boolean) =>
-  (route: RouteLocationNormalized | RouteRecordNormalized) =>
-    route.meta.authorize?.({ roles, isLoggedIn }) ?? true;
+const implicitLoadingBar = true;
+function useRouteLoadingBar(isValid: boolean, routeLoadingBar?: boolean) {
+  const showLoadingBar = routeLoadingBar ?? implicitLoadingBar;
+  if (!showLoadingBar) return;
+  feedback.loadingBar.start();
+  setTimeout(isValid ? feedback.loadingBar.finish : feedback.loadingBar.error);
+}
 
 router.beforeEach((to, from, next) => {
-  const { roles, isLoggedIn } = useAccountService();
-  const authorize = createAuthorization(roles, isLoggedIn);
-  const referrer = router.referrer;
-  router.referrer = from;
-
-  const isFound = !!to.matched.length;
-  const isAuthorized = to.matched.every(authorize);
-  const isValid = isFound && isAuthorized;
-
-  if (to.meta.loadingBar ?? settings.implicitLoadingBar) {
-    loadingBar.start();
-    setTimeout(() => (isValid ? loadingBar.finish() : loadingBar.error()));
-  }
+  const { isLoggedIn } = useAccountService();
+  const validate = useRouteValidation();
+  const isValid = validate(to);
+  useRouteLoadingBar(isValid, to.meta.loadingBar);
 
   return isValid
     ? next()
-    : referrer && authorize(from)
-    ? next(from)
-    : referrer && authorize(referrer)
-    ? next(referrer)
+    : validate(from)
+    ? next(false)
     : next(isLoggedIn ? defaultRoute.user : defaultRoute.visitor);
 });
 
@@ -72,8 +69,5 @@ declare module "vue-router" {
     breadcrumbs?: (route: RouteLocationNormalized) => RouteBreadcrumb[];
     title?: string | ((route: RouteLocationNormalized) => string);
     loadingBar?: boolean;
-  }
-  interface Router {
-    referrer?: RouteLocationNormalized;
   }
 }
