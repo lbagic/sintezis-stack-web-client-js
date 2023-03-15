@@ -1,5 +1,5 @@
 import { useAccountService } from "@/modules/account/accountService";
-import { createInterceptor } from "./base/interceptorFactory";
+import { createInterceptor } from "@/services/api/base/interceptorFactory";
 
 const loggingInterceptor = createInterceptor({
   // onRequest: ({ requestContext }) =>

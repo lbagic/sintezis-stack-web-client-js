@@ -1,9 +1,9 @@
+import type { InputTypes } from "@/components/base/input/input.types";
 import { HTML_INPUT_ERRORS } from "@/enums/HTML_INPUT_ERRORS";
 import { intl } from "@/internationalization/intl";
 import { stringMapReplace } from "@/utils/string";
 import * as R from "ramda";
 import { nextTick } from "vue";
-import type { InputTypes } from "./input.types";
 
 const errorKeys = HTML_INPUT_ERRORS.keys;
 type ErrorKeys = keyof (typeof HTML_INPUT_ERRORS)["enum"];

@@ -1,5 +1,5 @@
+import { useFirebaseAuth } from "@/services/firebase/firebase";
 import { TwitterAuthProvider } from "firebase/auth";
-import { useFirebaseAuth } from "../firebase/firebase";
 
 const instance = new TwitterAuthProvider();
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { inputValidation } from "@/components/base/input/inputValidation";
 import { NFormItem } from "naive-ui";
 import { computed, ref, toRefs } from "vue";
-import { inputValidation } from "./inputValidation";
 
 const inputRef = ref(null);
 const props = defineProps<{

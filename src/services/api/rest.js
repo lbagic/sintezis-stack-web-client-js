@@ -1,5 +1,5 @@
-import { createRestPromiseClient } from "./base/restClientFactory";
-import { restInterceptors } from "./interceptors";
+import { createRestPromiseClient } from "@/services/api/base/restClientFactory";
+import { restInterceptors } from "@/services/api/interceptors";
 
 export const rest = createRestPromiseClient({
   baseURL: import.meta.env.VITE_SNT_API_URL,

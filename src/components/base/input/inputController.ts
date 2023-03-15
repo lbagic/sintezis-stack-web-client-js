@@ -1,12 +1,12 @@
 import { activeLocale } from "@/internationalization/intl";
 import * as R from "ramda";
 import { computed, mergeProps, reactive, ref, watch } from "vue";
+import { inputValidation } from "@/components/base/input/inputValidation";
 import {
   baseFormItemProps,
   baseInputProps,
   type InputTypes,
-} from "./input.types";
-import { inputValidation } from "./inputValidation";
+} from "@/components/base/input/input.types";
 
 let submittedAt = 0;
 function checkIfCanSubmit() {

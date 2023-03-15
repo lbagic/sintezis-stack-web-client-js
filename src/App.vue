@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { theme } from "@/app/theme";
 import { lifecycleHooks } from "@/hooks";
 import {
   NConfigProvider,
@@ -6,7 +7,6 @@ import {
   NMessageProvider,
   NNotificationProvider,
 } from "naive-ui";
-import { theme } from "./app/theme";
 
 lifecycleHooks.onOpened();
 window.addEventListener("beforeunload", lifecycleHooks.onClosed);
