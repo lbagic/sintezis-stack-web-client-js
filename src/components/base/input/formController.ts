@@ -35,9 +35,10 @@ export function useForm<
     onError?: ErrorHandler;
   }
 ) {
+  const initialData = { ...data };
   const fields = keys(data);
   const ctx = reactive({
-    data: data,
+    data,
     error: mapObjIndexed(() => null, data),
     touched: mapObjIndexed(() => false, data),
   }) as InputTypes.ContextType<Data>;
@@ -55,7 +56,7 @@ export function useForm<
     return Object.defineProperties({}, { isFormModel, ...accessors });
   }, data) as InputTypes.ModelType<Data>;
 
-  function hydrate(data: any) {
+  function hydrate(data: Partial<Data>) {
     if (typeof data === "object")
       fields.forEach((key) => {
         if (has(key as any, data)) (ctx.data as any)[key] = data[key];
@@ -64,7 +65,7 @@ export function useForm<
 
   function reset() {
     fields.forEach((key) => {
-      model[key].data = data[key];
+      model[key].data = initialData[key];
       model[key].error = null;
       model[key].touched = false;
     });

@@ -39,7 +39,7 @@ export namespace InputTypes {
   export type BaseFormItemProps = Partial<
     ExtractPropTypes<typeof baseFormItemProps>
   >;
-  export type BaseModel<T extends Record<string, any> = Record<string, any>> = {
+  export type BaseModel<T = any> = {
     data: T;
     error: null | string;
     touched: boolean;
