@@ -3,8 +3,8 @@
 interface ImportMetaEnv {
   // Sintezis
   readonly VITE_ADMIN_PANEL: string;
-  readonly VITE_SNT_API_URL: string;
   readonly VITE_SNT_GRPC_URL: string;
+  readonly VITE_SNT_REST_URL: string;
   readonly VITE_SNT_HASH: string;
 
   // Firebase
@@ -19,6 +19,11 @@ interface ImportMetaEnv {
 
   // Google maps
   readonly VITE_GOOGLE_MAPS_API_KEY: string;
+
+  // LinkedIn
+  readonly VITE_LINKEDIN_CLIENT_ID: string;
+  readonly VITE_LINKEDIN_CLIENT_SECRET: string;
+  readonly VITE_LINKEDIN_CALLBACK_URI: string;
 }
 
 interface ImportMeta {
