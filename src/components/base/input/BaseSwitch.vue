@@ -1,19 +1,19 @@
 <script setup lang="ts">
 import { NSwitch, switchProps } from "naive-ui";
 import { ref } from "vue";
-import InputValidation from "./FormItem.vue";
-import { inputController as ctl } from "./inputController";
+import InputValidation from "@/components/base/input/FormItem.vue";
+import { inputController } from "@/components/base/input/inputController";
 
 const inputRef = ref<InstanceType<typeof NSwitch>>();
 const validationRef = ref<any>();
 const props = defineProps({
   ...switchProps,
-  ...ctl.props.base,
+  ...inputController.props.base,
 });
 const emit = defineEmits(["update:modelValue"]);
 defineExpose({ input: inputRef });
 
-const { model, context, formItemContext } = ctl.setup({
+const { model, context, formItemContext } = inputController.setup({
   emit,
   props,
   inputRef,

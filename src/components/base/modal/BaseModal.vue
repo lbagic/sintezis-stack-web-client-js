@@ -1,9 +1,12 @@
 <script setup lang="ts">
+import {
+  baseModalProps,
+  modalInternals,
+} from "@/components/base/modal/modalController";
 import { setCssVar } from "@/utils/css";
 import { NModal } from "naive-ui";
 import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { baseModalProps, modalInternals } from "./modalController";
 
 const props = defineProps(baseModalProps);
 const emit = defineEmits(["update:show", "modalShow", "modalHide"]);

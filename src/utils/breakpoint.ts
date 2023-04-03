@@ -1,4 +1,4 @@
+import { css } from "@/utils/css";
 import { useBreakpoints } from "@vueuse/core";
-import { css } from "./css";
 
 export const breakpoint = useBreakpoints(css.breakpoint);

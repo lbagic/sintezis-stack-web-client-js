@@ -1,7 +1,7 @@
+import { en } from "@/internationalization/locale.en";
+import { de } from "@/internationalization/locale.de";
 import { computed, ref, watch } from "vue";
-import { en } from "./locale.en";
-import { de } from "./locale.de";
-import type { IntlMessages } from "./messages";
+import type { IntlMessages } from "@/internationalization/messages";
 
 type LocaleRecord = { key: string; label: string; messages: IntlMessages };
 type LocaleKeys = (typeof localeList)[number]["key"];
