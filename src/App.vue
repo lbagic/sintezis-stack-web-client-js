@@ -31,7 +31,4 @@ body {
   background: var(--#{$prefix}base-color-background);
   color: var(--#{$prefix}base-color-text);
 }
-#app {
-  height: 100%;
-}
 </style>

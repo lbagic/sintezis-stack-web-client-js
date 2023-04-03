@@ -101,37 +101,25 @@
   grid-template-columns: repeat(auto-fill, minmax(var(--width), 1fr));
   gap: var(--grid-gap);
 }
-.#{$prefix}flex {
-  @include flexbox-gap;
-  @include flexbox-center;
-  @include flexbox-equal;
-  display: flex;
-  align-items: center;
-  & > * + * {
-    margin-left: var(--flex-gap);
-  }
-}
-.#{$prefix}flex-column {
-  @include flexbox-gap;
-  @include flexbox-center;
-  @include flexbox-equal;
-  display: flex;
-  flex-direction: column;
-  & > * + * {
-    margin-top: var(--flex-gap);
-  }
-}
+.#{$prefix}flex,
+.#{$prefix}flex-column,
 .#{$prefix}flex-wrap {
   @include flexbox-gap;
+  @include flexbox-center;
+  @include flexbox-equal;
   display: flex;
+  gap: var(--flex-gap);
+}
+
+.#{$prefix}flex {
+  align-items: center;
+}
+.#{$prefix}flex-column {
+  flex-direction: column;
+}
+.#{$prefix}flex-wrap {
   align-items: center;
   flex-wrap: wrap;
-  margin-left: calc(-1 * var(--flex-gap));
-  margin-bottom: calc(-1 * var(--flex-gap));
-  & > * {
-    margin-left: var(--flex-gap);
-    margin-bottom: var(--flex-gap);
-  }
 }
 .#{$prefix}flex-carousel {
   // If used within grid, be wary of grid blowout. https://css-tricks.com/preventing-a-grid-blowout/
@@ -141,6 +129,7 @@
   @include flexbox-gap;
 
   display: flex;
+  gap: var(--flex-gap);
   overflow-x: auto;
 
   // scroll-snap-type: x mandatory;
@@ -153,9 +142,9 @@
     height: var(--carousel-item-height);
     max-width: 100%;
   }
-  & > * + * {
-    margin-left: var(--flex-gap);
-  }
+  // & > * + * {
+  //   margin-left: var(--flex-gap);
+  // }
   & img {
     object-fit: cover;
     width: 100%;
