@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { defineAsyncComponent, computed, type Component } from "vue";
+import { computed, defineAsyncComponent } from "vue";
 
 const props = defineProps<{
-  icon: string | Component;
-  tag?: string | Component;
+  icon: string | object;
+  tag?: string | object;
   size?: string | number;
   width?: string | number;
   height?: string | number;
