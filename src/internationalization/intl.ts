@@ -1,5 +1,5 @@
 import { en } from "@/internationalization/locale.en";
-import { de } from "@/internationalization/locale.de";
+import { hr } from "@/internationalization/locale.hr";
 import { computed, ref, watch } from "vue";
 import type { IntlMessages } from "@/internationalization/messages";
 
@@ -20,7 +20,7 @@ const persist = {
 const defaultLocale: LocaleKeys = "en";
 export const localeList = [
   { key: "en", label: "EN", messages: en },
-  { key: "de", label: "DE", messages: de },
+  { key: "hr", label: "HR", messages: hr },
 ] as const satisfies Readonly<LocaleRecord[]>;
 const localeKeys = localeList.map(({ key }) => key);
 const activeKey = ref<LocaleKeys>(persist.get());
