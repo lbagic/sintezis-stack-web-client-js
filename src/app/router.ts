@@ -36,6 +36,7 @@ function useRouteLoadingBar(isValid: boolean, routeLoadingBar?: boolean) {
 }
 
 router.beforeEach((to, from, next) => {
+  router.previousRoute = from.matched.length ? from : to;
   const { isLoggedIn } = useAccountService();
   const validate = useRouteValidation();
   const isValid = validate(to);
@@ -61,6 +62,9 @@ export type RouteBreadcrumb = {
   to: { name: string } | { path: string };
 };
 declare module "vue-router" {
+  interface Router {
+    previousRoute: RouteLocationNormalized;
+  }
   interface RouteMeta {
     authorize?: (options: {
       roles: typeof ROLES.values | string[];
