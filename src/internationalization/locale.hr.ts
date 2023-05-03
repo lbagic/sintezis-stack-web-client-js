@@ -1,6 +1,11 @@
 import { createLocaleMessages } from "@/internationalization/messages";
 
-export const de = createLocaleMessages({
+export const hr = createLocaleMessages({
+  roles: {
+    Admin: "Admin YAAAR!",
+    User: "User YAAAR!",
+    Guest: "Guest YAAAR!",
+  },
   HTMLInputErrors: {
     badInput: "Bad input value. YAAAR!",
     patternMismatch: "Value does not match. YAAAR!",
