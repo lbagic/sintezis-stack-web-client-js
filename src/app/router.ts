@@ -1,5 +1,5 @@
 import type { ROLES } from "@/enums/ROLES";
-import { useAccountService } from "@/modules/account/accountService";
+import { useAccountModule } from "@/modules/account/accountModule";
 import { routes } from "@/routes";
 import { feedback } from "@/utils/feedback";
 import { applicationTitle } from "@/utils/globalProperties";
@@ -15,11 +15,11 @@ export const router = createRouter({
 });
 
 export const defaultRoute = import.meta.env.VITE_ADMIN_PANEL
-  ? { user: "/app", visitor: "/login" }
-  : { user: "/app", visitor: "/login" };
+  ? { user: "/", visitor: "/login" }
+  : { user: "/", visitor: "/login" };
 
 function useRouteValidation() {
-  const { roles, isLoggedIn } = useAccountService();
+  const { roles, isLoggedIn } = useAccountModule();
   return (route: RouteLocationNormalized) =>
     !!route.matched.length &&
     route.matched.every(
@@ -37,7 +37,7 @@ function useRouteLoadingBar(isValid: boolean, routeLoadingBar?: boolean) {
 
 router.beforeEach((to, from, next) => {
   router.previousRoute = from.matched.length ? from : to;
-  const { isLoggedIn } = useAccountService();
+  const { isLoggedIn } = useAccountModule();
   const validate = useRouteValidation();
   const isValid = validate(to);
   useRouteLoadingBar(isValid, to.meta.loadingBar);

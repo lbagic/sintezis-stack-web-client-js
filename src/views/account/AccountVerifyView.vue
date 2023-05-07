@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { useAccountService } from "@/modules/account/accountService";
+import { useAccountModule } from "@/modules/account/accountModule";
 import { grpc } from "@/services/api/grpc";
 import { useDialog, useMessage } from "naive-ui";
 import { h, onMounted } from "vue";
 import { useRoute } from "vue-router";
 
-const account = useAccountService();
+const account = useAccountModule();
 const route = useRoute();
 const message = useMessage();
 const dialog = useDialog();

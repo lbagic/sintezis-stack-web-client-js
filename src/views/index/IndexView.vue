@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useAccountService } from "@/modules/account/accountService";
+import { useAccountModule } from "@/modules/account/accountModule";
 import { RouterLink } from "vue-router";
 
-const account = useAccountService();
+const account = useAccountModule();
 const logout = account.useLogout();
 </script>
 

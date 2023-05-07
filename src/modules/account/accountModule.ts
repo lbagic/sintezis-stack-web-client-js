@@ -10,7 +10,7 @@ import type { User } from "@buf/sintezis_reti.bufbuild_es/user_pb";
 import { useMessage } from "naive-ui";
 import { defineStore } from "pinia";
 
-export const useAccountService = defineStore({
+export const useAccountModule = defineStore({
   id: "account",
   state: () => ({
     token: "",
@@ -40,7 +40,7 @@ export const useAccountService = defineStore({
     },
     useLogout() {
       const message = useMessage();
-      const account = useAccountService();
+      const account = useAccountModule();
 
       return () => {
         account.$reset();

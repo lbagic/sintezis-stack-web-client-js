@@ -2,11 +2,11 @@
 import DevelopmentLogin from "@/components/account/DevelopmentLogin.vue";
 import BaseInput from "@/components/base/input/BaseInput.vue";
 import { useForm } from "@/components/base/input/formController";
-import { useAccountService } from "@/modules/account/accountService";
+import { useAccountModule } from "@/modules/account/accountModule";
 import { useMessage } from "naive-ui";
 import { useRoute } from "vue-router";
 
-const account = useAccountService();
+const account = useAccountModule();
 const message = useMessage();
 const route = useRoute();
 

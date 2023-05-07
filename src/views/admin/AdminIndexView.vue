@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useAccountService } from "@/modules/account/accountService";
+import { useAccountModule } from "@/modules/account/accountModule";
 import { adminResources } from "@/modules/admin/adminResources";
-import { useAdminService } from "@/modules/admin/adminService";
+import { useAdminModule } from "@/modules/admin/adminModule";
 import { css } from "@/utils/css";
 import { useRouteBreadcrumbs } from "@/utils/routeBreadcrumbs";
 import {
@@ -22,8 +22,8 @@ import { RouterLink, useRoute } from "vue-router";
 
 const route = useRoute();
 const dialog = useDialog();
-const adminStore = useAdminService();
-const account = useAccountService();
+const adminStore = useAdminModule();
+const account = useAccountModule();
 const logout = account.useLogout();
 const breadcrumbs = useRouteBreadcrumbs();
 const activePath = computed(() => route.path);

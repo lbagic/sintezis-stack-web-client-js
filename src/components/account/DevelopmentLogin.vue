@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { ROLES } from "@/enums/ROLES";
 import { intl } from "@/internationalization/intl";
-import { useAccountService } from "@/modules/account/accountService";
+import { useAccountModule } from "@/modules/account/accountModule";
 import { usePromise } from "@/utils/usePromise";
 import { NDropdown } from "naive-ui";
 import type { DropdownMixedOption } from "naive-ui/es/dropdown/src/interface";
 
-const account = useAccountService();
+const account = useAccountModule();
 const login = usePromise((data: any) => account.login(data));
 
 const config = {
