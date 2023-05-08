@@ -12,9 +12,8 @@ function piniaPluginResetstate({ store, options }: PiniaPluginContext) {
   type Reset = Record<keyof State, () => void>;
 
   const reset: Reset = {};
-  const initialState = options.state?.();
   Object.keys(store.$state).forEach((key) => {
-    reset[key] = () => (store.$state[key] = initialState?.[key]);
+    reset[key] = () => (store.$state[key] = options.state?.()?.[key]);
   });
   return { reset };
 }
