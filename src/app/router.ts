@@ -3,6 +3,7 @@ import { useAccountModule } from "@/modules/account/accountModule";
 import { routes } from "@/routes";
 import { feedback } from "@/utils/feedback";
 import { applicationTitle } from "@/utils/globalProperties";
+import { ref, type Ref } from "vue";
 import {
   createRouter,
   createWebHistory,
@@ -36,7 +37,10 @@ function useRouteLoadingBar(isValid: boolean, routeLoadingBar?: boolean) {
 }
 
 router.beforeEach((to, from, next) => {
-  router.previousRoute = from.matched.length ? from : to;
+  const previousRoute = from.matched.length ? from : to;
+  if (!router.previousRoute) router.previousRoute = ref(previousRoute);
+  else router.previousRoute.value = previousRoute;
+
   const { isLoggedIn } = useAccountModule();
   const validate = useRouteValidation();
   const isValid = validate(to);
@@ -63,7 +67,7 @@ export type RouteBreadcrumb = {
 };
 declare module "vue-router" {
   interface Router {
-    previousRoute: RouteLocationNormalized;
+    previousRoute: Ref<RouteLocationNormalized>;
   }
   interface RouteMeta {
     authorize?: (options: {
