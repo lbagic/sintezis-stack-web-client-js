@@ -1,0 +1,54 @@
+.snt-table {
+  --snt-table-padding: 0.5rem;
+  --snt-table-color: var(--snt-color-primary);
+  --snt-table-on-color: var(--snt-color-on-primary);
+  --snt-table-background-color: var(--snt-color-light);
+  --snt-table-alt-color: var(--snt-color-primary-max-light);
+  --snt-table-border-color: var(--snt-color-primary-darker);
+
+  border-spacing: 0px;
+  position: relative;
+  width: 100%;
+}
+.snt-table td,
+.snt-table th {
+  background: var(--snt-table-background-color);
+  padding: var(--snt-table-padding);
+  text-align: left;
+}
+
+// sticky header styles
+
+.snt-table tr > th {
+  position: sticky;
+}
+.snt-table thead > tr > th,
+.snt-table > tr:not(:last-child) > th {
+  top: 0;
+}
+.snt-table tfoot > tr > th,
+.snt-table > tr:last-child > th {
+  bottom: 0;
+}
+
+// table color styles
+
+.snt-table th {
+  background: var(--snt-table-color);
+  color: var(--snt-table-on-color);
+}
+.snt-table > tr:nth-child(2n-1) > td,
+.snt-table > tbody > tr:nth-child(2n-1) > td {
+  background: var(--snt-table-alt-color);
+}
+// .snt-table  > tr:nth-child(2n) > td,
+// .snt-table  > tbody > tr:nth-child(2n) > td {
+//   background: var(--snt-table-alt-color-2);
+// }
+
+// table border styles
+
+.snt-table {
+  border-spacing: 1px;
+  background: var(--snt-table-border-color);
+}

@@ -1,0 +1,94 @@
+// position
+.relative {
+  position: relative;
+}
+.absolute {
+  position: absolute;
+}
+.fixed {
+  position: fixed;
+}
+.pointer {
+  cursor: pointer;
+}
+.m-auto {
+  margin: auto;
+}
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+.my-auto {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+// containers
+.block {
+  display: block;
+}
+.inline {
+  display: inline;
+}
+.inline-block {
+  display: inline-block;
+}
+.grid {
+  display: grid;
+}
+.flex {
+  display: flex;
+}
+.align-items {
+  align-items: center;
+}
+.align-content {
+  align-content: center;
+}
+.align-self {
+  align-self: center;
+}
+.justify-items {
+  justify-items: center;
+}
+.justify-content {
+  justify-content: center;
+}
+.justify-self {
+  justify-self: center;
+}
+
+// sizes
+
+.w-1-1 {
+  width: 100%;
+}
+.h-1-1 {
+  height: 100%;
+}
+
+// text
+
+.underline {
+  text-decoration: underline;
+}
+.italic {
+  font-style: italic;
+}
+.bold {
+  font-weight: bolder;
+}
+.capitalize {
+  text-transform: capitalize;
+}
+.uppercase {
+  text-transform: uppercase;
+}
+
+// content handlers
+*[content-before]::before {
+  content: attr(content-before);
+}
+*[content-after]::after {
+  content: attr(content-after);
+}

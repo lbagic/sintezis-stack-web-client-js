@@ -1,9 +1,8 @@
-import { createStore } from "./core/storeFactory";
+import { generateStore } from "./core/storeFactory";
 
-export const useUserStore = createStore({
-  id: "store",
+export const useUserStore = generateStore({
+  id: "user",
   state: () => ({
-    counter: 0,
     users: [
       { id: 1, type: "odd" },
       { id: 2, type: "even" },
@@ -11,15 +10,12 @@ export const useUserStore = createStore({
       { id: 4, type: "even" },
     ],
   }),
-  actions: {
-    increment() {
-      this.counter++;
-    },
-    getEntries() {
-      fetch("https://api.publicapis.org/entries")
-        .then((response) => response.json())
-        .then((data) => console.log(data));
-    },
-  },
-  persist: true,
 });
+
+const userStore = useUserStore();
+userStore.users;
+userStore.usersAdd({ id: 5, type: "new" });
+userStore.usersFind({});
+userStore.usersFindMany({ type: "odd" });
+userStore.usersRemove({ type: "even" });
+userStore.usersReset();

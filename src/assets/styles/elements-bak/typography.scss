@@ -1,0 +1,61 @@
+:root {
+  --snt-font-base-size: calc(16px * var(--snt-font-global-scale));
+  --snt-font-scale-factor: 1.25;
+  --snt-font-global-scale: 0.8;
+  @include m {
+    --snt-font-global-scale: 1;
+  }
+
+  --snt-fs-6: calc(var(--snt-fs-5) * var(--snt-font-scale-factor));
+  --snt-fs-5: calc(var(--snt-fs-4) * var(--snt-font-scale-factor));
+  --snt-fs-4: calc(var(--snt-fs-3) * var(--snt-font-scale-factor));
+  --snt-fs-3: calc(var(--snt-fs-2) * var(--snt-font-scale-factor));
+  --snt-fs-2: calc(var(--snt-fs-1) * var(--snt-font-scale-factor));
+  --snt-fs-1: var(--snt-font-base-size);
+
+  --snt-fs--1: calc(var(--snt-font-base-size) / var(--snt-font-scale-factor));
+  --snt-fs--2: calc(var(--snt-fs--1) / var(--snt-font-scale-factor));
+  --snt-fs--3: calc(var(--snt-fs--2) / var(--snt-font-scale-factor));
+}
+
+// font faces
+
+@font-face {
+  font-family: SpaceMono;
+  src: url("~@/assets/fonts/SpaceMono-Regular.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.#{$prefix}-font-mono {
+  font-family: SpaceMono;
+}
+
+// font sizes
+.#{$prefix}-fs-6 {
+  font-size: var(--snt-fs-6);
+}
+.#{$prefix}-fs-5 {
+  font-size: var(--snt-fs-5);
+}
+.#{$prefix}-fs-4 {
+  font-size: var(--snt-fs-4);
+}
+.#{$prefix}-fs-3 {
+  font-size: var(--snt-fs-3);
+}
+.#{$prefix}-fs-2 {
+  font-size: var(--snt-fs-2);
+}
+.#{$prefix}-fs-1 {
+  font-size: var(--snt-fs-1);
+}
+.#{$prefix}-fs--1 {
+  font-size: var(--snt-fs--1);
+}
+.#{$prefix}-fs--2 {
+  font-size: var(--snt-fs--2);
+}
+.#{$prefix}-fs--3 {
+  font-size: var(--snt-fs--3);
+}

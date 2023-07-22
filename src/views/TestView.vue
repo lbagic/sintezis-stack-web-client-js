@@ -1,33 +1,38 @@
 <script setup lang="ts">
-import BaseButton from "../components/base/BaseButton.vue";
-import BaseIcon from "../components/base/BaseIcon.vue";
-import BaseModal from "../components/base/BaseModal.vue";
+import { useUserStore } from "@/stores/UserStore";
 
-const modal = $ref<InstanceType<typeof BaseModal>>();
+const userStore = useUserStore();
+
+function add() {
+  userStore.usersAdd({ id: 5, type: "asdf" });
+}
+function find() {
+  console.log(userStore.usersFindOne({ type: "even" }));
+}
+function findAll() {
+  console.log(userStore.usersFindMany({ type: "even" }));
+}
+function remove() {
+  userStore.usersRemove({ type: "odd" });
+}
+function reset() {
+  userStore.usersReset();
+}
 </script>
 
 <template>
-  <div class="wrap">
-    <div class="btn-group">
-      <button class="btn btn-link">button</button>
-      <router-link class="btn btn-primary" to="#">link</router-link>
-      <BaseIcon icon="IconClose" button />
+  <div style="display: grid; gap: 0.5rem; grid-template-columns: 1fr 1fr">
+    <div style="display: grid">
+      <button @click="add">add</button>
+      <button @click="find">find</button>
+      <button @click="findAll">findAll</button>
+      <button @click="remove">remove</button>
+      <button @click="reset">reset</button>
     </div>
-    <BaseButton>Button</BaseButton>
-    <BaseButton color="secondary" to="#dialog">Button</BaseButton>
-    <router-link to="#dialog">dialog</router-link>
-    <BaseModal class="dialog" hash="#dialog" query="dialog" ref="modal">
-      <input type="text" autofocus />
-      <input type="text" />
-      <input type="text" />
-      <input type="text" />
-      <input type="text" />
-    </BaseModal>
+    <pre>{{ userStore.users }}</pre>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.wrap > div {
-  padding: 1rem;
-}
+//
 </style>

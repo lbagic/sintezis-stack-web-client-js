@@ -17,7 +17,6 @@ import {
 type Identifier = string | number | symbol;
 type Identifiable = { id: Identifier; [key: Identifier]: unknown };
 type ArrayElement<A> = A extends readonly (infer T)[] ? T : never;
-type Capitalized<K> = Capitalize<string & K>;
 type PickArrayKeys<T> = Pick<
   T,
   {
@@ -26,31 +25,34 @@ type PickArrayKeys<T> = Pick<
 >;
 
 type GenerateActions<T, S> = T & {
-  [K in keyof S as `reset${Capitalized<K>}`]: () => S[K];
+  [K in keyof S as `${string & K}Reset`]: () => S[K];
 } & {
-  [K in keyof PickArrayKeys<S> as `add${Capitalized<K>}`]: (
+  [K in keyof PickArrayKeys<S> as `${string & K}Add`]: (
     item: ArrayElement<S[K]> | S[K]
   ) => S[K];
 } & {
-  [K in keyof PickArrayKeys<S> as `remove${Capitalized<K>}`]: (
+  [K in keyof PickArrayKeys<S> as `${string & K}Remove`]: (
     search: Identifier | Identifier[] | Partial<ArrayElement<S[K]>>
   ) => S[K];
 } & {
-  [K in keyof PickArrayKeys<S> as `find${Capitalized<K>}`]: (
+  [K in keyof PickArrayKeys<S> as `${string & K}FindOne`]: (
     search: Identifier | Identifier[] | Partial<ArrayElement<S[K]>>
   ) => ArrayElement<S[K]> | undefined;
 } & {
-  [K in keyof PickArrayKeys<S> as `findAll${Capitalized<K>}`]: (
+  [K in keyof PickArrayKeys<S> as `${string & K}FindMany`]: (
     search: Identifier | Identifier[] | Partial<ArrayElement<S[K]>>
   ) => S[K];
 };
 type ActionType<T, S> = T & ThisType<GenerateActions<T, S> & S>;
 
-const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 const isPrimitive = (value: unknown) =>
-  typeof value === "string" || typeof value === "number";
+  value === null ||
+  value === undefined ||
+  typeof value === "string" ||
+  typeof value === "number" ||
+  typeof value === "boolean";
 
-export const createStore = <
+export const generateStore = <
   Id extends string,
   // eslint-disable-next-line @typescript-eslint/ban-types
   S extends StateTree = {},
@@ -66,7 +68,7 @@ export const createStore = <
       /**
        * Reset method; applied to every root level state
        */
-      a[`reset${capitalize(key)}`] = function () {
+      a[`${key}Reset`] = function () {
         this[key] = store.state?.()[key];
         return this[key];
       };
@@ -74,7 +76,7 @@ export const createStore = <
         /**
          * Collection add method; adds unique elements to collection based on "id"
          */
-        a[`add${capitalize(key)}`] = function (
+        a[`${key}Add`] = function (
           this: { [key: Identifier]: Identifiable[] },
           item: Identifiable | Identifiable[]
         ) {
@@ -92,7 +94,7 @@ export const createStore = <
         /**
          * Collection remove method; removes elements from collection
          */
-        a[`remove${capitalize(key)}`] = function (
+        a[`${key}Remove`] = function (
           this: { [key: Identifier]: Identifiable[] },
           search: Identifier | Identifier[] | Identifiable
         ) {
@@ -111,7 +113,7 @@ export const createStore = <
         /**
          * Collection find method; searches for specific element in collection
          */
-        a[`find${capitalize(key)}`] = function (
+        a[`${key}FindOne`] = function (
           this: { [key: Identifier]: Identifiable[] },
           search: Identifier | Identifier[] | Identifiable
         ) {
@@ -128,9 +130,9 @@ export const createStore = <
           return undefined;
         };
         /**
-         * Collection findAll method; searches for specific elements in collection
+         * Collection findMany method; searches for specific elements in collection
          */
-        a[`findAll${capitalize(key)}`] = function (
+        a[`${key}FindMany`] = function (
           this: { [key: Identifier]: Identifiable[] },
           search: Identifier | Identifier[] | Identifiable
         ) {
@@ -152,7 +154,7 @@ export const createStore = <
     {}
   ) as GenerateActions<A, S>;
 
-  if (store.actions) Object.assign(generatedActions, store.actions);
+  store.actions = { ...store.actions, ...generatedActions };
 
   return defineStore(
     store as unknown as DefineStoreOptions<Id, S, G, GenerateActions<A, S>>

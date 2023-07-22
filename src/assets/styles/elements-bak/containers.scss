@@ -1,0 +1,75 @@
+%snt-container-base {
+  width: 100%;
+  padding-left: 16px;
+  padding-right: 16px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.snt-container-s {
+  @extend %snt-container-base;
+  max-width: 400px;
+}
+
+.snt-container-m {
+  @extend %snt-container-base;
+  max-width: 600px;
+}
+
+.snt-container-l {
+  @extend %snt-container-base;
+  max-width: 800px;
+}
+
+.snt-container-xl {
+  @extend %snt-container-base;
+  max-width: 1200px;
+}
+
+.snt-container-expand {
+  @extend %snt-container-base;
+  max-width: initial;
+}
+
+.snt-container {
+  padding: 16px;
+}
+
+.snt-grid {
+  --gtc: initial;
+  --gtr: initial;
+  --gap: 0.5rem;
+  display: grid;
+  align-content: flex-start;
+  gap: var(--gap);
+  grid-template-columns: var(--gtc);
+  grid-template-rows: var(--gtr);
+}
+.snt-grid-fill {
+  --width: 200px;
+  --gap: 0.5rem;
+  display: grid;
+  align-content: flex-start;
+  grid-template-columns: repeat(auto-fill, minmax(var(--width), 1fr));
+  gap: var(--gap);
+}
+.snt-flex {
+  --gap: 0.5rem;
+  display: flex;
+  align-items: center;
+  & > * + * {
+    margin-left: var(--gap);
+  }
+}
+.snt-flex-wrap {
+  --gap: 0.5rem;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-left: calc(-1 * var(--gap));
+  margin-bottom: calc(-1 * var(--gap));
+  & > * {
+    margin-left: var(--gap);
+    margin-bottom: var(--gap);
+  }
+}

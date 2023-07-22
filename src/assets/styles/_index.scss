@@ -2,7 +2,14 @@
 
 :root {
   --prefix: #{$prefix};
+  --#{$prefix}-line-height: 1.5;
+  --#{$prefix}-body-color: white;
   @include generate-css-variables($breakpoints, 'breakpoint');
   @include generate-css-variables($colors, 'color');
+}
+
+.asdf {
+  color: white;
+  text-decoration: if(true, null, none);
 }
 
